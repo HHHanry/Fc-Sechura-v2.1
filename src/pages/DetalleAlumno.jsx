@@ -1,42 +1,68 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import FifaRadar from '../components/FifaRadar';
-import { Card, CardBody, Button, Badge, DataTable, EmptyState, Skeleton } from '../components/ui';
+import { Card, CardBody, Button, Badge, DataTable, EmptyState, Skeleton, StatusBadge } from '../components/ui';
 import { usePagosDeAlumno } from '../hooks/usePagos';
 import { useAsistenciaDeAlumno } from '../hooks/useAsistencia';
 import { useDeudasDeAlumno } from '../hooks/useDeudores';
-import { useMisionesDeAlumno } from '../hooks/useMisiones';
-import { useCompetenciasDeAlumno } from '../hooks/useCompetencias';
-import { useCanteraDeAlumno } from '../hooks/useCantera';
-import { mutarAlumnos } from '../hooks/useAlumnos';
+import { useAlumno, mutarAlumnos } from '../hooks/useAlumnos';
 import { toast } from '../hooks/useToast';
+import { PlanVivoCard, CompetenciasCard, CanteraCard } from './detalle-alumno/SidebarCards';
+import { TabResumen } from './detalle-alumno/TabResumen';
+import { TabTimeline } from './detalle-alumno/TabTimeline';
 import {
   PRECIO_MENSUALIDAD, formatMoney, formatDateLima, getPlayerTier, calculateOVR, STAT_KEYS,
-  MISION_ESTADOS, MISION_AREAS_LIST,
-  POSICIONES, COMPETENCIAS_POR_POSICION, NIVELES_COMPETENCIA,
-  POTENCIAL,
 } from '../config/businessRules';
+import { withDefaults } from '../helpers/alumnoDefaults';
 
 // function declarations para los iconos usados antes de su definición textual (TDZ-safe)
 function DocIcon() { return (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"/><path d="M14 3v6h6"/></svg>); }
 function RunIcon() { return (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="13" cy="4" r="2"/><path d="m4 22 5-9 4 4 4-5 4 5"/></svg>); }
 function WalletIcon() { return (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M16 13h2"/></svg>); }
 function CalendarIcon() { return (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>); }
+function ClipboardIcon() { return (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>); }
+function TimelineIcon() { return (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>); }
 
 const TABS = [
+  { id: 'resumen',    label: 'Resumen',  icon: <ClipboardIcon /> },
   { id: 'general',    label: 'Datos',    icon: <DocIcon /> },
   { id: 'deportivo',  label: 'Físico',   icon: <RunIcon /> },
   { id: 'finanzas',   label: 'Finanzas', icon: <WalletIcon /> },
   { id: 'asistencia', label: 'Asist.',   icon: <CalendarIcon /> },
+  { id: 'timeline',   label: 'Historial',icon: <TimelineIcon /> },
 ];
+
+const resolveAlumnoId = (params, searchParams, state) =>
+  params.id || searchParams.get('id') || state?.alumno?.id || null;
 
 const DetalleAlumno = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const alumnoInicial = location.state?.alumno;
+  const params = useParams();
+  const [searchParams] = useSearchParams();
 
-  const [alumno, setAlumno] = useState(alumnoInicial);
-  const [tab, setTab] = useState('general');
+  const alumnoId = resolveAlumnoId(params, searchParams, location.state);
+  const stateAlumno = location.state?.alumno ?? null;
+  const alumnoInicial = (stateAlumno?.id === alumnoId) ? stateAlumno : null;
+
+  // Siempre intenta cargar de Firestore si hay ID (para F5 / deep-link / state stale)
+  const { alumno: alumnoRemoto, loading: loadingRemoto } = useAlumno(alumnoId);
+
+  const [alumnoLocal, setAlumnoLocal] = useState(alumnoInicial);
+
+  // Sincroniza: state si existe, sino remote. Aplica defaults seguros.
+  const alumnoRaw = alumnoLocal ?? alumnoRemoto ?? null;
+  const alumno = useMemo(() => withDefaults(alumnoRaw), [alumnoRaw]);
+
+  // Cuando llega el remote, sincroniza local (cache rápido o F5)
+  useEffect(() => {
+    if (alumnoRemoto) setAlumnoLocal(alumnoRemoto);
+  }, [alumnoRemoto]);
+
+  // Alias para ediciones locales (mantiene compatibilidad con guardarMedico etc.)
+  const setAlumno = setAlumnoLocal;
+
+  const [tab, setTab] = useState('resumen');
   const [filtroMes, setFiltroMes] = useState('Todos');
   const [editandoMedico, setEditandoMedico] = useState(false);
   const [datosMedicos, setDatosMedicos] = useState({
@@ -106,7 +132,27 @@ const DetalleAlumno = () => {
   const ovr = alumno ? (alumno.ovr ?? calculateOVR(stats)) : 0;
   const tier = getPlayerTier(ovr);
 
-  // === Pantalla de rescate (recargada con F5 sin state) ===
+  // === Estado de carga (F5 sin state, esperando Firestore) ===
+  if (loadingRemoto && !alumno) {
+    return (
+      <div style={pageBg}>
+        <div style={contentWrap}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sn-space-4)' }}>
+            <Skeleton style={{ height: 48, maxWidth: 200 }} />
+            <div style={mainGridStyle} className="sn-detalle-grid">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sn-space-4)' }}>
+                <Skeleton style={{ height: 300 }} />
+                <Skeleton style={{ height: 80 }} />
+              </div>
+              <Skeleton style={{ height: 400 }} />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // === Pantalla de rescate (ID no encontrado o no proporcionado) ===
   if (!alumno || !alumno.id) {
     return (
       <div style={pageBg}>
@@ -114,9 +160,13 @@ const DetalleAlumno = () => {
           <Card>
             <CardBody style={{ padding: 'var(--sn-space-7)', textAlign: 'center' }}>
               <div style={rescateIconStyle}>?</div>
-              <h2 style={{ margin: '0 0 var(--sn-space-2)', fontFamily: 'var(--sn-font-display)', color: 'var(--sn-text-primary)' }}>Sesión no encontrada</h2>
+              <h2 style={{ margin: '0 0 var(--sn-space-2)', fontFamily: 'var(--sn-font-display)', color: 'var(--sn-text-primary)' }}>
+                {alumnoId ? 'Alumno no encontrado' : 'Sesión no encontrada'}
+              </h2>
               <p style={{ color: 'var(--sn-text-muted)', marginBottom: 'var(--sn-space-5)' }}>
-                Recargaste la página y los datos temporales se limpiaron por seguridad.
+                {alumnoId
+                  ? 'El ID proporcionado no corresponde a ningún alumno registrado.'
+                  : 'Recargaste la página y los datos temporales se limpiaron. Usa el directorio para navegar.'}
               </p>
               <Button onClick={() => navigate('/alumnos')} icon={<ArrowLeftIcon />}>Volver al directorio</Button>
             </CardBody>
@@ -191,6 +241,10 @@ const DetalleAlumno = () => {
               ))}
             </div>
 
+            {tab === 'resumen' && (
+              <TabResumen alumno={alumno} setAlumno={setAlumno} />
+            )}
+
             {tab === 'general' && (
               <TabGeneral
                 alumno={alumno}
@@ -219,6 +273,10 @@ const DetalleAlumno = () => {
                 filtroMes={filtroMes} setFiltroMes={setFiltroMes}
                 loading={loadingAsist}
               />
+            )}
+
+            {tab === 'timeline' && (
+              <TabTimeline alumno={alumno} setAlumno={setAlumno} />
             )}
           </section>
         </div>
@@ -267,7 +325,8 @@ const PerfilCard = ({ alumno, inicial, ovr, tier, linkWhatsApp, celular }) => (
           DNI · {alumno.dni}
         </p>
 
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginBottom: 'var(--sn-space-4)' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 8, marginBottom: 'var(--sn-space-4)' }}>
+          <StatusBadge value={alumno.estado} />
           <Badge tone="brand">Cat. {alumno.categoria}</Badge>
           <Badge tone="neutral">{alumno.edad ?? '—'} años</Badge>
         </div>
@@ -672,7 +731,7 @@ const tabsBarStyle = {
 
 const tabBtnStyle = (active) => ({
   flex: 1,
-  minWidth: 100,
+  minWidth: 80,
   padding: '0.6rem 1rem',
   borderRadius: 'var(--sn-radius-pill)',
   background: active ? 'var(--sn-brand-gradient)' : 'transparent',
@@ -842,278 +901,6 @@ const rescateIconStyle = {
   color: 'var(--sn-text-muted)',
   fontSize: 36, fontWeight: 800,
   margin: '0 auto var(--sn-space-4)',
-};
-
-/* =====================================================
-   PlanVivoCard — Resumen Fase 2 dentro del expediente
-   ===================================================== */
-
-const PlanVivoCard = ({ alumnoId }) => {
-  const { misiones, loading } = useMisionesDeAlumno(alumnoId);
-
-  const activa = misiones.find(
-    (m) => m.estado === MISION_ESTADOS.EN_PROCESO || m.estado === MISION_ESTADOS.NO_LOGRADO,
-  );
-  const ultimaLograda = misiones.find(
-    (m) => m.estado === MISION_ESTADOS.LOGRADO || m.estado === MISION_ESTADOS.DESTACADO,
-  );
-  const conteoArea = {};
-  misiones.forEach((m) => { if (m.area) conteoArea[m.area] = (conteoArea[m.area] ?? 0) + 1; });
-  const areaTop = Object.entries(conteoArea).sort((a, b) => b[1] - a[1])[0]?.[0];
-  const areaTopLabel = MISION_AREAS_LIST.find((a) => a.value === areaTop)?.label;
-
-  return (
-    <Card>
-      <CardBody style={{ padding: 0 }}>
-        <div style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: 'var(--sn-space-4) var(--sn-space-5)',
-          borderBottom: '1px solid var(--sn-border-faint)',
-        }}>
-          <div>
-            <div style={{ fontSize: 'var(--sn-fs-xs)', fontWeight: 800, letterSpacing: 'var(--sn-tracking-mega)', color: 'var(--sn-brand-glow)', textTransform: 'uppercase' }}>
-              Plan vivo
-            </div>
-            <div style={{ fontFamily: 'var(--sn-font-display)', fontWeight: 700, color: 'var(--sn-text-primary)', fontSize: 'var(--sn-fs-md)' }}>
-              Misiones del jugador
-            </div>
-          </div>
-          <Link
-            to="/misiones"
-            state={{ alumno: { id: alumnoId } }}
-            style={{
-              padding: '0.4rem 0.75rem',
-              borderRadius: 'var(--sn-radius-pill)',
-              background: 'color-mix(in srgb, var(--sn-brand-glow) 12%, transparent)',
-              border: '1px solid var(--sn-border-glow)',
-              color: 'var(--sn-brand-glow)',
-              fontSize: 'var(--sn-fs-xs)', fontWeight: 700,
-              textDecoration: 'none', letterSpacing: 'var(--sn-tracking-wide)',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            Gestionar →
-          </Link>
-        </div>
-        <div style={{ padding: 'var(--sn-space-4) var(--sn-space-5)' }}>
-          {loading ? (
-            <Skeleton height={70} />
-          ) : misiones.length === 0 ? (
-            <EmptyState
-              title="Sin misiones"
-              description="Asígnale la primera misión desde la sección plan vivo."
-            />
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sn-space-3)' }}>
-              {activa && (
-                <PlanRow
-                  label="Activa"
-                  tone="warn"
-                  texto={activa.descripcion}
-                />
-              )}
-              {ultimaLograda && (
-                <PlanRow
-                  label="Última lograda"
-                  tone="success"
-                  texto={ultimaLograda.descripcion}
-                />
-              )}
-              {areaTopLabel && (
-                <PlanRow
-                  label="Área más repetida"
-                  tone="brand"
-                  texto={areaTopLabel}
-                />
-              )}
-            </div>
-          )}
-        </div>
-      </CardBody>
-    </Card>
-  );
-};
-
-const PlanRow = ({ label, tone, texto }) => (
-  <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-    <Badge tone={tone}>{label}</Badge>
-    <div style={{ color: 'var(--sn-text-primary)', fontWeight: 600, fontSize: 'var(--sn-fs-sm)', lineHeight: 1.35 }}>
-      {texto}
-    </div>
-  </div>
-);
-
-/* =====================================================
-   CompetenciasCard — Resumen Fase 3 dentro del expediente
-   ===================================================== */
-
-const POSICIONES_LABEL = {
-  [POSICIONES.PORTERO]: 'Portero',
-  [POSICIONES.DEFENSA]: 'Defensa',
-  [POSICIONES.VOLANTE]: 'Volante',
-  [POSICIONES.DELANTERO]: 'Delantero',
-};
-
-const CompetenciasCard = ({ alumnoId }) => {
-  const { competencias, loading } = useCompetenciasDeAlumno(alumnoId);
-
-  const resumen = useMemo(() => {
-    if (!competencias?.competencias) return null;
-    const pos = competencias.posicion;
-    const comps = COMPETENCIAS_POR_POSICION[pos] ?? [];
-    const vals = comps.map((c) => competencias.competencias[c] ?? 0).filter((v) => v > 0);
-    if (vals.length === 0) return null;
-    const avg = vals.reduce((a, b) => a + b, 0) / vals.length;
-    const nivel = NIVELES_COMPETENCIA.slice().reverse().find((n) => avg >= n.value) ?? NIVELES_COMPETENCIA[0];
-    const mejor = comps.reduce((best, c) =>
-      (competencias.competencias[c] ?? 0) > (competencias.competencias[best] ?? 0) ? c : best
-    , comps[0]);
-    return { pos, avg, nivel, mejor, mejorVal: competencias.competencias[mejor] ?? 0 };
-  }, [competencias]);
-
-  return (
-    <Card>
-      <CardBody style={{ padding: 0 }}>
-        <div style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: 'var(--sn-space-4) var(--sn-space-5)',
-          borderBottom: '1px solid var(--sn-border-faint)',
-        }}>
-          <div>
-            <div style={{ fontSize: 'var(--sn-fs-xs)', fontWeight: 800, letterSpacing: 'var(--sn-tracking-mega)', color: 'var(--sn-brand-glow)', textTransform: 'uppercase' }}>
-              Competencias
-            </div>
-            <div style={{ fontFamily: 'var(--sn-font-display)', fontWeight: 700, color: 'var(--sn-text-primary)', fontSize: 'var(--sn-fs-md)' }}>
-              Mapa por posición
-            </div>
-          </div>
-          <Link
-            to="/competencias"
-            state={{ alumno: { id: alumnoId } }}
-            style={{
-              padding: '0.4rem 0.75rem',
-              borderRadius: 'var(--sn-radius-pill)',
-              background: 'color-mix(in srgb, var(--sn-brand-glow) 12%, transparent)',
-              border: '1px solid var(--sn-border-glow)',
-              color: 'var(--sn-brand-glow)',
-              fontSize: 'var(--sn-fs-xs)', fontWeight: 700,
-              textDecoration: 'none', letterSpacing: 'var(--sn-tracking-wide)',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            Evaluar →
-          </Link>
-        </div>
-        <div style={{ padding: 'var(--sn-space-4) var(--sn-space-5)' }}>
-          {loading ? (
-            <Skeleton height={70} />
-          ) : !resumen ? (
-            <EmptyState
-              title="Sin evaluación"
-              description="Evalúa las competencias de este jugador desde la sección Competencias."
-            />
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sn-space-3)' }}>
-              <PlanRow
-                label="Posición"
-                tone="brand"
-                texto={POSICIONES_LABEL[resumen.pos] ?? resumen.pos}
-              />
-              <PlanRow
-                label="Nivel global"
-                tone={resumen.avg >= 3.5 ? 'elite' : resumen.avg >= 2.5 ? 'success' : 'info'}
-                texto={`${resumen.nivel.label} (${resumen.avg.toFixed(1)})`}
-              />
-              <PlanRow
-                label="Mejor competencia"
-                tone="elite"
-                texto={`${resumen.mejor} (${resumen.mejorVal}/4)`}
-              />
-            </div>
-          )}
-        </div>
-      </CardBody>
-    </Card>
-  );
-};
-
-/* =====================================================
-   CanteraCard — Resumen Fase 4 dentro del expediente
-   ===================================================== */
-
-const CanteraCard = ({ alumnoId }) => {
-  const { cantera, loading } = useCanteraDeAlumno(alumnoId);
-
-  const potInfo = cantera ? POTENCIAL.find((p) => p.value === cantera.potencial) : null;
-
-  return (
-    <Card>
-      <CardBody style={{ padding: 0 }}>
-        <div style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: 'var(--sn-space-4) var(--sn-space-5)',
-          borderBottom: '1px solid var(--sn-border-faint)',
-        }}>
-          <div>
-            <div style={{ fontSize: 'var(--sn-fs-xs)', fontWeight: 800, letterSpacing: 'var(--sn-tracking-mega)', color: 'var(--sn-brand-glow)', textTransform: 'uppercase' }}>
-              Cantera
-            </div>
-            <div style={{ fontFamily: 'var(--sn-font-display)', fontWeight: 700, color: 'var(--sn-text-primary)', fontSize: 'var(--sn-fs-md)' }}>
-              Proyección
-            </div>
-          </div>
-          <Link
-            to="/cantera"
-            state={{ alumno: { id: alumnoId } }}
-            style={{
-              padding: '0.4rem 0.75rem',
-              borderRadius: 'var(--sn-radius-pill)',
-              background: 'color-mix(in srgb, var(--sn-brand-glow) 12%, transparent)',
-              border: '1px solid var(--sn-border-glow)',
-              color: 'var(--sn-brand-glow)',
-              fontSize: 'var(--sn-fs-xs)', fontWeight: 700,
-              textDecoration: 'none', letterSpacing: 'var(--sn-tracking-wide)',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            Evaluar →
-          </Link>
-        </div>
-        <div style={{ padding: 'var(--sn-space-4) var(--sn-space-5)' }}>
-          {loading ? (
-            <Skeleton height={70} />
-          ) : !cantera ? (
-            <EmptyState
-              title="Sin evaluación"
-              description="Evalúa el potencial de este jugador desde la sección Cantera."
-            />
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sn-space-3)' }}>
-              {potInfo && (
-                <PlanRow
-                  label="Potencial"
-                  tone={cantera.potencial === 'elite' ? 'elite' : cantera.potencial === 'alto' ? 'success' : 'info'}
-                  texto={potInfo.label}
-                />
-              )}
-              {cantera.alertas?.length > 0 && (
-                <PlanRow
-                  label="Alertas"
-                  tone="warn"
-                  texto={cantera.alertas.join(', ')}
-                />
-              )}
-              {cantera.notas && (
-                <div style={{ fontSize: 'var(--sn-fs-xs)', color: 'var(--sn-text-muted)', fontStyle: 'italic' }}>
-                  "{cantera.notas.length > 80 ? cantera.notas.slice(0, 80) + '…' : cantera.notas}"
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      </CardBody>
-    </Card>
-  );
 };
 
 export default DetalleAlumno;

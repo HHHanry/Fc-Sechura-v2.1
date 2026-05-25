@@ -413,7 +413,7 @@ const CateraProyeccion = () => {
                     <CardBody>
                       <span style={subLabelStyle}>Accesos rápidos</span>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 10 }}>
-                        <Link to={`/perfil-alumno?id=${alumno.id}`} style={quickLinkStyle}>
+                        <Link to={`/perfil-alumno/${alumno.id}`} style={quickLinkStyle}>
                           Expediente completo →
                         </Link>
                         <Link to={`/competencias?alumno=${alumno.id}`} style={quickLinkStyle}>

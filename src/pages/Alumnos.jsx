@@ -1,8 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAlumnos, mutarAlumnos } from '../hooks/useAlumnos';
-import { CATEGORIAS, formatDateLima } from '../config/businessRules';
-import { Card, CardBody, Button, Badge, DataTable, Modal, EmptyState } from '../components/ui';
+import { CATEGORIAS, ESTADOS_ALUMNO, formatDateLima } from '../config/businessRules';
+import { withDefaults } from '../helpers/alumnoDefaults';
+import { Card, CardBody, Button, Badge, DataTable, Modal, EmptyState, StatusBadge } from '../components/ui';
 import { toast } from '../hooks/useToast';
 import { AlumnoForm } from './alumnos/AlumnoForm';
 import { CarnetModal } from './alumnos/CarnetModal';
@@ -26,6 +27,7 @@ const Alumnos = () => {
   const [busqueda, setBusqueda]               = useState('');
   const [filtroCategoria, setFiltroCategoria] = useState('Todas');
   const [filtroDistrito, setFiltroDistrito]   = useState('Todos');
+  const [filtroEstado, setFiltroEstado]       = useState('Todos');
   const [orden, setOrden]                     = useState('reciente');
   const [guardando, setGuardando]             = useState(false);
   const [eliminando, setEliminando]           = useState(false);
@@ -35,17 +37,21 @@ const Alumnos = () => {
     [alumnos],
   );
 
+  const alumnosConDefaults = useMemo(() => alumnos.map(withDefaults), [alumnos]);
+
   const alumnosVisibles = useMemo(() => {
     const term = busqueda.toLowerCase();
-    return alumnos
+    return alumnosConDefaults
       .filter((a) => {
         const matchTexto = !term
           || a.nombre?.toLowerCase().includes(term)
           || a.apellido?.toLowerCase().includes(term)
-          || a.dni?.includes(term);
+          || a.dni?.includes(term)
+          || (a.etiquetas ?? []).some((t) => t.toLowerCase().includes(term));
         const matchCat = filtroCategoria === 'Todas' || a.categoria === filtroCategoria;
         const matchDist = filtroDistrito === 'Todos' || a.distrito === filtroDistrito;
-        return matchTexto && matchCat && matchDist;
+        const matchEstado = filtroEstado === 'Todos' || a.estado === filtroEstado;
+        return matchTexto && matchCat && matchDist && matchEstado;
       })
       .sort((a, b) => {
         if (orden === 'az')         return (a.nombre ?? '').localeCompare(b.nombre ?? '');
@@ -54,7 +60,7 @@ const Alumnos = () => {
         if (orden === 'edad_desc')  return (parseInt(b.edad) || 0) - (parseInt(a.edad) || 0);
         return 0;
       });
-  }, [alumnos, busqueda, filtroCategoria, filtroDistrito, orden]);
+  }, [alumnosConDefaults, busqueda, filtroCategoria, filtroDistrito, filtroEstado, orden]);
 
   const handleSubmit = async (datos) => {
     setGuardando(true);
@@ -117,7 +123,7 @@ const Alumnos = () => {
         {/* === FILTROS === */}
         <Card style={{ marginBottom: 'var(--sn-space-5)' }}>
           <CardBody>
-            <div style={filtersGridStyle}>
+            <div style={filtersGridStyle} className="sn-alumnos-filters">
               <div style={searchWrapStyle}>
                 <SearchIcon />
                 <input
@@ -133,14 +139,16 @@ const Alumnos = () => {
                 options={[{ value: 'Todas', label: 'Todas las categorías' }, ...CATEGORIAS.map((c) => ({ value: c, label: `Cat. ${c}` }))]} />
               <SelectFilter value={filtroDistrito} onChange={setFiltroDistrito}
                 options={distritosExistentes.map((d) => ({ value: d, label: d === 'Todos' ? 'Todos los distritos' : d }))} />
+              <SelectFilter value={filtroEstado} onChange={setFiltroEstado}
+                options={[{ value: 'Todos', label: 'Todos los estados' }, ...ESTADOS_ALUMNO.map((e) => ({ value: e.value, label: e.label }))]} />
               <SelectFilter value={orden} onChange={setOrden} options={ORDENES} />
             </div>
             <div style={{ marginTop: 'var(--sn-space-3)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <span style={{ fontSize: 'var(--sn-fs-xs)', color: 'var(--sn-text-muted)', letterSpacing: 'var(--sn-tracking-wide)' }}>
                 {loading ? 'Cargando...' : `${alumnosVisibles.length} de ${alumnos.length} alumnos`}
               </span>
-              {(busqueda || filtroCategoria !== 'Todas' || filtroDistrito !== 'Todos' || orden !== 'reciente') && (
-                <button onClick={() => { setBusqueda(''); setFiltroCategoria('Todas'); setFiltroDistrito('Todos'); setOrden('reciente'); }}
+              {(busqueda || filtroCategoria !== 'Todas' || filtroDistrito !== 'Todos' || filtroEstado !== 'Todos' || orden !== 'reciente') && (
+                <button onClick={() => { setBusqueda(''); setFiltroCategoria('Todas'); setFiltroDistrito('Todos'); setFiltroEstado('Todos'); setOrden('reciente'); }}
                   style={resetBtnStyle} className="sn-focusable">
                   Limpiar filtros
                 </button>
@@ -187,11 +195,8 @@ const Alumnos = () => {
                   render: (a) => <Badge tone="brand">Cat. {a.categoria}</Badge>,
                 },
                 {
-                  key: 'estado', header: 'Estado de cuenta', align: 'center', width: 180,
-                  render: (a) => {
-                    const enDeuda = hoy >= (a.vencimientoMensualidad || '2000-01-01');
-                    return enDeuda ? <Badge tone="crit">Pendiente</Badge> : <Badge tone="success">Al día</Badge>;
-                  },
+                  key: 'estado', header: 'Estado', align: 'center', width: 140,
+                  render: (a) => <StatusBadge value={a.estado} />,
                 },
                 {
                   key: 'acciones', header: 'Acciones', align: 'right', width: 220,
@@ -216,6 +221,19 @@ const Alumnos = () => {
       />
 
       <CarnetModal alumno={alumnoCarnet} onClose={() => setAlumnoCarnet(null)} />
+
+      <style>{`
+        @media (max-width: 767.98px) {
+          .sn-alumnos-filters {
+            grid-template-columns: 1fr !important;
+          }
+        }
+        @media (min-width: 768px) and (max-width: 1099.98px) {
+          .sn-alumnos-filters {
+            grid-template-columns: 1fr 1fr !important;
+          }
+        }
+      `}</style>
 
       <Modal
         open={!!alumnoAEliminar}
@@ -260,7 +278,7 @@ const Avatar = ({ alumno }) => alumno.foto
 const RowActions = ({ a, onCarnet, onEditar, onEliminar }) => (
   <div style={{ display: 'inline-flex', gap: 6, justifyContent: 'flex-end' }}>
     <IconBtn as={Link} to={`/jugador/${a.id}`} target="_blank" title="Tarjeta pública (FIFA)" tone="elite"><ExternalIcon /></IconBtn>
-    <IconBtn as={Link} to="/perfil-alumno" state={{ alumno: a }} title="Ver expediente" tone="success"><ChartIcon /></IconBtn>
+    <IconBtn as={Link} to={`/perfil-alumno/${a.id}`} state={{ alumno: a }} title="Ver expediente" tone="success"><ChartIcon /></IconBtn>
     <IconBtn onClick={() => onCarnet(a)}    title="Carnet PVC"   tone="brand"><CardIcon /></IconBtn>
     <IconBtn onClick={() => onEditar(a)}    title="Editar"       tone="warn"><EditIcon /></IconBtn>
     <IconBtn onClick={() => onEliminar(a)}  title="Dar de baja"  tone="crit"><TrashIcon /></IconBtn>
@@ -341,7 +359,7 @@ const leadStyle  = { margin: '0.3rem 0 0', color: 'var(--sn-text-muted)', fontSi
 
 const filtersGridStyle = {
   display: 'grid',
-  gridTemplateColumns: 'minmax(220px, 2fr) minmax(180px, 1fr) minmax(180px, 1fr) minmax(160px, 1fr)',
+  gridTemplateColumns: 'minmax(200px, 2fr) repeat(4, minmax(140px, 1fr))',
   gap: 'var(--sn-space-3)',
 };
 

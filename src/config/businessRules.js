@@ -169,10 +169,12 @@ export const ALERTAS_CANTERA = [
    ============================================================= */
 export const ESTADOS_ALUMNO = [
   { value: 'activo',     label: 'Activo',     color: 'var(--sn-success)' },
+  { value: 'inactivo',   label: 'Inactivo',   color: 'var(--sn-text-muted)' },
   { value: 'observado',  label: 'Observado',  color: 'var(--sn-info)' },
   { value: 'lesionado',  label: 'Lesionado',  color: 'var(--sn-crit)' },
   { value: 'moroso',     label: 'Moroso',     color: 'var(--sn-warn)' },
   { value: 'becado',     label: 'Becado',     color: 'var(--sn-tier-elite)' },
+  { value: 'suspendido', label: 'Suspendido', color: 'var(--sn-crit)' },
   { value: 'prueba',     label: 'En prueba',  color: 'var(--sn-text-muted)' },
   { value: 'retirado',   label: 'Retirado',   color: 'var(--sn-text-dim)' },
 ];

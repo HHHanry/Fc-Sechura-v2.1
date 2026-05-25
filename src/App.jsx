@@ -55,6 +55,11 @@ const AppContent = () => {
               <DetalleAlumno />
             </ProtectedRoute>
           } />
+          <Route path="/perfil-alumno/:id" element={
+            <ProtectedRoute allowedRoles={['admin', 'entrenador', 'tesorero']}>
+              <DetalleAlumno />
+            </ProtectedRoute>
+          } />
 
           <Route path="/asistencia" element={
             <ProtectedRoute allowedRoles={['admin', 'entrenador']}>
