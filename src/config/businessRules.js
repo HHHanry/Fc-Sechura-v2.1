@@ -200,25 +200,29 @@ export const TIPOS_CONTACTO_FAMILIAR = [
    FASE 7 — Convocatoria profesional
    ============================================================= */
 export const DISPONIBILIDAD_CONVOCATORIA = [
-  { value: 'disponible',         label: 'Disponible',          color: 'var(--sn-success)' },
-  { value: 'lesionado',          label: 'Lesionado',           color: 'var(--sn-crit)' },
-  { value: 'deuda',              label: 'Deuda pendiente',     color: 'var(--sn-warn)' },
-  { value: 'permiso_pendiente',  label: 'Permiso pendiente',   color: 'var(--sn-info)' },
+  { value: 'confirmado',         label: 'Confirmado',          color: 'var(--sn-success)' },
+  { value: 'disponible',         label: 'Disponible',          color: 'var(--sn-brand-glow)' },
+  { value: 'pendiente',          label: 'Pendiente',           color: 'var(--sn-warn)' },
+  { value: 'no_disponible',      label: 'No disponible',       color: 'var(--sn-crit)' },
 ];
 
 export const MOTIVOS_NO_CONVOCADO = [
   'Lesión',
+  'Morosidad',
+  'Baja asistencia',
   'Decisión técnica',
-  'Falta',
-  'Disciplina',
+  'Cupo limitado',
+  'Suspendido/Inactivo',
+  'Otro',
 ];
 
 export const CHECKLIST_CONVOCATORIA = [
-  'DNI',
-  'Uniforme',
-  'Hidratación',
-  'Movilidad',
-  'Autorización',
+  'Uniforme listo',
+  'Permiso/apoderado confirmado',
+  'Pago al día',
+  'Documentos listos',
+  'Confirmado por WhatsApp',
+  'Asistencia esperada',
 ];
 
 /* =============================================================
@@ -226,15 +230,26 @@ export const CHECKLIST_CONVOCATORIA = [
    ============================================================= */
 export const ESTADOS_USUARIO = [
   { value: 'activo',     label: 'Activo',     color: 'var(--sn-success)' },
+  { value: 'inactivo',   label: 'Inactivo',   color: 'var(--sn-text-muted)' },
   { value: 'suspendido', label: 'Suspendido', color: 'var(--sn-crit)' },
+  { value: 'pendiente',  label: 'Pendiente',  color: 'var(--sn-warn)' },
 ];
 
 export const PERMISOS_FINOS = [
-  { value: 'pagos.ver',     label: 'Ver pagos' },
-  { value: 'pagos.editar',  label: 'Editar pagos' },
-  { value: 'pagos.anular',  label: 'Anular pagos' },
-  { value: 'alumnos.editar',label: 'Editar alumnos' },
-  { value: 'reportes.ver',  label: 'Ver reportes' },
+  { value: 'ver_alumnos',          label: 'Ver alumnos',          grupo: 'Alumnos' },
+  { value: 'editar_alumnos',       label: 'Editar alumnos',       grupo: 'Alumnos' },
+  { value: 'ver_expediente',       label: 'Ver expediente',       grupo: 'Alumnos' },
+  { value: 'editar_expediente',    label: 'Editar expediente',    grupo: 'Alumnos' },
+  { value: 'ver_pagos',            label: 'Ver pagos',            grupo: 'Finanzas' },
+  { value: 'registrar_pagos',      label: 'Registrar pagos',      grupo: 'Finanzas' },
+  { value: 'ver_asistencia',       label: 'Ver asistencia',       grupo: 'Operaciones' },
+  { value: 'registrar_asistencia', label: 'Registrar asistencia', grupo: 'Operaciones' },
+  { value: 'ver_convocatorias',    label: 'Ver convocatorias',    grupo: 'Deportivo' },
+  { value: 'crear_convocatorias',  label: 'Crear convocatorias',  grupo: 'Deportivo' },
+  { value: 'gestionar_usuarios',   label: 'Gestionar usuarios',   grupo: 'Sistema' },
+  { value: 'ver_reportes',         label: 'Ver reportes',         grupo: 'Sistema' },
+  { value: 'exportar_datos',       label: 'Exportar datos',       grupo: 'Sistema' },
+  { value: 'ver_auditoria',        label: 'Ver auditoría',        grupo: 'Sistema' },
 ];
 
 export const ACCIONES_AUDITABLES = Object.freeze({
