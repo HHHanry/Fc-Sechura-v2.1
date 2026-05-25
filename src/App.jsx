@@ -22,6 +22,7 @@ import Convocatoria from './pages/Convocatoria';
 import MisionesJugador from './pages/MisionesJugador';
 import CompetenciasJugador from './pages/CompetenciasJugador';
 import CateraProyeccion from './pages/CateraProyeccion';
+import CargaMasivaSechura from './pages/cargamasiva_sechura';
 
 const AppContent = () => {
   const location = useLocation();
@@ -124,6 +125,12 @@ const AppContent = () => {
           <Route path="/cantera" element={
             <ProtectedRoute allowedRoles={['admin', 'entrenador']}>
               <CateraProyeccion />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/carga-masiva-sechura" element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <CargaMasivaSechura />
             </ProtectedRoute>
           } />
         </Routes>
