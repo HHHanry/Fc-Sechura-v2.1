@@ -4,7 +4,7 @@ import { invalidate } from '../hooks/useFirestoreCache';
 import { increment, arrayUnion } from '../services/firestoreClient';
 import { alumnosService } from '../services/alumnosService';
 import { toast } from '../hooks/useToast';
-import { Card, CardBody, Button, Badge, Modal, EmptyState } from '../components/ui';
+import { Card, CardBody, Button, Badge, Modal, EmptyState, FilterBar } from '../components/ui';
 
 // Catálogo de medallas (gamificación)
 const CATALOGO_MEDALLAS = [
@@ -22,6 +22,24 @@ const ScoutingPartidos = () => {
   const [statsJugadores, setStatsJugadores] = useState([]);
   const [confirmarOpen, setConfirmarOpen] = useState(false);
   const [cerrando, setCerrando]           = useState(false);
+
+  // Filtros de la bitácora
+  const [filtroEstado, setFiltroEstado] = useState('');
+  const [filtroCat, setFiltroCat]       = useState('');
+
+  const categoriasBitacora = useMemo(
+    () => [...new Set(convocatorias.map((c) => c.categoria).filter(Boolean))].sort(),
+    [convocatorias],
+  );
+
+  const bitacora = useMemo(() => convocatorias.filter((p) => {
+    const estado = p.estado === 'Completado' ? 'completado' : 'pendiente';
+    const matchEstado = !filtroEstado || estado === filtroEstado;
+    const matchCat = !filtroCat || String(p.categoria) === String(filtroCat);
+    return matchEstado && matchCat;
+  }), [convocatorias, filtroEstado, filtroCat]);
+
+  const hayFiltros = !!(filtroEstado || filtroCat);
 
   const abrirEditor = (partido) => {
     if (partido.estado === 'Completado') return toast.warn('Este partido ya fue procesado.');
@@ -116,22 +134,42 @@ const ScoutingPartidos = () => {
           </div>
         </header>
 
+        <div style={{ marginBottom: 'var(--sn-space-5)' }}>
+          <FilterBar
+            filters={[
+              { id: 'estado', ariaLabel: 'Filtrar por estado del partido', value: filtroEstado, onChange: setFiltroEstado,
+                options: [
+                  { value: '', label: 'Todos los partidos' },
+                  { value: 'pendiente', label: 'Por cerrar' },
+                  { value: 'completado', label: 'Procesados' },
+                ] },
+              { id: 'cat', ariaLabel: 'Filtrar por categoría', value: filtroCat, onChange: setFiltroCat,
+                options: [{ value: '', label: 'Todas las categorías' }, ...categoriasBitacora.map((c) => ({ value: String(c), label: `Cat. ${c}` }))] },
+            ]}
+            meta={loading ? 'Cargando…' : `${bitacora.length} de ${convocatorias.length} partidos`}
+            onReset={hayFiltros ? () => { setFiltroEstado(''); setFiltroCat(''); } : undefined}
+          />
+        </div>
+
         <div style={mainGridStyle} className="sn-scout-grid">
           {/* === BITÁCORA === */}
           <Card>
             <CardBody style={{ padding: 0 }}>
               <div style={{ padding: 'var(--sn-space-4) var(--sn-space-5)', borderBottom: '1px solid var(--sn-border-faint)' }}>
                 <h3 style={{ margin: 0, fontFamily: 'var(--sn-font-display)', fontSize: 'var(--sn-fs-md)', fontWeight: 700, color: 'var(--sn-text-primary)' }}>Bitácora de partidos</h3>
-                <span style={subLabelStyle}>{convocatorias.length} convocatorias</span>
+                <span style={subLabelStyle}>{bitacora.length} convocatorias</span>
               </div>
               <div className="sn-scroll" style={{ maxHeight: 640, overflow: 'auto', padding: 'var(--sn-space-3)' }}>
                 {loading ? (
                   <EmptyState title="Cargando..." description="Sincronizando con la base de datos." />
-                ) : convocatorias.length === 0 ? (
-                  <EmptyState title="Sin partidos" description="No hay convocatorias registradas todavía." />
+                ) : bitacora.length === 0 ? (
+                  <EmptyState
+                    title={convocatorias.length === 0 ? 'Sin partidos' : 'Sin coincidencias'}
+                    description={convocatorias.length === 0 ? 'No hay convocatorias registradas todavía.' : 'Ningún partido cumple con los filtros aplicados.'}
+                  />
                 ) : (
                   <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 'var(--sn-space-2)' }}>
-                    {convocatorias.map((p) => {
+                    {bitacora.map((p) => {
                       const completado = p.estado === 'Completado';
                       return (
                         <li key={p.id}
@@ -228,14 +266,14 @@ const ScoutingPartidos = () => {
                                 className="sn-focusable"
                                 style={{
                                   width: 38, height: 38, borderRadius: '50%',
-                                  background: activa ? `${m.color}1A` : 'var(--sn-input-bg)',
+                                  background: activa ? `color-mix(in srgb, ${m.color} 14%, transparent)` : 'var(--sn-input-bg)',
                                   border: `2px solid ${activa ? m.color : 'var(--sn-border-soft)'}`,
                                   color: activa ? m.color : 'var(--sn-text-muted)',
                                   cursor: 'pointer',
                                   fontSize: 16,
                                   display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
                                   transform: activa ? 'translateY(-2px) scale(1.08)' : 'none',
-                                  boxShadow: activa ? `0 0 14px ${m.color}55` : 'none',
+                                  boxShadow: activa ? `0 0 14px color-mix(in srgb, ${m.color} 34%, transparent)` : 'none',
                                   transition: 'all var(--sn-dur-fast) var(--sn-ease)',
                                 }}
                               >

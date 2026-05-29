@@ -6,7 +6,7 @@ import { toast } from '../hooks/useToast';
 import { audit } from '../helpers/auditHelper';
 import { withDefaults } from '../helpers/alumnoDefaults';
 import {
-  Card, CardBody, Button, Badge, EmptyState, Modal, Skeleton, StatusBadge,
+  Card, CardBody, Button, Badge, EmptyState, Modal, Skeleton, StatusBadge, FilterBar,
 } from '../components/ui';
 import {
   CATEGORIAS, DISPONIBILIDAD_CONVOCATORIA, MOTIVOS_NO_CONVOCADO,
@@ -542,6 +542,17 @@ const ConvocadoCard = ({ c, idx, onChangeDisp, onToggleCheck, onRemove }) => {
    Historial
    ============================================================= */
 const HistorialPanel = ({ convocatorias, loading, onVer }) => {
+  const [filtroCat, setFiltroCat] = useState('');
+
+  const categorias = useMemo(
+    () => [...new Set(convocatorias.map((c) => String(c.categoria)).filter(Boolean))].sort(),
+    [convocatorias],
+  );
+  const lista = useMemo(
+    () => (filtroCat ? convocatorias.filter((c) => String(c.categoria) === filtroCat) : convocatorias),
+    [convocatorias, filtroCat],
+  );
+
   if (loading) {
     return <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>{[1, 2, 3].map((i) => <Skeleton key={i} style={{ height: 80 }} />)}</div>;
   }
@@ -550,7 +561,17 @@ const HistorialPanel = ({ convocatorias, loading, onVer }) => {
   }
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sn-space-3)' }}>
-      {convocatorias.map((c) => (
+      <FilterBar
+        filters={[
+          { id: 'cat', ariaLabel: 'Filtrar por categoría', value: filtroCat, onChange: setFiltroCat,
+            options: [{ value: '', label: 'Todas las categorías' }, ...categorias.map((c) => ({ value: c, label: `Cat. ${c}` }))] },
+        ]}
+        meta={`${lista.length} de ${convocatorias.length} convocatorias`}
+        onReset={filtroCat ? () => setFiltroCat('') : undefined}
+      />
+      {lista.length === 0 ? (
+        <Card><CardBody><EmptyState title="Sin coincidencias" description="Ninguna convocatoria en esa categoría." /></CardBody></Card>
+      ) : lista.map((c) => (
         <Card key={c.id}>
           <CardBody style={{ display: 'flex', alignItems: 'center', gap: 'var(--sn-space-3)', flexWrap: 'wrap' }}>
             <div style={{ flex: 1, minWidth: 0 }}>
