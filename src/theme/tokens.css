@@ -1,79 +1,97 @@
 /* =============================================================
-   FC SECHURA — DESIGN TOKENS · Light premium + Dark
-   - Light por defecto (cálido, espacioso, premium escolar/deportivo).
-   - Dark vía [data-theme="dark"] en <html>.
-   - Cian bajado a un sky-blue sobrio. Oro mate cálido como acento premium.
-   - Todos los pares texto/fondo cumplen WCAG 2.1 AA.
+   FC SECHURA — DESIGN TOKENS · Centro de Alto Rendimiento
+   - LIGHT: administrativo limpio, deportivo, premium, ALTO contraste.
+   - DARK : stadium / HUD marcado pero serio (fondo profundo, acentos
+            deportivos, glow sutil). Sin texto gris invisible.
+   - Dos personalidades distintas, no dos tonos del mismo gris.
+   - Pares texto/fondo cumplen WCAG 2.1 AA.
    ============================================================= */
 
 :root {
-  /* ===== BACKGROUNDS / SURFACES (LIGHT por defecto) ===== */
-  --sn-bg-base:        #F4F7FB;   /* Claro administrativo, limpio y deportivo */
+  /* ===== BACKGROUNDS / SURFACES (LIGHT) ===== */
+  --sn-bg-base:        #EEF3F9;   /* Cancha administrativa, fría y limpia */
   --sn-bg-surface:     #FFFFFF;   /* Cards */
   --sn-bg-elevated:    #FFFFFF;   /* Modales / popovers */
+  --sn-bg-deep:        #E4EBF4;   /* Barras: headers de tabla, toolbars */
   --sn-bg-overlay:     rgba(15, 23, 42, 0.45);
-  --sn-bg-soft:        #EEF4FA;   /* Sub-superficies tenues */
+  --sn-bg-soft:        #E8EFF7;   /* Sub-superficies tenues */
 
   /* ===== BRAND ===== */
   --sn-brand-deep:     #173B82;   /* Azul histórico FC Sechura */
   --sn-brand-deep-2:   #0F2A62;
-  --sn-brand-glow:     #0B8FD9;   /* Sky sobrio para modo claro */
+  --sn-brand-glow:     #0C7FC2;   /* Sky sobrio, legible como texto sobre blanco */
   --sn-brand-glow-2:   #0369A1;
-  --sn-brand-gradient: linear-gradient(135deg, #173B82 0%, #0B8FD9 100%);
-  --sn-brand-gradient-soft: linear-gradient(135deg, rgba(23,59,130,0.10) 0%, rgba(11,143,217,0.08) 100%);
+  --sn-brand-gradient: linear-gradient(135deg, #173B82 0%, #0C7FC2 100%);
+  --sn-brand-gradient-soft: linear-gradient(135deg, rgba(23,59,130,0.10) 0%, rgba(12,127,194,0.08) 100%);
 
-  /* ===== TIER (FIFA) — oro mate cálido, no metálico ===== */
-  --sn-tier-elite:     #C99A3B;
+  /* ===== EQUIPO / RIVAL (pizarra, scouting, convocatoria) ===== */
+  --sn-team:           #173B82;   /* Nosotros */
+  --sn-team-soft:      rgba(23, 59, 130, 0.10);
+  --sn-rival:          #C81E1E;   /* Rival */
+  --sn-rival-soft:     rgba(200, 30, 30, 0.10);
+
+  /* ===== TIER (FIFA) — oro mate cálido ===== */
+  --sn-tier-elite:     #B07D1E;   /* Más profundo para legibilidad sobre blanco */
   --sn-tier-gold:      #B98A2E;
-  --sn-tier-silver:    #94A3B8;
+  --sn-tier-silver:    #8593A6;
   --sn-tier-bronze:    #B45309;
 
   /* ===== SEMÁNTICOS ===== */
   --sn-success:        #15803D;   /* Verde césped real */
   --sn-success-soft:   rgba(21, 128, 61, 0.10);
-  --sn-warn:           #D97706;
-  --sn-warn-soft:      rgba(217, 119, 6, 0.10);
-  --sn-crit:           #DC2626;
-  --sn-crit-soft:      rgba(220, 38, 38, 0.10);
-  --sn-info:           #0284C7;
-  --sn-info-soft:      rgba(2, 132, 199, 0.10);
+  --sn-warn:           #C2620A;   /* Ámbar legible sobre blanco */
+  --sn-warn-soft:      rgba(194, 98, 10, 0.10);
+  --sn-crit:           #C81E1E;
+  --sn-crit-soft:      rgba(200, 30, 30, 0.10);
+  --sn-info:           #0E72B8;
+  --sn-info-soft:      rgba(14, 114, 184, 0.10);
 
   /* ===== TEXTO sobre fondo claro ===== */
-  --sn-text-primary:   #0F172A;   /* 17:1 sobre marfil */
-  --sn-text-secondary: #334155;   /* 11:1 */
-  --sn-text-muted:     #64748B;   /* 5.5:1 */
-  --sn-text-dim:       #94A3B8;   /* 4.7:1 — límite WCAG AA */
+  --sn-text-primary:   #0E1726;   /* ~16:1 */
+  --sn-text-secondary: #2F3E54;   /* ~10:1 */
+  --sn-text-muted:     #566274;   /* ~6:1 */
+  --sn-text-dim:       #7C8AA0;   /* ~4.6:1 — límite AA */
 
-  --sn-text-on-light:  #0F172A;
+  --sn-text-on-light:  #0E1726;
   --sn-text-on-light-muted: #475569;
-  --sn-text-on-brand:  #FFFFFF;   /* Texto sobre brand-deep */
-  --sn-text-on-glow:   #FFFFFF;   /* Texto sobre brand-glow */
-  --sn-text-on-elite:  #1A1408;   /* Texto sobre oro */
+  --sn-text-on-brand:  #FFFFFF;
+  --sn-text-on-glow:   #FFFFFF;
+  --sn-text-on-elite:  #1A1408;
+  --sn-text-on-success:#FFFFFF;   /* sobre verde oscuro */
+  --sn-text-on-crit:   #FFFFFF;   /* sobre rojo oscuro */
 
   /* ===== BORDES / DIVISORES ===== */
-  --sn-border-faint:   rgba(15, 23, 42, 0.06);
-  --sn-border-soft:    rgba(15, 23, 42, 0.12);
-  --sn-border-strong:  rgba(15, 23, 42, 0.22);
-  --sn-border-glow:    rgba(14, 165, 233, 0.45);
+  --sn-border-faint:   rgba(15, 23, 42, 0.08);
+  --sn-border-soft:    rgba(15, 23, 42, 0.15);
+  --sn-border-strong:  rgba(15, 23, 42, 0.26);
+  --sn-border-glow:    rgba(12, 127, 194, 0.48);
 
-  /* ===== SOMBRAS — suaves, premium escolar ===== */
-  --sn-shadow-sm:      0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.06);
-  --sn-shadow-md:      0 4px 12px rgba(15, 23, 42, 0.06), 0 2px 4px rgba(15, 23, 42, 0.04);
-  --sn-shadow-lg:      0 24px 48px -16px rgba(15, 23, 42, 0.18), 0 8px 16px rgba(15, 23, 42, 0.06);
-  --sn-shadow-glow:    0 0 0 1px rgba(14, 165, 233, 0.30), 0 8px 24px rgba(14, 165, 233, 0.14);
-  --sn-shadow-crit:    0 0 0 1px rgba(220, 38, 38, 0.30), 0 8px 24px rgba(220, 38, 38, 0.12);
-  --sn-shadow-elite:   0 0 0 1px rgba(201, 154, 59, 0.40), 0 8px 24px rgba(201, 154, 59, 0.18);
+  /* ===== SOMBRAS — premium escolar ===== */
+  --sn-shadow-sm:      0 1px 2px rgba(15, 23, 42, 0.05), 0 1px 3px rgba(15, 23, 42, 0.07);
+  --sn-shadow-md:      0 4px 14px rgba(15, 23, 42, 0.08), 0 2px 4px rgba(15, 23, 42, 0.05);
+  --sn-shadow-lg:      0 24px 48px -16px rgba(15, 23, 42, 0.20), 0 8px 16px rgba(15, 23, 42, 0.07);
+  --sn-shadow-glow:    0 0 0 1px rgba(12, 127, 194, 0.30), 0 8px 24px rgba(12, 127, 194, 0.16);
+  --sn-shadow-crit:    0 0 0 1px rgba(200, 30, 30, 0.30), 0 8px 24px rgba(200, 30, 30, 0.14);
+  --sn-shadow-elite:   0 0 0 1px rgba(176, 125, 30, 0.40), 0 8px 24px rgba(176, 125, 30, 0.18);
 
-  /* ===== INPUT BG (para que se vean en light y dark) ===== */
+  /* ===== INPUTS ===== */
   --sn-input-bg:       #FFFFFF;
-  --sn-input-border:   rgba(15, 23, 42, 0.14);
+  --sn-input-border:   rgba(15, 23, 42, 0.20);
 
-  /* ===== ROWS / TRACKS / OVERLAYS sutiles ===== */
-  --sn-row-soft:       rgba(15, 23, 42, 0.03);
-  --sn-row-strong:     rgba(15, 23, 42, 0.06);
-  --sn-overlay-soft:   rgba(15, 23, 42, 0.03);
+  /* ===== NAV (top + bottom app nav) ===== */
+  --sn-nav-bg:         rgba(255, 255, 255, 0.86);
+  --sn-nav-border:     rgba(15, 23, 42, 0.10);
+  --sn-nav-active:     var(--sn-brand-glow);
+
+  /* ===== FOCUS ===== */
+  --sn-focus-ring:     rgba(12, 127, 194, 0.34);
+
+  /* ===== ROWS / TRACKS / OVERLAYS ===== */
+  --sn-row-soft:       rgba(15, 23, 42, 0.035);
+  --sn-row-strong:     rgba(15, 23, 42, 0.07);
+  --sn-overlay-soft:   rgba(15, 23, 42, 0.035);
   --sn-overlay-strong: rgba(15, 23, 42, 0.06);
-  --sn-track-bg:       rgba(15, 23, 42, 0.07);
+  --sn-track-bg:       rgba(15, 23, 42, 0.08);
 
   /* ===== RADIOS ===== */
   --sn-radius-xs: 6px;
@@ -88,13 +106,13 @@
   --sn-font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
   --sn-font-mono:    'JetBrains Mono', 'SF Mono', Consolas, monospace;
 
-  --sn-fs-xs:   0.78rem;   /* 12.5px */
-  --sn-fs-sm:   0.9rem;    /* 14.4px */
-  --sn-fs-base: 1rem;      /* 16px */
-  --sn-fs-md:   1.15rem;   /* 18.4px */
-  --sn-fs-lg:   1.3rem;    /* 20.8px */
-  --sn-fs-xl:   1.55rem;   /* 24.8px */
-  --sn-fs-2xl:  2rem;      /* 32px */
+  --sn-fs-xs:   0.78rem;
+  --sn-fs-sm:   0.9rem;
+  --sn-fs-base: 1rem;
+  --sn-fs-md:   1.15rem;
+  --sn-fs-lg:   1.3rem;
+  --sn-fs-xl:   1.55rem;
+  --sn-fs-2xl:  2rem;
   --sn-fs-3xl:  2.5rem;
   --sn-fs-4xl:  3.25rem;
 
@@ -144,56 +162,78 @@
 }
 
 /* =============================================================
-   DARK MODE — sobrio, sin neón
+   DARK MODE — stadium / HUD marcado pero serio
    ============================================================= */
 :root[data-theme="dark"] {
-  --sn-bg-base:        #05070D;
-  --sn-bg-surface:     #0D1424;
-  --sn-bg-elevated:    #111B31;
-  --sn-bg-overlay:     rgba(7, 9, 15, 0.78);
-  --sn-bg-soft:        #07101E;
+  --sn-bg-base:        #060912;   /* Azul-negro profundo de estadio */
+  --sn-bg-surface:     #0E1626;
+  --sn-bg-elevated:    #15213B;   /* Separación real de elevación */
+  --sn-bg-deep:        #080D18;   /* Más profundo que surface (headers) */
+  --sn-bg-overlay:     rgba(4, 7, 14, 0.80);
+  --sn-bg-soft:        #0A1120;
 
-  --sn-brand-glow:     #22D3EE;   /* HUD stadium / FIFA */
+  --sn-brand-deep:     #1E3A8A;
+  --sn-brand-deep-2:   #16306E;
+  --sn-brand-glow:     #22D3EE;   /* Cian HUD */
   --sn-brand-glow-2:   #38BDF8;
-  --sn-brand-gradient: linear-gradient(135deg, #1E3A8A 0%, #22D3EE 100%);
-  --sn-brand-gradient-soft: linear-gradient(135deg, rgba(30,58,138,0.26) 0%, rgba(34,211,238,0.14) 100%);
+  --sn-brand-gradient: linear-gradient(135deg, #1D4ED8 0%, #22D3EE 100%);
+  --sn-brand-gradient-soft: linear-gradient(135deg, rgba(29,78,216,0.30) 0%, rgba(34,211,238,0.16) 100%);
 
-  --sn-success:        #22C55E;
-  --sn-success-soft:   rgba(34, 197, 94, 0.12);
-  --sn-warn:           #F59E0B;
-  --sn-warn-soft:      rgba(245, 158, 11, 0.12);
-  --sn-crit:           #EF4444;
-  --sn-crit-soft:      rgba(239, 68, 68, 0.12);
+  --sn-team:           #3B82F6;
+  --sn-team-soft:      rgba(59, 130, 246, 0.18);
+  --sn-rival:          #F43F5E;
+  --sn-rival-soft:     rgba(244, 63, 94, 0.18);
+
+  --sn-success:        #2DD46A;
+  --sn-success-soft:   rgba(45, 212, 106, 0.14);
+  --sn-warn:           #F9A825;
+  --sn-warn-soft:      rgba(249, 168, 37, 0.14);
+  --sn-crit:           #FB5468;
+  --sn-crit-soft:      rgba(251, 84, 104, 0.14);
   --sn-info:           #38BDF8;
-  --sn-info-soft:      rgba(56, 189, 248, 0.12);
+  --sn-info-soft:      rgba(56, 189, 248, 0.14);
 
-  --sn-tier-elite:     #E0B45A;   /* Oro mate más claro para dark */
+  --sn-tier-elite:     #E6BC5C;   /* Oro mate más claro para dark */
+  --sn-tier-gold:      #D9A53A;
+  --sn-tier-silver:    #AAB7C7;
+  --sn-tier-bronze:    #D08A3A;
 
-  --sn-text-primary:   #F8FAFC;
-  --sn-text-secondary: #CBD5E1;
-  --sn-text-muted:     #94A3B8;
-  --sn-text-dim:       #64748B;
+  --sn-text-on-success:#06241B;   /* sobre verde brillante */
+  --sn-text-on-crit:   #1A0608;   /* sobre rojo brillante */
 
-  --sn-border-faint:   rgba(148, 163, 184, 0.12);
-  --sn-border-soft:    rgba(148, 163, 184, 0.22);
-  --sn-border-strong:  rgba(148, 163, 184, 0.38);
-  --sn-border-glow:    rgba(34, 211, 238, 0.52);
+  --sn-text-primary:   #F4F8FE;
+  --sn-text-secondary: #C7D3E3;
+  --sn-text-muted:     #9DAEC4;   /* Subido: legible sobre fondo profundo */
+  --sn-text-dim:       #8294AB;   /* Ya no invisible */
 
-  --sn-shadow-sm:      0 1px 2px rgba(0, 0, 0, 0.30);
-  --sn-shadow-md:      0 14px 34px rgba(0, 0, 0, 0.42);
-  --sn-shadow-lg:      0 30px 64px -14px rgba(0, 0, 0, 0.68);
-  --sn-shadow-glow:    0 0 0 1px rgba(34, 211, 238, 0.42), 0 12px 36px rgba(34, 211, 238, 0.22);
-  --sn-shadow-crit:    0 0 0 1px rgba(239, 68, 68, 0.35), 0 8px 30px rgba(239, 68, 68, 0.18);
-  --sn-shadow-elite:   0 0 0 1px rgba(224, 180, 90, 0.40), 0 8px 30px rgba(224, 180, 90, 0.18);
+  --sn-text-on-elite:  #16100A;
 
-  --sn-input-bg:       rgba(7, 9, 15, 0.55);
-  --sn-input-border:   rgba(148, 163, 184, 0.20);
+  --sn-border-faint:   rgba(148, 170, 200, 0.14);
+  --sn-border-soft:    rgba(148, 170, 200, 0.28);
+  --sn-border-strong:  rgba(148, 170, 200, 0.46);
+  --sn-border-glow:    rgba(34, 211, 238, 0.58);
 
-  --sn-row-soft:       rgba(148, 163, 184, 0.04);
-  --sn-row-strong:     rgba(148, 163, 184, 0.08);
-  --sn-overlay-soft:   rgba(7, 9, 15, 0.40);
-  --sn-overlay-strong: rgba(7, 9, 15, 0.65);
-  --sn-track-bg:       rgba(148, 163, 184, 0.10);
+  --sn-shadow-sm:      0 1px 2px rgba(0, 0, 0, 0.40);
+  --sn-shadow-md:      0 14px 34px rgba(0, 0, 0, 0.50);
+  --sn-shadow-lg:      0 30px 64px -14px rgba(0, 0, 0, 0.72);
+  --sn-shadow-glow:    0 0 0 1px rgba(34, 211, 238, 0.50), 0 14px 40px rgba(34, 211, 238, 0.26);
+  --sn-shadow-crit:    0 0 0 1px rgba(251, 84, 104, 0.42), 0 10px 34px rgba(251, 84, 104, 0.22);
+  --sn-shadow-elite:   0 0 0 1px rgba(230, 188, 92, 0.45), 0 10px 34px rgba(230, 188, 92, 0.22);
+
+  --sn-input-bg:       rgba(13, 21, 38, 0.78);
+  --sn-input-border:   rgba(148, 170, 200, 0.32);
+
+  --sn-nav-bg:         rgba(8, 13, 24, 0.88);
+  --sn-nav-border:     rgba(148, 170, 200, 0.18);
+  --sn-nav-active:     var(--sn-brand-glow);
+
+  --sn-focus-ring:     rgba(34, 211, 238, 0.42);
+
+  --sn-row-soft:       rgba(148, 170, 200, 0.05);
+  --sn-row-strong:     rgba(148, 170, 200, 0.10);
+  --sn-overlay-soft:   rgba(4, 7, 14, 0.42);
+  --sn-overlay-strong: rgba(4, 7, 14, 0.66);
+  --sn-track-bg:       rgba(148, 170, 200, 0.12);
 
   color-scheme: dark;
 }
@@ -243,8 +283,8 @@ body {
 }
 
 @keyframes sn-pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.35); }
-  50%      { box-shadow: 0 0 0 8px rgba(14, 165, 233, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.35); }
+  50%      { box-shadow: 0 0 0 8px rgba(34, 211, 238, 0); }
 }
 
 @keyframes sn-spin {
@@ -283,11 +323,8 @@ body {
 
 .sn-focusable:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.30);
+  box-shadow: 0 0 0 3px var(--sn-focus-ring);
   border-color: var(--sn-brand-glow) !important;
-}
-:root[data-theme="dark"] .sn-focusable:focus-visible {
-  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.35);
 }
 
 /* Scrollbars */
@@ -305,7 +342,7 @@ body {
    ============================================================= */
 @media (max-width: 640px) {
   :root {
-    --sn-fs-base: 1.05rem;   /* +5% en mobile */
+    --sn-fs-base: 1.05rem;
     --sn-fs-sm:   0.95rem;
     --sn-fs-xs:   0.82rem;
     --sn-fs-md:   1.2rem;
@@ -315,7 +352,6 @@ body {
     --sn-fs-3xl:  2.2rem;
     --sn-fs-4xl:  2.7rem;
   }
-  /* Inputs táctiles más cómodos */
   input, select, textarea, button {
     font-size: 16px !important;  /* evita zoom auto en iOS */
     min-height: 44px;            /* área táctil mínima */

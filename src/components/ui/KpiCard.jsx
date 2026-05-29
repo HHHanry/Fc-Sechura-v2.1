@@ -52,9 +52,16 @@ export const KpiCard = ({ label, value, suffix = '', accent = 'brand', icon, hin
       <div
         aria-hidden
         style={{
+          position: 'absolute', top: 0, left: 0, right: 0, height: 3,
+          background: accentColor, opacity: 0.9, pointerEvents: 'none',
+        }}
+      />
+      <div
+        aria-hidden
+        style={{
           position: 'absolute',
           inset: 0,
-          background: `radial-gradient(120% 80% at 100% 0%, ${accentColor}22 0%, transparent 60%)`,
+          background: `radial-gradient(120% 80% at 100% 0%, color-mix(in srgb, ${accentColor} 20%, transparent) 0%, transparent 60%)`,
           pointerEvents: 'none',
         }}
       />
@@ -67,7 +74,8 @@ export const KpiCard = ({ label, value, suffix = '', accent = 'brand', icon, hin
             <div style={{
               width: 38, height: 38, borderRadius: 'var(--sn-radius-md)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: `${accentColor}1A`, color: accentColor, border: `1px solid ${accentColor}40`,
+              background: `color-mix(in srgb, ${accentColor} 14%, transparent)`, color: accentColor,
+              border: `1px solid color-mix(in srgb, ${accentColor} 40%, transparent)`,
             }}>{icon}</div>
           )}
         </div>

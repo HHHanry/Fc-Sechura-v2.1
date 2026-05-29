@@ -19,15 +19,15 @@ const variants = {
   },
   danger: {
     background: 'var(--sn-crit)',
-    color: 'white',
+    color: 'var(--sn-text-on-crit)',
     border: '1px solid transparent',
-    boxShadow: '0 8px 24px -8px rgba(239, 68, 68, 0.55)',
+    boxShadow: 'var(--sn-shadow-crit)',
   },
   success: {
     background: 'var(--sn-success)',
-    color: '#06241B',
+    color: 'var(--sn-text-on-success)',
     border: '1px solid transparent',
-    boxShadow: '0 8px 24px -8px rgba(16, 185, 129, 0.45)',
+    boxShadow: '0 8px 24px -8px color-mix(in srgb, var(--sn-success) 50%, transparent)',
   },
 };
 

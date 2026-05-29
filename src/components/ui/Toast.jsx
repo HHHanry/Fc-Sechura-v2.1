@@ -3,10 +3,10 @@ import { createPortal } from 'react-dom';
 import { useToasts, toast } from '../../hooks/useToast';
 
 const variantTone = {
-  success: { color: 'var(--sn-success)', bg: 'rgba(16,185,129,0.10)',  border: 'rgba(16,185,129,0.45)',  icon: '✓' },
-  error:   { color: 'var(--sn-crit)',    bg: 'rgba(239,68,68,0.10)',   border: 'rgba(239,68,68,0.45)',   icon: '✕' },
-  warn:    { color: 'var(--sn-warn)',    bg: 'rgba(245,158,11,0.10)',  border: 'rgba(245,158,11,0.45)',  icon: '!' },
-  info:    { color: 'var(--sn-info)',    bg: 'rgba(56,189,248,0.10)',  border: 'rgba(56,189,248,0.45)',  icon: 'i' },
+  success: { color: 'var(--sn-success)', bg: 'var(--sn-success-soft)', border: 'color-mix(in srgb, var(--sn-success) 45%, transparent)', icon: '✓' },
+  error:   { color: 'var(--sn-crit)',    bg: 'var(--sn-crit-soft)',    border: 'color-mix(in srgb, var(--sn-crit) 45%, transparent)',    icon: '✕' },
+  warn:    { color: 'var(--sn-warn)',    bg: 'var(--sn-warn-soft)',    border: 'color-mix(in srgb, var(--sn-warn) 45%, transparent)',    icon: '!' },
+  info:    { color: 'var(--sn-info)',    bg: 'var(--sn-info-soft)',    border: 'color-mix(in srgb, var(--sn-info) 45%, transparent)',    icon: 'i' },
 };
 
 export const ToastProvider = () => {

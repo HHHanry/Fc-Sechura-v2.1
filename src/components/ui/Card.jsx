@@ -8,8 +8,19 @@ import React from 'react';
  *  - "glow":     borde animado cian (para destacar).
  *  - "tier":     fondo dorado tipo "tarjeta élite FIFA".
  */
+const ACCENTS = {
+  brand:   'var(--sn-brand-glow)',
+  success: 'var(--sn-success)',
+  warn:    'var(--sn-warn)',
+  crit:    'var(--sn-crit)',
+  info:    'var(--sn-info)',
+  elite:   'var(--sn-tier-elite)',
+  team:    'var(--sn-team)',
+  rival:   'var(--sn-rival)',
+};
+
 export const Card = React.forwardRef(function Card(
-  { variant = 'surface', as = 'div', children, style, className = '', interactive = false, ...rest },
+  { variant = 'surface', as = 'div', children, style, className = '', interactive = false, accent, ...rest },
   ref,
 ) {
   const base = {
@@ -17,6 +28,8 @@ export const Card = React.forwardRef(function Card(
     color: 'var(--sn-text-primary)',
     transition: 'transform var(--sn-dur-base) var(--sn-ease), box-shadow var(--sn-dur-base) var(--sn-ease), border-color var(--sn-dur-base) var(--sn-ease)',
   };
+  const accentColor = accent ? (ACCENTS[accent] ?? accent) : null;
+  const accentStyle = accentColor ? { borderLeft: `3px solid ${accentColor}` } : null;
   const variants = {
     surface: {
       background: 'var(--sn-bg-surface)',
@@ -39,7 +52,7 @@ export const Card = React.forwardRef(function Card(
       boxShadow: 'var(--sn-shadow-elite)',
     },
   };
-  const merged = { ...base, ...variants[variant], ...style };
+  const merged = { ...base, ...variants[variant], ...accentStyle, ...style };
   return React.createElement(
     as,
     {
