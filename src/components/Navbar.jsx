@@ -6,6 +6,7 @@ import { signOut } from 'firebase/auth';
 import logo from '../assets/logonegro.png';
 import { toast } from '../hooks/useToast';
 import { useTheme } from '../hooks/useTheme';
+import BottomNav from './BottomNav';
 
 /**
  * Navbar Stadium Noir — glass dark, jerarquía por grupos.
@@ -343,6 +344,9 @@ const Navbar = () => {
           </aside>
         </div>
       )}
+
+      {/* === BOTTOM-NAV (móvil/tablet) — el slot "Más" abre el drawer de arriba === */}
+      <BottomNav user={user} onMore={openMobile} moreActive={isMobileOpen} />
 
       <style>{`
         @media (max-width: 991.98px) {

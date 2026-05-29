@@ -44,7 +44,7 @@ const AppContent = () => {
   const mostrarCredito = !location.pathname.startsWith('/jugador');
 
   return (
-    <div className="sn-app-shell">
+    <div className={`sn-app-shell${mostrarNavbar ? ' sn-with-bottom-nav' : ''}`}>
       <main className="sn-app-main">
         {mostrarNavbar && <Navbar />}
 
