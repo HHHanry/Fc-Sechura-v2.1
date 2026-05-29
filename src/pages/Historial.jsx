@@ -390,11 +390,12 @@ const inputStyle = {
 const iconBtn = (tone) => {
   const c = { warn: 'var(--sn-warn)', crit: 'var(--sn-crit)', brand: 'var(--sn-brand-glow)' }[tone];
   return {
-    width: 32, height: 32, borderRadius: 'var(--sn-radius-sm)',
+    width: 36, height: 36, borderRadius: 'var(--sn-radius-sm)',
     display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-    background: 'transparent', color: c,
-    border: `1px solid ${c}40`,
+    background: `color-mix(in srgb, ${c} 14%, transparent)`, color: c,
+    border: `1px solid color-mix(in srgb, ${c} 40%, transparent)`,
     cursor: 'pointer',
+    transition: 'background var(--sn-dur-fast) var(--sn-ease), transform var(--sn-dur-fast) var(--sn-ease)',
   };
 };
 

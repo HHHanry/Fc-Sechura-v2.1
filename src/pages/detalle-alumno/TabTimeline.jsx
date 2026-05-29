@@ -53,7 +53,7 @@ const getLabel = (tipo) => TIPO_LABEL[tipo] ?? capitalize(tipo);
 /* =====================================================
    Componente principal
    ===================================================== */
-export const TabTimeline = ({ alumno, setAlumno }) => {
+export const TabTimeline = ({ alumno, setAlumno, puedeEditar = false }) => {
   const { user } = useAuth();
 
   const [mostrarForm, setMostrarForm] = useState(false);
@@ -141,7 +141,7 @@ export const TabTimeline = ({ alumno, setAlumno }) => {
                 </span>
               </div>
             </div>
-            {!mostrarForm && (
+            {puedeEditar && !mostrarForm && (
               <Button variant="secondary" size="sm" icon={<PlusIcon />} onClick={abrirForm}>
                 Agregar evento
               </Button>
@@ -201,12 +201,14 @@ export const TabTimeline = ({ alumno, setAlumno }) => {
               <EmptyState
                 icon={<ClipboardIcon />}
                 title="Sin eventos registrados"
-                description="La bitácora de este jugador está vacía. Agrega el primer evento deportivo."
-                action={
+                description={puedeEditar
+                  ? 'La bitácora de este jugador está vacía. Agrega el primer evento deportivo.'
+                  : 'La bitácora de este jugador está vacía.'}
+                action={puedeEditar ? (
                   <Button variant="secondary" size="sm" icon={<PlusIcon />} onClick={abrirForm}>
                     Agregar evento
                   </Button>
-                }
+                ) : undefined}
               />
             )}
 

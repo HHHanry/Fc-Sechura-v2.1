@@ -14,6 +14,8 @@ import {
   PRECIO_MENSUALIDAD, formatMoney, formatDateLima, getPlayerTier, calculateOVR, STAT_KEYS,
 } from '../config/businessRules';
 import { withDefaults } from '../helpers/alumnoDefaults';
+import { useAuth } from '../context/useAuth';
+import { puedeEditarAlumno } from '../helpers/permisosHelper';
 
 // function declarations para los iconos usados antes de su definición textual (TDZ-safe)
 function DocIcon() { return (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"/><path d="M14 3v6h6"/></svg>); }
@@ -40,6 +42,8 @@ const DetalleAlumno = () => {
   const navigate = useNavigate();
   const params = useParams();
   const [searchParams] = useSearchParams();
+  const { user } = useAuth();
+  const puedeEditar = puedeEditarAlumno(user);
 
   const alumnoId = resolveAlumnoId(params, searchParams, location.state);
   const stateAlumno = location.state?.alumno ?? null;
@@ -242,12 +246,13 @@ const DetalleAlumno = () => {
             </div>
 
             {tab === 'resumen' && (
-              <TabResumen alumno={alumno} setAlumno={setAlumno} />
+              <TabResumen alumno={alumno} setAlumno={setAlumno} puedeEditar={puedeEditar} />
             )}
 
             {tab === 'general' && (
               <TabGeneral
                 alumno={alumno}
+                puedeEditar={puedeEditar}
                 editandoMedico={editandoMedico} setEditandoMedico={setEditandoMedico}
                 datosMedicos={datosMedicos} setDatosMedicos={setDatosMedicos}
                 guardandoMedico={guardandoMedico} guardarMedico={guardarMedico}
@@ -276,7 +281,7 @@ const DetalleAlumno = () => {
             )}
 
             {tab === 'timeline' && (
-              <TabTimeline alumno={alumno} setAlumno={setAlumno} />
+              <TabTimeline alumno={alumno} setAlumno={setAlumno} puedeEditar={puedeEditar} />
             )}
           </section>
         </div>
@@ -358,7 +363,7 @@ const DisabledContact = ({ label }) => (
    TAB: GENERAL (datos + médico)
    ===================================================== */
 
-const TabGeneral = ({ alumno, editandoMedico, setEditandoMedico, datosMedicos, setDatosMedicos, guardandoMedico, guardarMedico }) => (
+const TabGeneral = ({ alumno, puedeEditar, editandoMedico, setEditandoMedico, datosMedicos, setDatosMedicos, guardandoMedico, guardarMedico }) => (
   <div style={tabGridStyle}>
     <Card>
       <CardBody style={{ padding: 0 }}>
@@ -378,7 +383,7 @@ const TabGeneral = ({ alumno, editandoMedico, setEditandoMedico, datosMedicos, s
           title="Ficha médica"
           icon={<HeartIcon />}
           tone="crit"
-          action={!editandoMedico && (
+          action={puedeEditar && !editandoMedico && (
             <button onClick={() => setEditandoMedico(true)} style={editLinkStyle} className="sn-focusable">Editar</button>
           )}
         />

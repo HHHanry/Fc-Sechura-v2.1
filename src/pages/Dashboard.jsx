@@ -930,9 +930,11 @@ const styleSheet = `
     .sn-dashboard-hero        { min-height: 240px !important; }
     .sn-dashboard-hero-content { padding: var(--sn-space-5) var(--sn-space-4) !important; }
     .sn-dashboard-hero-quote  {
-      max-width: calc(100% - 1rem) !important;
+      max-width: calc(100% - 1.5rem) !important;
       margin: var(--sn-space-3) !important;
       font-size: var(--sn-fs-xs) !important;
+      align-self: stretch !important;
+      align-items: flex-start !important;
     }
     .sn-dash-filters select { width: 100% !important; }
   }

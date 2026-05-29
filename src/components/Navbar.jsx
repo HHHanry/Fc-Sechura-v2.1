@@ -489,21 +489,31 @@ const Navbar = () => {
         .sn-md-link {
           position: relative;
           display: flex; flex-direction: column;
-          padding: 10px 12px;
-          margin-top: 2px;
+          padding: 11px 14px;
+          margin-top: 8px;
           border-radius: var(--sn-radius-md);
+          background: var(--sn-bg-surface);
+          border: 1px solid var(--sn-border-soft);
+          box-shadow: var(--sn-shadow-sm);
           color: var(--sn-text-secondary);
           text-decoration: none;
-          min-height: 48px; justify-content: center;
-          transition: background var(--sn-dur-fast) var(--sn-ease), color var(--sn-dur-fast) var(--sn-ease);
+          min-height: 50px; justify-content: center;
+          transition: background var(--sn-dur-fast) var(--sn-ease), color var(--sn-dur-fast) var(--sn-ease),
+                      border-color var(--sn-dur-fast) var(--sn-ease), transform var(--sn-dur-fast) var(--sn-ease);
         }
-        .sn-md-link:hover { background: var(--sn-row-soft); color: var(--sn-text-primary); }
+        .sn-md-link:hover {
+          background: var(--sn-row-strong);
+          color: var(--sn-text-primary);
+          border-color: var(--sn-border-strong);
+        }
+        .sn-md-link:active { transform: scale(0.985); }
         .sn-md-link.is-active {
           color: var(--sn-text-primary);
           background: color-mix(in srgb, var(--sn-brand-glow) 12%, transparent);
+          border-color: var(--sn-border-glow);
         }
         .sn-md-link-bar {
-          position: absolute; left: 0; top: 8px; bottom: 8px;
+          position: absolute; left: 6px; top: 10px; bottom: 10px;
           width: 3px; border-radius: 999px;
           background: var(--sn-brand-glow);
         }

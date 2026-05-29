@@ -9,10 +9,17 @@
   box-sizing: border-box;
 }
 
+/* overflow-x: clip en html blinda contra cualquier hijo que se desborde
+   horizontalmente (navbar/hero saliéndose en móvil) sin romper position: sticky. */
+html {
+  overflow-x: clip;
+}
+
 body {
   background-color: var(--sn-bg-base);
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
+  max-width: 100%;
 }
 
 img,
@@ -237,73 +244,8 @@ svg {
 
   
 }
-/* --- CUSTOM HAMBURGER ANIMATION --- */
-.navbar-toggler {
-  width: 45px;
-  height: 45px;
-  position: relative;
-  transition: .5s ease-in-out;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 6px;
-}
-
-.navbar-toggler span {
-  display: block;
-  width: 28px;
-  height: 3px;
-  background: white;
-  border-radius: 9px;
-  transition: .25s ease-in-out;
-}
-
-/* Animación a X cuando se abre */
-.navbar-toggler:not(.collapsed) span:nth-child(1) {
-  transform: translateY(9px) rotate(45deg);
-}
-.navbar-toggler:not(.collapsed) span:nth-child(2) {
-  opacity: 0;
-}
-.navbar-toggler:not(.collapsed) span:nth-child(3) {
-  transform: translateY(-9px) rotate(-45deg);
-}
-
-/* --- RESPONSIVE MENU STYLE (Mobile) --- */
-@media (max-width: 991.98px) {
-  .navbar-collapse {
-    background: color-mix(in srgb, var(--sn-brand-deep) 95%, transparent);
-    backdrop-filter: blur(10px);
-    position: absolute;
-    top: 100%;
-    left: 15px;
-    right: 15px;
-    border-radius: 20px;
-    padding: 20px;
-    margin-top: 15px;
-    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-    border: 1px solid rgba(255,255,255,0.1);
-    z-index: 1000;
-  }
-
-  .nav-item {
-    width: 100%;
-    text-align: center;
-    padding: 8px 0;
-  }
-
-  .nav-link {
-    font-size: 1.1rem;
-    padding: 12px !important;
-  }
-
-  .nav-item.ms-lg-4 {
-    margin-top: 15px;
-    margin-left: 0 !important;
-  }
-}
+/* (Eliminado CSS legacy de Bootstrap navbar — .navbar-toggler / .navbar-collapse /
+   .nav-item / .nav-link. El Navbar real usa clases sn-* con su propio drawer.) */
 
 /* Ajustes de margen para que el contenido no se pegue al borde en móviles */
 @media (max-width: 576px) {
@@ -393,5 +335,21 @@ svg {
   table th, table td {
     padding: 0.6rem 0.7rem !important;
     white-space: nowrap;
+  }
+}
+
+/* =============================================================
+   ENTRADA DE PÁGINA — fade + rise sutil en cada navegación.
+   Solo opacidad/transform (GPU), una sola vez al montar la ruta.
+   Respeta prefers-reduced-motion (override global más abajo en tokens).
+   ============================================================= */
+@keyframes sn-page-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sn-app-main > div {
+    animation: sn-page-in 360ms var(--sn-ease-out) both;
   }
 }

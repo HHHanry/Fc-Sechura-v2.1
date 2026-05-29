@@ -39,7 +39,7 @@ const CONTACTO_VACIO = {
 /* =====================================================
    Componente principal
    ===================================================== */
-export const TabResumen = ({ alumno, setAlumno }) => {
+export const TabResumen = ({ alumno, setAlumno, puedeEditar = false }) => {
   const { user } = useAuth();
 
   // --- Estado: cambio de estado del alumno ---
@@ -209,20 +209,22 @@ export const TabResumen = ({ alumno, setAlumno }) => {
                 <span style={subLabelStyle}>Estado actual</span>
                 <StatusBadge value={alumno.estado} size="lg" />
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                <span style={subLabelStyle}>Cambiar a</span>
-                <select
-                  value={alumno.estado}
-                  onChange={(e) => handleSeleccionarEstado(e.target.value)}
-                  disabled={guardandoEstado}
-                  className="sn-focusable"
-                  style={{ ...inputStyle, width: 'auto', minWidth: 160 }}
-                >
-                  {ESTADOS_ALUMNO.map((e) => (
-                    <option key={e.value} value={e.value}>{e.label}</option>
-                  ))}
-                </select>
-              </div>
+              {puedeEditar && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  <span style={subLabelStyle}>Cambiar a</span>
+                  <select
+                    value={alumno.estado}
+                    onChange={(e) => handleSeleccionarEstado(e.target.value)}
+                    disabled={guardandoEstado}
+                    className="sn-focusable"
+                    style={{ ...inputStyle, width: 'auto', minWidth: 160 }}
+                  >
+                    {ESTADOS_ALUMNO.map((e) => (
+                      <option key={e.value} value={e.value}>{e.label}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
             </div>
           </div>
         </CardBody>
@@ -243,17 +245,31 @@ export const TabResumen = ({ alumno, setAlumno }) => {
             </div>
           </div>
           <div style={{ padding: 'var(--sn-space-5)' }}>
-            <TagInput
-              value={alumno.etiquetas}
-              onChange={handleEtiquetasChange}
-              suggestions={TODAS_SUGERENCIAS}
-              placeholder="Agregar etiqueta…"
-              max={12}
-            />
-            {alumno.etiquetas.length === 0 && (
-              <p style={{ marginTop: 8, fontSize: 'var(--sn-fs-xs)', color: 'var(--sn-text-muted)' }}>
-                Sin etiquetas. Escribe o elige una sugerencia.
-              </p>
+            {puedeEditar ? (
+              <>
+                <TagInput
+                  value={alumno.etiquetas}
+                  onChange={handleEtiquetasChange}
+                  suggestions={TODAS_SUGERENCIAS}
+                  placeholder="Agregar etiqueta…"
+                  max={12}
+                />
+                {alumno.etiquetas.length === 0 && (
+                  <p style={{ marginTop: 8, fontSize: 'var(--sn-fs-xs)', color: 'var(--sn-text-muted)' }}>
+                    Sin etiquetas. Escribe o elige una sugerencia.
+                  </p>
+                )}
+              </>
+            ) : (
+              alumno.etiquetas.length === 0 ? (
+                <p style={{ margin: 0, fontSize: 'var(--sn-fs-xs)', color: 'var(--sn-text-muted)' }}>
+                  Sin etiquetas registradas.
+                </p>
+              ) : (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                  {alumno.etiquetas.map((t, i) => <Badge key={i} tone="neutral">{t}</Badge>)}
+                </div>
+              )
             )}
           </div>
         </CardBody>
@@ -269,7 +285,7 @@ export const TabResumen = ({ alumno, setAlumno }) => {
               </span>
               <h3 style={panelTitleStyle}>Contacto familiar</h3>
             </div>
-            {!formContacto && (
+            {puedeEditar && !formContacto && (
               <Button variant="secondary" size="sm" icon={<PlusIcon />} onClick={abrirNuevoContacto}>
                 Agregar
               </Button>
@@ -298,24 +314,26 @@ export const TabResumen = ({ alumno, setAlumno }) => {
                       <span style={starBadgeStyle} title="Contacto principal">★ Principal</span>
                     )}
                   </div>
-                  <div style={{ display: 'flex', gap: 6 }}>
-                    <button
-                      className="sn-focusable"
-                      style={iconBtnStyle}
-                      onClick={() => abrirEditarContacto(idx)}
-                      title="Editar contacto"
-                    >
-                      <EditIcon />
-                    </button>
-                    <button
-                      className="sn-focusable"
-                      style={{ ...iconBtnStyle, color: 'var(--sn-crit)' }}
-                      onClick={() => solicitarBorrarContacto(idx)}
-                      title="Eliminar contacto"
-                    >
-                      <TrashIcon />
-                    </button>
-                  </div>
+                  {puedeEditar && (
+                    <div style={{ display: 'flex', gap: 6 }}>
+                      <button
+                        className="sn-focusable"
+                        style={iconBtnStyle}
+                        onClick={() => abrirEditarContacto(idx)}
+                        title="Editar contacto"
+                      >
+                        <EditIcon />
+                      </button>
+                      <button
+                        className="sn-focusable"
+                        style={{ ...iconBtnStyle, color: 'var(--sn-crit)' }}
+                        onClick={() => solicitarBorrarContacto(idx)}
+                        title="Eliminar contacto"
+                      >
+                        <TrashIcon />
+                      </button>
+                    </div>
+                  )}
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 8 }}>
                   <span style={{ fontWeight: 700, color: 'var(--sn-text-primary)', fontSize: 'var(--sn-fs-sm)' }}>

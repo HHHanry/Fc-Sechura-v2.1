@@ -3,6 +3,11 @@ import { Link } from 'react-router-dom';
 import { useAlumnos, mutarAlumnos } from '../hooks/useAlumnos';
 import { CATEGORIAS, ESTADOS_ALUMNO, formatDateLima } from '../config/businessRules';
 import { withDefaults } from '../helpers/alumnoDefaults';
+import {
+  puedeRegistrarAlumno, puedeEditarAlumno, puedeDarBajaAlumno,
+  puedeVerExpediente, puedeVerCarnet,
+} from '../helpers/permisosHelper';
+import { useAuth } from '../context/useAuth';
 import { Card, CardBody, Button, Badge, DataTable, Modal, EmptyState, StatusBadge } from '../components/ui';
 import { toast } from '../hooks/useToast';
 import { AlumnoForm } from './alumnos/AlumnoForm';
@@ -18,7 +23,17 @@ const ORDENES = [
 
 const Alumnos = () => {
   const { alumnos, loading } = useAlumnos();
+  const { user } = useAuth();
   const { iso: hoy } = formatDateLima();
+
+  // === Permisos finos por rol ===
+  const perms = useMemo(() => ({
+    crear:       puedeRegistrarAlumno(user),
+    editar:      puedeEditarAlumno(user),
+    darBaja:     puedeDarBajaAlumno(user),
+    expediente:  puedeVerExpediente(user),
+    carnet:      puedeVerCarnet(user),
+  }), [user]);
 
   // === UI state ===
   const [modoForm, setModoForm] = useState({ open: false, modoEdicion: false, alumno: null });
@@ -110,14 +125,16 @@ const Alumnos = () => {
             <h1 style={titleStyle}>Alumnos</h1>
             <p style={leadStyle}>Ficha técnica y administrativa de cada jugador del club.</p>
           </div>
-          <Button
-            variant="primary"
-            size="lg"
-            icon={<PlusIcon />}
-            onClick={() => setModoForm({ open: true, modoEdicion: false, alumno: null })}
-          >
-            Registrar alumno
-          </Button>
+          {perms.crear && (
+            <Button
+              variant="primary"
+              size="lg"
+              icon={<PlusIcon />}
+              onClick={() => setModoForm({ open: true, modoEdicion: false, alumno: null })}
+            >
+              Registrar alumno
+            </Button>
+          )}
         </header>
 
         {/* === FILTROS === */}
@@ -200,7 +217,7 @@ const Alumnos = () => {
                 },
                 {
                   key: 'acciones', header: 'Acciones', align: 'right', width: 220,
-                  render: (a) => <RowActions a={a} onCarnet={setAlumnoCarnet} onEditar={(al) => setModoForm({ open: true, modoEdicion: true, alumno: al })} onEliminar={setAlumnoAEliminar} />,
+                  render: (a) => <RowActions a={a} perms={perms} onCarnet={setAlumnoCarnet} onEditar={(al) => setModoForm({ open: true, modoEdicion: true, alumno: al })} onEliminar={setAlumnoAEliminar} />,
                 },
               ]}
             />
@@ -275,24 +292,34 @@ const Avatar = ({ alumno }) => alumno.foto
     </div>
   );
 
-const RowActions = ({ a, onCarnet, onEditar, onEliminar }) => (
+const RowActions = ({ a, perms, onCarnet, onEditar, onEliminar }) => (
   <div style={{ display: 'inline-flex', gap: 6, justifyContent: 'flex-end' }}>
+    {/* Tarjeta pública (FIFA): es información pública vía QR, visible para todo rol con acceso al directorio */}
     <IconBtn as={Link} to={`/jugador/${a.id}`} target="_blank" title="Tarjeta pública (FIFA)" tone="elite"><ExternalIcon /></IconBtn>
-    <IconBtn as={Link} to={`/perfil-alumno/${a.id}`} state={{ alumno: a }} title="Ver expediente" tone="success"><ChartIcon /></IconBtn>
-    <IconBtn onClick={() => onCarnet(a)}    title="Carnet PVC"   tone="brand"><CardIcon /></IconBtn>
-    <IconBtn onClick={() => onEditar(a)}    title="Editar"       tone="warn"><EditIcon /></IconBtn>
-    <IconBtn onClick={() => onEliminar(a)}  title="Dar de baja"  tone="crit"><TrashIcon /></IconBtn>
+    {perms.expediente && (
+      <IconBtn as={Link} to={`/perfil-alumno/${a.id}`} state={{ alumno: a }} title="Ver expediente" tone="success"><ChartIcon /></IconBtn>
+    )}
+    {perms.carnet && (
+      <IconBtn onClick={() => onCarnet(a)}    title="Carnet PVC"   tone="brand"><CardIcon /></IconBtn>
+    )}
+    {perms.editar && (
+      <IconBtn onClick={() => onEditar(a)}    title="Editar"       tone="warn"><EditIcon /></IconBtn>
+    )}
+    {perms.darBaja && (
+      <IconBtn onClick={() => onEliminar(a)}  title="Dar de baja"  tone="crit"><TrashIcon /></IconBtn>
+    )}
   </div>
 );
 
 const IconBtn = ({ as = 'button', tone = 'brand', children, ...rest }) => {
   const rel = rest.target === '_blank' && !rest.rel ? 'noreferrer' : rest.rel;
+  // Cada acción se tiñe con su propio color (no gris): el fondo lleva la marca de su tono.
   const colors = {
-    brand:   { c: 'var(--sn-brand-glow)', b: 'color-mix(in srgb, var(--sn-brand-glow) 32%, transparent)' },
-    success: { c: 'var(--sn-success)',    b: 'rgba(16,185,129,0.30)' },
-    warn:    { c: 'var(--sn-warn)',       b: 'rgba(245,158,11,0.30)' },
-    crit:    { c: 'var(--sn-crit)',       b: 'rgba(239,68,68,0.30)'  },
-    elite:   { c: 'var(--sn-tier-elite)', b: 'rgba(251,191,36,0.30)' },
+    brand:   { c: 'var(--sn-brand-glow)', bg: 'color-mix(in srgb, var(--sn-brand-glow) 14%, transparent)', b: 'color-mix(in srgb, var(--sn-brand-glow) 40%, transparent)' },
+    success: { c: 'var(--sn-success)',    bg: 'color-mix(in srgb, var(--sn-success) 14%, transparent)',    b: 'color-mix(in srgb, var(--sn-success) 40%, transparent)' },
+    warn:    { c: 'var(--sn-warn)',       bg: 'color-mix(in srgb, var(--sn-warn) 14%, transparent)',       b: 'color-mix(in srgb, var(--sn-warn) 40%, transparent)' },
+    crit:    { c: 'var(--sn-crit)',       bg: 'color-mix(in srgb, var(--sn-crit) 14%, transparent)',       b: 'color-mix(in srgb, var(--sn-crit) 40%, transparent)' },
+    elite:   { c: 'var(--sn-tier-elite)', bg: 'color-mix(in srgb, var(--sn-tier-elite) 16%, transparent)', b: 'color-mix(in srgb, var(--sn-tier-elite) 42%, transparent)' },
   }[tone];
   return React.createElement(
     as,
@@ -301,18 +328,26 @@ const IconBtn = ({ as = 'button', tone = 'brand', children, ...rest }) => {
       rel,
       className: 'sn-focusable',
       style: {
-        width: 34, height: 34,
+        width: 36, height: 36,
         display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
         borderRadius: 'var(--sn-radius-sm)',
-        background: 'rgba(15,20,34,0.65)',
+        background: colors.bg,
         color: colors.c,
         border: `1px solid ${colors.b}`,
         cursor: 'pointer',
         textDecoration: 'none',
-        transition: 'background var(--sn-dur-fast) var(--sn-ease), transform var(--sn-dur-fast) var(--sn-ease)',
+        transition: 'background var(--sn-dur-fast) var(--sn-ease), transform var(--sn-dur-fast) var(--sn-ease), box-shadow var(--sn-dur-fast) var(--sn-ease)',
       },
-      onMouseEnter: (e) => { e.currentTarget.style.background = `${colors.c}22`; },
-      onMouseLeave: (e) => { e.currentTarget.style.background = 'rgba(15,20,34,0.65)'; },
+      onMouseEnter: (e) => {
+        e.currentTarget.style.background = `color-mix(in srgb, ${colors.c} 28%, transparent)`;
+        e.currentTarget.style.transform = 'translateY(-1px)';
+        e.currentTarget.style.boxShadow = `0 4px 12px -4px ${colors.c}`;
+      },
+      onMouseLeave: (e) => {
+        e.currentTarget.style.background = colors.bg;
+        e.currentTarget.style.transform = '';
+        e.currentTarget.style.boxShadow = 'none';
+      },
     },
     children,
   );
