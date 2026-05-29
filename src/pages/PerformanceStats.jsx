@@ -319,7 +319,7 @@ const SliderRow = ({ attr, value, onChange }) => {
         <span style={{
           minWidth: 48, padding: '2px 10px', borderRadius: 'var(--sn-radius-pill)',
           fontFamily: 'var(--sn-font-mono)', fontWeight: 800, fontSize: 'var(--sn-fs-sm)',
-          background: `${c}1A`, color: c, border: `1px solid ${c}55`,
+          background: `color-mix(in srgb, ${c} 12%, transparent)`, color: c, border: `1px solid color-mix(in srgb, ${c} 33%, transparent)`,
           textAlign: 'center',
         }}>{value}</span>
       </div>

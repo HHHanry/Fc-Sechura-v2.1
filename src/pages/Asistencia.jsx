@@ -418,7 +418,7 @@ const feedbackOverlayStyle = {
 
 const feedbackTone = (tone) => {
   const c = { success: 'var(--sn-success)', warn: 'var(--sn-warn)', brand: 'var(--sn-brand-glow)', crit: 'var(--sn-crit)' }[tone];
-  return { background: `${c}28`, color: c };
+  return { background: `color-mix(in srgb, ${c} 16%, transparent)`, color: c };
 };
 
 const selectStyle = {

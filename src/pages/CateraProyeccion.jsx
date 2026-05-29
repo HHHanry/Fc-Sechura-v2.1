@@ -6,7 +6,7 @@ import { useCanteraDeAlumno, useCanteraAll, mutarCantera } from '../hooks/useCan
 import { useCompetenciasDeAlumno } from '../hooks/useCompetencias';
 import { toast } from '../hooks/useToast';
 import {
-  Card, CardBody, Button, Badge, EmptyState, Skeleton,
+  Card, CardBody, Button, Badge, EmptyState, Skeleton, FilterBar,
 } from '../components/ui';
 import {
   POTENCIAL, ALERTAS_CANTERA, CATEGORIAS,
@@ -188,27 +188,15 @@ const CateraProyeccion = () => {
         {vista === 'panel' ? (
           /* ====== VISTA PANEL ====== */
           <div>
-            <div style={filtersRowStyle}>
-              <select
-                value={filtroPotencial}
-                onChange={(e) => setFiltroPotencial(e.target.value)}
-                className="sn-focusable"
-                style={selectStyle}
-              >
-                {FILTROS_POTENCIAL.map((f) => (
-                  <option key={f.value} value={f.value}>{f.label}</option>
-                ))}
-              </select>
-              <select
-                value={filtroCategoria}
-                onChange={(e) => setFiltroCategoria(e.target.value)}
-                className="sn-focusable"
-                style={selectStyle}
-              >
-                {FILTROS_CATEGORIA.map((f) => (
-                  <option key={f.value} value={f.value}>{f.label}</option>
-                ))}
-              </select>
+            <div style={{ marginBottom: 'var(--sn-space-4)' }}>
+              <FilterBar
+                filters={[
+                  { id: 'pot', ariaLabel: 'Filtrar por potencial', value: filtroPotencial, onChange: setFiltroPotencial, options: FILTROS_POTENCIAL },
+                  { id: 'cat', ariaLabel: 'Filtrar por categoría', value: filtroCategoria, onChange: setFiltroCategoria, options: FILTROS_CATEGORIA },
+                ]}
+                meta={(loadingReg || loadingAlumnos) ? 'Cargando…' : `${panelData.length} evaluado${panelData.length === 1 ? '' : 's'}`}
+                onReset={(filtroPotencial !== 'todos' || filtroCategoria !== 'todas') ? () => { setFiltroPotencial('todos'); setFiltroCategoria('todas'); } : undefined}
+              />
             </div>
 
             {(loadingReg || loadingAlumnos) ? (
@@ -641,20 +629,6 @@ const inputStyle = {
   fontFamily: 'var(--sn-font-ui)', fontSize: 'var(--sn-fs-sm)',
   padding: '0.6rem 0.85rem', outline: 'none',
   minHeight: 44,
-};
-
-const selectStyle = {
-  ...inputStyle,
-  width: 'auto', minWidth: 140,
-  appearance: 'none',
-  backgroundImage: 'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%2364748b\' stroke-width=\'2.5\'><path d=\'m6 9 6 6 6-6\'/></svg>")',
-  backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.75rem center',
-  paddingRight: '2rem',
-};
-
-const filtersRowStyle = {
-  display: 'flex', gap: 10, flexWrap: 'wrap',
-  marginBottom: 'var(--sn-space-4)',
 };
 
 const selectedPlayerStyle = {

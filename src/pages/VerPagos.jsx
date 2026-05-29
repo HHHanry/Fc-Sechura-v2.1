@@ -560,7 +560,7 @@ const iconBtn = (tone) => {
   return {
     width: 32, height: 32, borderRadius: 'var(--sn-radius-sm)',
     display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-    background: 'transparent', color: c, border: `1px solid ${c}40`, cursor: 'pointer',
+    background: 'transparent', color: c, border: `1px solid color-mix(in srgb, ${c} 25%, transparent)`, cursor: 'pointer',
   };
 };
 

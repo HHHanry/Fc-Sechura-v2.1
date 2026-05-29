@@ -549,8 +549,8 @@ const AuditoriaRow = ({ label, value, tone, highlight }) => {
       padding: highlight ? '0.55rem 0.7rem' : '0.3rem 0',
       marginTop: highlight ? 6 : 0,
       borderRadius: highlight ? 'var(--sn-radius-sm)' : 0,
-      background: highlight ? `${c}1A` : 'transparent',
-      border: highlight ? `1px solid ${c}55` : 'none',
+      background: highlight ? `color-mix(in srgb, ${c} 12%, transparent)` : 'transparent',
+      border: highlight ? `1px solid color-mix(in srgb, ${c} 33%, transparent)` : 'none',
     }}>
       <span style={{ color: 'var(--sn-text-secondary)', fontSize: 'var(--sn-fs-sm)' }}>{label}</span>
       <span style={{ color: c, fontWeight: 800, fontFamily: 'var(--sn-font-mono)' }}>{value}</span>

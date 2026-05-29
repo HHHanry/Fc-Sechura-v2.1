@@ -612,7 +612,7 @@ const PanelHeader = ({ title, subtitle, icon, action, tone = 'brand' }) => {
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--sn-space-4)', padding: 'var(--sn-space-5)', borderBottom: '1px solid var(--sn-border-faint)' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-        <span style={{ width: 32, height: 32, borderRadius: 'var(--sn-radius-sm)', background: `${c}1A`, color: c, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${c}40` }}>
+        <span style={{ width: 32, height: 32, borderRadius: 'var(--sn-radius-sm)', background: `color-mix(in srgb, ${c} 12%, transparent)`, color: c, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', border: `1px solid color-mix(in srgb, ${c} 25%, transparent)` }}>
           {icon}
         </span>
         <div>
@@ -892,7 +892,7 @@ const contactBtnStyle = (tone) => {
   return {
     flex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
     padding: '0.6rem 0.9rem', borderRadius: 'var(--sn-radius-pill)',
-    background: `${c}1A`, color: c, border: `1px solid ${c}55`,
+    background: `color-mix(in srgb, ${c} 12%, transparent)`, color: c, border: `1px solid color-mix(in srgb, ${c} 33%, transparent)`,
     fontFamily: 'var(--sn-font-ui)', fontWeight: 700, fontSize: 'var(--sn-fs-sm)',
     textDecoration: 'none', cursor: 'pointer',
   };
