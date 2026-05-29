@@ -17,6 +17,10 @@ export const misionesService = {
   listarActivas: () =>
     list(PATH, where('estado', 'in', ['no_logrado', 'en_proceso']), orderBy('createdAt', 'desc')),
 
+  /** Todas las misiones del sistema (más recientes primero) — para el panel global. */
+  listarTodas: () =>
+    list(PATH, orderBy('createdAt', 'desc')),
+
   crear:    (data) => create(PATH, data),
   actualizar: (id, data) => update(PATH, id, data),
   eliminar: (id) => remove(PATH, id),

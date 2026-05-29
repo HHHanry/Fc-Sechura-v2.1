@@ -16,6 +16,12 @@ export const useMisionesDeAlumno = (alumnoId) => {
   return { misiones: q.data ?? [], loading: q.loading, error: q.error, refetch: q.refetch };
 };
 
+/** Todas las misiones del sistema — alimenta el panel global de /misiones. */
+export const useMisionesAll = () => {
+  const q = useQuery(`${KEY}:__all__`, () => misionesService.listarTodas(), []);
+  return { misiones: q.data ?? [], loading: q.loading, error: q.error, refetch: q.refetch };
+};
+
 export const mutarMisiones = {
   crear: async (data) => {
     const r = await misionesService.crear(data);
