@@ -143,6 +143,12 @@
   --sn-z-toast:    9500;
   --sn-z-carnet:   9999;
 
+  /* ===== LAYOUT ===== */
+  /* Altura reservada para la navbar sticky superior. Sobre-estimado seguro:
+     cubre tanto el layout desktop (~58px) como el móvil con burger (~70px),
+     evitando que el contenido quede oculto bajo la navbar en cualquier ancho. */
+  --sn-navbar-h: 73px;
+
   /* ===== SPACING ===== */
   --sn-space-1: 0.25rem;
   --sn-space-2: 0.5rem;

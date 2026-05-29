@@ -37,7 +37,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     return (
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        minHeight: 'calc(100vh - 73px)', padding: 'var(--sn-space-5)',
+        minHeight: 'calc(100vh - var(--sn-navbar-h))', padding: 'var(--sn-space-5)',
         background: 'var(--sn-bg-base)',
       }}>
         <div style={{
