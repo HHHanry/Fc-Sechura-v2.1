@@ -266,14 +266,14 @@ const ScoutingPartidos = () => {
                                 className="sn-focusable"
                                 style={{
                                   width: 38, height: 38, borderRadius: '50%',
-                                  background: activa ? `color-mix(in srgb, ${m.color} 14%, transparent)` : 'var(--sn-input-bg)',
+                                  background: activa ? `color-mix(in srgb, ${m.color} 18%, transparent)` : 'var(--sn-input-bg)',
                                   border: `2px solid ${activa ? m.color : 'var(--sn-border-soft)'}`,
                                   color: activa ? m.color : 'var(--sn-text-muted)',
                                   cursor: 'pointer',
                                   fontSize: 16,
                                   display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
                                   transform: activa ? 'translateY(-2px) scale(1.08)' : 'none',
-                                  boxShadow: activa ? `0 0 14px color-mix(in srgb, ${m.color} 34%, transparent)` : 'none',
+                                  boxShadow: activa ? `0 0 16px color-mix(in srgb, ${m.color} 40%, transparent)` : 'none',
                                   transition: 'all var(--sn-dur-fast) var(--sn-ease)',
                                 }}
                               >

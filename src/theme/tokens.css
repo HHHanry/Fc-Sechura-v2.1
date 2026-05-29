@@ -81,7 +81,9 @@
   /* ===== NAV (top + bottom app nav) ===== */
   --sn-nav-bg:         rgba(255, 255, 255, 0.86);
   --sn-nav-border:     rgba(15, 23, 42, 0.10);
-  --sn-nav-active:     var(--sn-brand-glow);
+  /* Sky más profundo (rampa de marca) para que el label diminuto del bottom-nav
+     pase AA sobre el fondo casi-blanco: ~5.9:1 vs ~4.3:1 del glow estándar. */
+  --sn-nav-active:     var(--sn-brand-glow-2);
 
   /* ===== FOCUS ===== */
   --sn-focus-ring:     rgba(12, 127, 194, 0.34);
