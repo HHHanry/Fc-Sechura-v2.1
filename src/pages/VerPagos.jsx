@@ -94,6 +94,13 @@ const VerPagos = () => {
   const totalEfectivo  = completados.filter((p) => p.metodo === 'Efectivo').reduce((s, p) => s + p.monto, 0);
   const totalDigital   = completados.filter((p) => p.metodo === 'Yape/Plin' || p.metodo === 'Transferencia').reduce((s, p) => s + p.monto, 0);
 
+  const hayFiltros = busqueda || filtroMes !== 'Todos' || filtroMetodo !== 'Todos'
+    || filtroEstado !== 'Completado' || filtroCategoria !== 'Todas' || filtroAlumnoId !== 'Todos' || orden !== 'fecha_desc';
+  const limpiarFiltros = () => {
+    setBusqueda(''); setFiltroMes('Todos'); setFiltroMetodo('Todos');
+    setFiltroEstado('Completado'); setFiltroCategoria('Todas'); setFiltroAlumnoId('Todos'); setOrden('fecha_desc');
+  };
+
   // Deudores únicos (alumnos con mensualidad vencida o deudas extra)
   const hoyIso = new Date().toISOString().split('T')[0];
   const deudoresCount = useMemo(() => {
@@ -275,6 +282,16 @@ const VerPagos = () => {
                   <option value="monto_asc">Monto: menor a mayor</option>
                 </select>
               </FilterField>
+            </div>
+            <div style={filterMetaStyle}>
+              <span style={filterCountStyle}>
+                {loading ? 'Cargando…' : `${visibles.length} de ${pagos.length} comprobantes`}
+              </span>
+              {hayFiltros && (
+                <button type="button" onClick={limpiarFiltros} className="sn-focusable" style={filterResetStyle}>
+                  Limpiar filtros
+                </button>
+              )}
             </div>
           </CardBody>
         </Card>
@@ -522,6 +539,21 @@ const leadStyle = { margin: '0.3rem 0 0', color: 'var(--sn-text-muted)', fontSiz
 
 const kpiGridStyle = { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 'var(--sn-space-4)' };
 const filtrosGridStyle = { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 'var(--sn-space-3)' };
+
+const filterMetaStyle = {
+  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+  gap: 'var(--sn-space-3)', flexWrap: 'wrap', marginTop: 'var(--sn-space-3)',
+};
+const filterCountStyle = {
+  fontSize: 'var(--sn-fs-xs)', color: 'var(--sn-text-muted)',
+  letterSpacing: 'var(--sn-tracking-wide)', fontWeight: 600,
+};
+const filterResetStyle = {
+  background: 'transparent', border: 'none', cursor: 'pointer',
+  color: 'var(--sn-brand-glow)', fontWeight: 700,
+  fontSize: 'var(--sn-fs-xs)', letterSpacing: 'var(--sn-tracking-wide)',
+  fontFamily: 'var(--sn-font-ui)', padding: '4px 6px', borderRadius: 'var(--sn-radius-sm)',
+};
 
 const fieldLabelStyle = {
   display: 'block', marginBottom: 6,

@@ -50,6 +50,11 @@ const Historial = () => {
   const totalFaltas      = visibles.filter((r) => r.estado === ESTADOS_ASISTENCIA.FALTO).length;
   const totalCajaChica   = visibles.filter((r) => r.pagoCancha).length * PRECIO_CANCHA;
 
+  const hayFiltros = fecha !== hoyIso || filtroCategoria !== 'Todas' || filtroAlumnoId !== 'Todos' || filtroEstado !== 'Todos';
+  const limpiarFiltros = () => {
+    setFecha(hoyIso); setFiltroCategoria('Todas'); setFiltroAlumnoId('Todos'); setFiltroEstado('Todos');
+  };
+
   const guardarEdicion = async (e) => {
     e.preventDefault();
     setGuardando(true);
@@ -207,6 +212,16 @@ const Historial = () => {
                   <option value="Faltó">Falta</option>
                 </select>
               </FilterField>
+            </div>
+            <div style={filterMetaStyle}>
+              <span style={filterCountStyle}>
+                {loading ? 'Cargando…' : `${visibles.length} de ${asistencias.length} registros`}
+              </span>
+              {hayFiltros && (
+                <button type="button" onClick={limpiarFiltros} className="sn-focusable" style={filterResetStyle}>
+                  Limpiar filtros
+                </button>
+              )}
             </div>
           </CardBody>
         </Card>
@@ -366,6 +381,21 @@ const kpiGridStyle = {
 
 const filtrosGridStyle = {
   display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 'var(--sn-space-3)',
+};
+
+const filterMetaStyle = {
+  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+  gap: 'var(--sn-space-3)', flexWrap: 'wrap', marginTop: 'var(--sn-space-3)',
+};
+const filterCountStyle = {
+  fontSize: 'var(--sn-fs-xs)', color: 'var(--sn-text-muted)',
+  letterSpacing: 'var(--sn-tracking-wide)', fontWeight: 600,
+};
+const filterResetStyle = {
+  background: 'transparent', border: 'none', cursor: 'pointer',
+  color: 'var(--sn-brand-glow)', fontWeight: 700,
+  fontSize: 'var(--sn-fs-xs)', letterSpacing: 'var(--sn-tracking-wide)',
+  fontFamily: 'var(--sn-font-ui)', padding: '4px 6px', borderRadius: 'var(--sn-radius-sm)',
 };
 
 const fieldLabelStyle = {
