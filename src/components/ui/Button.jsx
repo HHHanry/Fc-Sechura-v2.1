@@ -3,7 +3,7 @@ import React from 'react';
 const variants = {
   primary: {
     background: 'var(--sn-brand-gradient)',
-    color: '#FFFFFF',
+    color: 'white',
     border: '1px solid transparent',
     boxShadow: '0 8px 24px -8px var(--sn-border-glow)',
   },
@@ -19,7 +19,7 @@ const variants = {
   },
   danger: {
     background: 'var(--sn-crit)',
-    color: '#FFFFFF',
+    color: 'white',
     border: '1px solid transparent',
     boxShadow: '0 8px 24px -8px rgba(239, 68, 68, 0.55)',
   },

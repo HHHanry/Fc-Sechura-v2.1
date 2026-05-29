@@ -1,50 +1,72 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
+import { Button } from './ui/Button';
 
-/**
- * PROTECTED ROUTE V2 - FC SECHURA
- * @param {children} - El componente que queremos proteger
- * @param {allowedRoles} - Array de roles permitidos (ej: ['admin', 'entrenador'])
- */
+const ShieldIcon = () => (
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--sn-crit)" strokeWidth="1.5" style={{ opacity: 0.75 }}>
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    <path d="M12 8v4M12 16h.01" />
+  </svg>
+);
+
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const { user, loading } = useAuth();
 
-  // 1. Mientras el Context está verificando el rol en Firestore, mostramos el spinner
   if (loading) {
     return (
-      <div className="d-flex justify-content-center align-items-center vh-100" style={{ background: 'var(--sn-bg-base)', color: 'var(--sn-text-primary)' }}>
-        <div className="spinner-border text-primary" style={{ width: '3rem', height: '3rem' }} role="status">
-          <span className="visually-hidden">Cargando permisos...</span>
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        minHeight: '100vh', background: 'var(--sn-bg-base)',
+      }}>
+        <div style={{
+          width: 48, height: 48, borderRadius: '50%',
+          border: '3px solid var(--sn-border-soft)',
+          borderTopColor: 'var(--sn-brand-glow)',
+          animation: 'sn-spin 0.7s linear infinite',
+        }} role="status" aria-label="Cargando permisos" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (allowedRoles && !allowedRoles.includes(user.rol)) {
+    return (
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        minHeight: 'calc(100vh - 73px)', padding: 'var(--sn-space-5)',
+        background: 'var(--sn-bg-base)',
+      }}>
+        <div style={{
+          maxWidth: 440, width: '100%', textAlign: 'center',
+          padding: 'var(--sn-space-7)', borderRadius: 'var(--sn-radius-xl)',
+          background: 'var(--sn-bg-surface)',
+          border: '1px solid var(--sn-border-soft)',
+          boxShadow: 'var(--sn-shadow-md)',
+        }}>
+          <ShieldIcon />
+          <h2 style={{
+            margin: 'var(--sn-space-4) 0 var(--sn-space-2)',
+            fontFamily: 'var(--sn-font-display)', fontWeight: 800,
+            fontSize: 'var(--sn-fs-xl)', color: 'var(--sn-text-primary)',
+          }}>Acceso Denegado</h2>
+          <p style={{
+            margin: '0 0 var(--sn-space-5)',
+            color: 'var(--sn-text-muted)', fontSize: 'var(--sn-fs-md)',
+          }}>
+            Tu perfil de <strong style={{ color: 'var(--sn-text-primary)' }}>{user.rol}</strong> no tiene permisos para esta sección.
+          </p>
+          <Button variant="secondary" onClick={() => window.history.back()}>
+            ← Volver atrás
+          </Button>
         </div>
       </div>
     );
   }
 
-  // 2. Si no hay usuario logueado en absoluto, fuera al login
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
-
-  // 3. Si el usuario existe pero su rol no está en la lista de permitidos para esta página
-  // Ejemplo: Un entrenador intentando entrar a /caja
-  if (allowedRoles && !allowedRoles.includes(user.rol)) {
-    return (
-      <div
-        className="container py-5 text-center shadow-sm rounded-4 mt-5 border border-danger border-opacity-25"
-        style={{ maxWidth: '500px', background: 'var(--sn-bg-surface)', color: 'var(--sn-text-primary)' }}
-      >
-        <i className="fas fa-user-shield fa-4x text-danger mb-4 opacity-75"></i>
-        <h2 className="fw-black" style={{ color: 'var(--sn-text-primary)' }}>Acceso Denegado</h2>
-        <p className="text-muted fs-5">Tu perfil de <strong>{user.rol}</strong> no tiene permisos para esta sección administrativa.</p>
-        <button className="btn btn-turquesa text-white fw-bold px-5 rounded-pill mt-3 shadow" onClick={() => window.history.back()}>
-          <i className="fas fa-arrow-left me-2"></i> Volver atrás
-        </button>
-      </div>
-    );
-  }
-
-  // 4. Si todo está en orden, mostramos la página solicitada
   return children;
 };
 

@@ -69,7 +69,7 @@ const ModalRegistrarPago = ({ isOpen, onClose, alumno }) => {
   };
 
   return (
-    <div className="modal-overlay d-flex align-items-center justify-content-center" style={{ zIndex: 3000, background: 'rgba(0,0,0,0.6)', position: 'fixed', top:0, left:0, width:'100%', height:'100%' }}>
+    <div className="modal-overlay d-flex align-items-center justify-content-center" style={{ zIndex: 'var(--sn-z-modal, 9000)', background: 'rgba(0,0,0,0.6)', position: 'fixed', top:0, left:0, width:'100%', height:'100%' }}>
       <div className="bg-white p-4 rounded-4 shadow-lg w-100 mx-3" style={{ maxWidth: '400px' }}>
         
         <h5 className="fw-bold text-success mb-3"><i className="fas fa-money-bill-wave me-2"></i> Registrar Pago</h5>

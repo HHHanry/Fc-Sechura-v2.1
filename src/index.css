@@ -47,24 +47,15 @@ svg {
 
 /* Bordado de inputs */
 .form-control, .form-select {
-  border: 2px solid #cbd5e1 !important;
+  border: 2px solid var(--sn-border-soft) !important;
   border-radius: 10px;
-  background-color: #ffffff;
+  background-color: var(--sn-bg-surface);
+  color: var(--sn-text-primary);
 }
 
 .form-control:focus, .form-select:focus {
-  border-color: var(--fc-turquesa) !important;
-  box-shadow: 0 0 0 0.25rem rgba(13, 148, 136, 0.2);
-}
-
-.btn-turquesa {
-  background-color: var(--fc-turquesa);
-  color: white;
-}
-
-.btn-turquesa:hover {
-  background-color: #0b7a70;
-  color: white;
+  border-color: var(--sn-brand-glow) !important;
+  box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--sn-brand-glow) 20%, transparent);
 }
 
 /* =========================================
@@ -73,9 +64,9 @@ svg {
 .modal-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background-color: rgba(15, 23, 42, 0.85); /* Fondo oscuro */
-  backdrop-filter: blur(8px); /* Efecto cristal borroso */
-  z-index: 9999; /* Este número altísimo asegura que salga por encima de TODO */
+  background-color: var(--sn-bg-overlay, rgba(15, 23, 42, 0.85));
+  backdrop-filter: blur(8px);
+  z-index: var(--sn-z-carnet, 9999);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -85,7 +76,7 @@ svg {
 .carnet-id-horizontal {
   width: 550px;
   height: 320px;
-  background-color: #ffffff;
+  background-color: var(--sn-bg-surface, #ffffff);
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
@@ -112,11 +103,11 @@ svg {
   width: 110px;
   height: 140px;
   border-radius: 8px;
-  border: 3px solid #ffffff;
+  border: 3px solid white;
   object-fit: cover;
   margin-bottom: 15px;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-  background-color: #f8fafc;
+  background-color: var(--sn-bg-base, #f8fafc);
 }
 
 .carnet-motto-hz {
@@ -137,18 +128,18 @@ svg {
 }
 
 .carnet-title {
-  color: var(--fc-azul);
+  color: var(--sn-brand-deep, var(--fc-azul));
   font-size: 1.1rem;
   font-weight: 900;
   letter-spacing: 1px;
-  border-bottom: 2px solid #e2e8f0;
+  border-bottom: 2px solid var(--sn-border-soft, #e2e8f0);
   padding-bottom: 4px;
   margin-bottom: 10px;
 }
 
 .data-label {
   font-size: 0.65rem;
-  color: #64748b;
+  color: var(--sn-text-muted, #64748b);
   text-transform: uppercase;
   font-weight: 800;
   letter-spacing: 0.5px;
@@ -157,7 +148,7 @@ svg {
 
 .data-value {
   font-size: 1.02rem;
-  color: #0f172a;
+  color: var(--sn-text-primary, #0f172a);
   font-weight: 700;
   margin-bottom: 8px;
   padding: 0;
@@ -171,23 +162,11 @@ svg {
   height: 105px;
   padding: 4px;
   background: white;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--sn-border-soft, #cbd5e1);
   border-radius: 8px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   flex-shrink: 0;
 }
-/* Botón de Imprimir */
-.btn-imprimir {
-  background-color: var(--fc-azul);
-  color: white;
-  transition: all 0.2s ease;
-}
-
-.btn-imprimir:hover {
-  background-color: #152c6b;
-  color: white;
-}
-
 /* =========================================
    REGLAS EXACTAS PARA LA IMPRESORA
    ========================================= */
@@ -258,58 +237,6 @@ svg {
 
   
 }
-.scanning-line {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  background: rgba(125, 211, 252, 0.6); /* Celeste FC Sechura */
-  box-shadow: 0 0 10px var(--fc-celeste);
-  animation: scan 2.5s infinite linear;
-  z-index: 5;
-}
-/* Portada Hero */
-.dashboard-hero {
-  height: 400px;
-  background: linear-gradient(rgba(30, 58, 138, 0.7), rgba(13, 148, 136, 0.7)), url('./assets/dashboard-cover.jpg');background-size: cover;
-  background-position: center;
-  border-radius: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  text-align: center;
-  margin-bottom: 40px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-}
-
-.hero-content h1 {
-  font-size: 3.5rem;
-  font-weight: 900;
-  text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
-}
-
-.slogan-box {
-  background: white;
-  border-left: 5px solid var(--fc-turquesa);
-  padding: 20px;
-  border-radius: 12px;
-  font-style: italic;
-  font-family: 'serif';
-  color: var(--fc-azul);
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-}
-
-.kpi-card {
-  transition: transform 0.3s ease;
-  border: none;
-  border-radius: 20px;
-}
-
-.kpi-card:hover {
-  transform: translateY(-10px);
-}
 /* --- CUSTOM HAMBURGER ANIMATION --- */
 .navbar-toggler {
   width: 45px;
@@ -347,8 +274,8 @@ svg {
 /* --- RESPONSIVE MENU STYLE (Mobile) --- */
 @media (max-width: 991.98px) {
   .navbar-collapse {
-    background: rgba(30, 58, 138, 0.95); /* Azul profundo con transparencia */
-    backdrop-filter: blur(10px); /* Efecto cristal */
+    background: color-mix(in srgb, var(--sn-brand-deep) 95%, transparent);
+    backdrop-filter: blur(10px);
     position: absolute;
     top: 100%;
     left: 15px;
@@ -430,7 +357,8 @@ svg {
   [style*="grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr)"],
   [style*="grid-template-columns: minmax(0, 2fr) minmax(0, 1fr)"],
   [style*="grid-template-columns: minmax(0, 300px)"],
-  [style*="grid-template-columns: minmax(220px, 2fr)"] {
+  [style*="grid-template-columns: minmax(220px, 2fr)"],
+  [style*="grid-template-columns: minmax(0, 1fr) minmax(0, 1fr)"] {
     grid-template-columns: 1fr !important;
   }
 

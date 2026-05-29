@@ -54,7 +54,7 @@ export const DataTable = ({
                 style={{
                   position: stickyHeader ? 'sticky' : 'static',
                   top: 0,
-                  background: 'rgba(7,9,15,0.92)',
+                  background: 'var(--sn-bg-deep, rgba(7,9,15,0.92))',
                   backdropFilter: 'blur(8px)',
                   textAlign: c.align ?? 'left',
                   padding: cellPadding,

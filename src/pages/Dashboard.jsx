@@ -1,57 +1,183 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 import { useAlumnos } from '../hooks/useAlumnos';
 import { useUltimosPagos, usePagosDelMes } from '../hooks/usePagos';
 import { useAsistenciaHoy } from '../hooks/useAsistencia';
 import { useDeudores } from '../hooks/useDeudores';
-import { ROLES_FINANCIEROS, formatMoney, formatDateLima } from '../config/businessRules';
+import { useConvocatorias } from '../hooks/useConvocatorias';
+import { useUsuarios } from '../hooks/useUsuarios';
+import { useCanteraAll } from '../hooks/useCantera';
+import { withDefaults } from '../helpers/alumnoDefaults';
+import {
+  ROLES_FINANCIEROS, ROLES_DEPORTIVOS,
+  ESTADOS_ALUMNO, formatMoney, formatDateLima,
+} from '../config/businessRules';
 import { Card, CardBody, KpiCard, Badge, DataTable, EmptyState, Skeleton } from '../components/ui';
+import { EstadoDonut, ConvocatoriaChart, CanteraPipeline } from './dashboard/DashCharts';
 import imagenPortada from '../assets/dashboard-cover.jpg';
 
-const puedeVerFinanzas = (rol) => ROLES_FINANCIEROS.includes(rol);
+const puedeVerFinanzas  = (rol) => ROLES_FINANCIEROS.includes(rol);
+const puedeVerDeportivo = (rol) => ROLES_DEPORTIVOS.includes(rol);
 
+/* ===========================================================
+   Alertas: cómputo puro
+   =========================================================== */
+const computeAlerts = (alumnos, convocatorias, usuarios, rol) => {
+  const alerts = [];
+  const isFin  = ROLES_FINANCIEROS.includes(rol);
+  const isDep  = ROLES_DEPORTIVOS.includes(rol);
+  const isAdm  = rol === 'admin';
+
+  if (isFin) {
+    const n = alumnos.filter(a => a.estado === 'moroso').length;
+    if (n > 0) alerts.push({ severity: 'alta', title: `${n} moroso${n > 1 ? 's' : ''}`, description: 'Alumnos con pagos pendientes.', link: '/alumnos', action: 'Ver alumnos' });
+  }
+
+  if (isDep) {
+    const n = alumnos.filter(a => a.estado === 'lesionado').length;
+    if (n > 0) alerts.push({ severity: 'alta', title: `${n} lesionado${n > 1 ? 's' : ''}`, description: 'Alumnos con lesión activa en plantilla.', link: '/alumnos', action: 'Ver alumnos' });
+  }
+
+  if (isDep) {
+    const n = alumnos.filter(a => a.estado === 'suspendido' || a.estado === 'inactivo').length;
+    if (n > 0) alerts.push({ severity: 'media', title: `${n} suspendido${n > 1 ? 's' : ''}/inactivo${n > 1 ? 's' : ''}`, description: 'Requieren seguimiento o reactivación.', link: '/alumnos', action: 'Revisar' });
+  }
+
+  if (isAdm) {
+    const n = alumnos.filter(a => !a.contactosFamiliares || a.contactosFamiliares.length === 0).length;
+    if (n > 0) alerts.push({ severity: 'media', title: `${n} sin contacto familiar`, description: 'Expedientes sin información de emergencia.', link: '/alumnos', action: 'Completar' });
+  }
+
+  if (isDep && convocatorias.length > 0) {
+    const ult = convocatorias[0];
+    const pend = (ult.convocados || []).filter(c => c.disponibilidad === 'pendiente').length;
+    if (pend > 0) alerts.push({ severity: 'alta', title: `${pend} convocado${pend > 1 ? 's' : ''} pendiente${pend > 1 ? 's' : ''}`, description: `En "${ult.titulo || 'Última convocatoria'}"`, link: '/convocatoria', action: 'Ver convocatoria' });
+  }
+
+  if (isAdm) {
+    const n = usuarios.filter(u => u.estado === 'suspendido' || u.estado === 'inactivo').length;
+    if (n > 0) alerts.push({ severity: 'media', title: `${n} usuario${n > 1 ? 's' : ''} del staff`, description: 'Usuarios suspendidos o inactivos.', link: '/usuarios', action: 'Gestionar' });
+  }
+
+  const order = { alta: 0, media: 1, baja: 2 };
+  alerts.sort((a, b) => order[a.severity] - order[b.severity]);
+  return alerts;
+};
+
+/* ===========================================================
+   Dashboard
+   =========================================================== */
 const Dashboard = () => {
   const { user } = useAuth();
+  const rol = user?.rol ?? 'invitado';
 
   const { iso: hoyIso, dmy: hoyDmy } = useMemo(() => formatDateLima(), []);
   const yyyymm = hoyIso.slice(0, 7);
 
-  const { alumnos, loading: loadingAlumnos } = useAlumnos();
-  const { pagos: ultimosPagos, loading: loadingPagos } = useUltimosPagos(8);
-  const { pagos: pagosDelMes } = usePagosDelMes(yyyymm);
-  const { asistencias, loading: loadingAsist } = useAsistenciaHoy(hoyDmy);
+  /* --- filtros --- */
+  const [filtroCat, setFiltroCat]       = useState('');
+  const [filtroEstado, setFiltroEstado] = useState('');
+
+  /* --- data hooks (siempre incondicionales) --- */
+  const { alumnos: alumnosRaw, loading: loadingAlumnos } = useAlumnos();
+  const { pagos: ultimosPagos, loading: loadingPagos }   = useUltimosPagos(8);
+  const { pagos: pagosDelMes, loading: loadingPagosMes } = usePagosDelMes(yyyymm);
+  const { asistencias, loading: loadingAsist }           = useAsistenciaHoy(hoyDmy);
   const { resumen: resumenDeudas, loading: loadingDeudas } = useDeudores();
+  const { convocatorias, loading: loadingConv }          = useConvocatorias(5);
+  const { usuarios, loading: loadingUsuarios }           = useUsuarios();
+  const { registros: canteraRegistros, loading: loadingCantera } = useCanteraAll();
 
-  const verFinanzas = puedeVerFinanzas(user?.rol);
+  const verFinanzas  = puedeVerFinanzas(rol);
+  const verDeportivo = puedeVerDeportivo(rol);
+  const notInvitado  = rol !== 'invitado';
 
-  // === Métricas derivadas ===
-  const totalAlumnos = alumnos.length;
-  const presentesHoy = asistencias.filter((a) => a.estado !== 'Faltó').length;
+  /* --- defaults + filtro --- */
+  const alumnos = useMemo(() => alumnosRaw.map(withDefaults), [alumnosRaw]);
+
+  const alumnosFiltrados = useMemo(() => {
+    let f = alumnos;
+    if (filtroCat)    f = f.filter(a => a.categoria === filtroCat);
+    if (filtroEstado) f = f.filter(a => a.estado === filtroEstado);
+    return f;
+  }, [alumnos, filtroCat, filtroEstado]);
+
+  const categoriasDisponibles = useMemo(() =>
+    [...new Set(alumnos.map(a => a.categoria).filter(Boolean))].sort(),
+  [alumnos]);
+
+  /* --- métricas derivadas --- */
+  const totalAlumnos = alumnosFiltrados.length;
+  const activos     = useMemo(() => alumnosFiltrados.filter(a => a.estado === 'activo').length, [alumnosFiltrados]);
+  const lesionados  = useMemo(() => alumnosFiltrados.filter(a => a.estado === 'lesionado').length, [alumnosFiltrados]);
+  const morosos     = useMemo(() => alumnosFiltrados.filter(a => a.estado === 'moroso').length, [alumnosFiltrados]);
+  const becados     = useMemo(() => alumnosFiltrados.filter(a => a.estado === 'becado').length, [alumnosFiltrados]);
+  const suspInact   = useMemo(() => alumnosFiltrados.filter(a => a.estado === 'suspendido' || a.estado === 'inactivo').length, [alumnosFiltrados]);
+
+  const presentesHoy = asistencias.filter(a => a.estado !== 'Faltó').length;
   const porcentajeAsistencia = totalAlumnos > 0 ? Math.round((presentesHoy / totalAlumnos) * 100) : 0;
+
+  const ingresosMes = useMemo(() =>
+    pagosDelMes.reduce((sum, p) => sum + (Number(p.total) || 0), 0),
+  [pagosDelMes]);
+
+  const staffActivo = useMemo(() =>
+    usuarios.filter(u => u.estado !== 'suspendido' && u.estado !== 'inactivo').length,
+  [usuarios]);
+
+  const promesas = useMemo(() =>
+    canteraRegistros.filter(r => r.potencial === 'alto' || r.potencial === 'elite').length,
+  [canteraRegistros]);
+
+  /* --- distribuciones --- */
+  const estadoDistribucion = useMemo(() => {
+    const counts = {};
+    ESTADOS_ALUMNO.forEach(e => { counts[e.value] = 0; });
+    alumnosFiltrados.forEach(a => { counts[a.estado || 'activo'] = (counts[a.estado || 'activo'] || 0) + 1; });
+    return ESTADOS_ALUMNO.filter(e => counts[e.value] > 0).map(e => ({ label: e.label, value: counts[e.value], color: e.color }));
+  }, [alumnosFiltrados]);
 
   const distribucion = useMemo(() => {
     const map = {};
-    alumnos.forEach((a) => {
-      const cat = a.categoria || 'Sin Cat';
-      map[cat] = (map[cat] ?? 0) + 1;
-    });
+    alumnosFiltrados.forEach(a => { const cat = a.categoria || 'Sin Cat'; map[cat] = (map[cat] ?? 0) + 1; });
     return Object.entries(map).sort((a, b) => Number(b[1]) - Number(a[1]));
-  }, [alumnos]);
+  }, [alumnosFiltrados]);
 
   const cumpleanieros = useMemo(() => {
     const mes = hoyIso.slice(5, 7);
-    return alumnos.filter((a) => a.fechaNacimiento?.split('-')[1] === mes);
-  }, [alumnos, hoyIso]);
+    return alumnosFiltrados.filter(a => a.fechaNacimiento?.split('-')[1] === mes);
+  }, [alumnosFiltrados, hoyIso]);
 
-  const ingresosMes = useMemo(
-    () => pagosDelMes.reduce((sum, p) => sum + (Number(p.total) || 0), 0),
-    [pagosDelMes],
-  );
-
-  const totalCategorias = distribucion.length || 7;
+  const totalCategorias  = distribucion.length || 7;
   const maxAlumnosPorCat = Math.max(...distribucion.map(([, c]) => c), 1);
 
+  /* --- alertas --- */
+  const alertas = useMemo(() =>
+    computeAlerts(alumnosFiltrados, convocatorias, usuarios, rol),
+  [alumnosFiltrados, convocatorias, usuarios, rol]);
+
+  /* --- resumen ejecutivo --- */
+  const resumenItems = useMemo(() => {
+    const items = [];
+    if (verFinanzas && morosos > 0)
+      items.push({ text: `${morosos} alumno${morosos > 1 ? 's' : ''} moroso${morosos > 1 ? 's' : ''} por revisar`, link: '/alumnos', tone: 'crit' });
+    if (verDeportivo && lesionados > 0)
+      items.push({ text: `${lesionados} lesionado${lesionados > 1 ? 's' : ''} activo${lesionados > 1 ? 's' : ''} en plantilla`, link: '/alumnos', tone: 'crit' });
+    if (verDeportivo && convocatorias.length > 0) {
+      const pend = (convocatorias[0].convocados || []).filter(c => c.disponibilidad === 'pendiente').length;
+      if (pend > 0) items.push({ text: `${pend} convocado${pend > 1 ? 's' : ''} pendiente${pend > 1 ? 's' : ''} de confirmar`, link: '/convocatoria', tone: 'warn' });
+    }
+    if (rol === 'admin') {
+      const sinC = alumnosFiltrados.filter(a => !a.contactosFamiliares || a.contactosFamiliares.length === 0).length;
+      if (sinC > 0) items.push({ text: `${sinC} alumno${sinC > 1 ? 's' : ''} sin contacto familiar completo`, link: '/alumnos', tone: 'warn' });
+    }
+    if (verDeportivo && suspInact > 0)
+      items.push({ text: `${suspInact} alumno${suspInact > 1 ? 's' : ''} suspendido${suspInact > 1 ? 's' : ''}/inactivo${suspInact > 1 ? 's' : ''}`, link: '/alumnos', tone: 'info' });
+    return items;
+  }, [morosos, lesionados, suspInact, alumnosFiltrados, convocatorias, rol, verFinanzas, verDeportivo]);
+
+  /* =========== RENDER =========== */
   return (
     <div style={pageBg}>
       <BackgroundFx />
@@ -59,49 +185,178 @@ const Dashboard = () => {
         {/* === HERO === */}
         <Hero user={user} hoyDmy={hoyDmy} />
 
-        {/* === KPIs === */}
-        <section style={{ marginTop: 'var(--sn-space-7)' }}>
-          <SectionHeader eyebrow="Vista rápida" title="Hoy en la academia" />
-          <div style={kpiGrid}>
-            <KpiCard
-              label="Alumnos"
-              value={totalAlumnos}
-              loading={loadingAlumnos}
-              icon={<UsersIcon />}
-              hint="Registros activos"
-              accent="brand"
-            />
-            <KpiCard
-              label="Asistencia hoy"
-              value={porcentajeAsistencia}
-              suffix="%"
-              loading={loadingAsist || loadingAlumnos}
-              icon={<CheckIcon />}
-              hint={`${presentesHoy} / ${totalAlumnos} presentes`}
-              accent="success"
-            />
-            <KpiCard
-              label="Deudas activas"
-              value={resumenDeudas?.facturas ?? 0}
-              loading={loadingDeudas}
-              icon={<AlertIcon />}
-              hint={resumenDeudas ? formatMoney(resumenDeudas.total) : '—'}
-              accent="crit"
-            />
-            <KpiCard
-              label="Categorías"
-              value={totalCategorias}
-              loading={loadingAlumnos}
-              icon={<TrophyIcon />}
-              hint="Activas en sistema"
-              accent="elite"
-            />
+        {/* === FILTROS === */}
+        <section style={{ marginTop: 'var(--sn-space-5)' }}>
+          <div className="sn-dash-filters" style={filtersBarStyle}>
+            <FilterIcon />
+            <select value={filtroCat} onChange={e => setFiltroCat(e.target.value)} className="form-select" style={filterSelectStyle}>
+              <option value="">Todas las categorías</option>
+              {categoriasDisponibles.map(c => <option key={c} value={c}>Cat. {c}</option>)}
+            </select>
+            <select value={filtroEstado} onChange={e => setFiltroEstado(e.target.value)} className="form-select" style={filterSelectStyle}>
+              <option value="">Todos los estados</option>
+              {ESTADOS_ALUMNO.map(e => <option key={e.value} value={e.value}>{e.label}</option>)}
+            </select>
+            {(filtroCat || filtroEstado) && (
+              <button onClick={() => { setFiltroCat(''); setFiltroEstado(''); }} style={clearFilterBtnStyle}>
+                ✕ Limpiar
+              </button>
+            )}
           </div>
         </section>
 
-        {/* === GRID PRINCIPAL === */}
+        {/* === KPIs === */}
+        <section style={{ marginTop: 'var(--sn-space-6)' }}>
+          <SectionHeader eyebrow="Vista rápida" title="Indicadores clave" />
+          <div style={kpiGrid}>
+            <KpiCard label="Alumnos" value={totalAlumnos} loading={loadingAlumnos}
+              icon={<UsersIcon />} hint={filtroCat ? `Cat. ${filtroCat}` : 'Registrados'} accent="brand" />
+
+            {(rol === 'admin' || rol === 'entrenador') && (
+              <KpiCard label="Activos" value={activos} loading={loadingAlumnos}
+                icon={<ActiveIcon />} hint={`${totalAlumnos > 0 ? Math.round((activos / totalAlumnos) * 100) : 0}% del total`} accent="success" />
+            )}
+
+            {verDeportivo && (
+              <KpiCard label="Lesionados" value={lesionados} loading={loadingAlumnos}
+                icon={<HeartIcon />} hint={lesionados > 0 ? 'Requieren seguimiento' : 'Ninguno'} accent="crit" />
+            )}
+
+            {verFinanzas && (
+              <KpiCard label="Morosos" value={morosos} loading={loadingAlumnos}
+                icon={<AlertIcon />} hint={morosos > 0 ? 'Pagos pendientes' : 'Al día'} accent="warn" />
+            )}
+
+            {verFinanzas && (
+              <KpiCard label="Becados" value={becados} loading={loadingAlumnos}
+                icon={<StarIcon />} hint="Con beca activa" accent="elite" />
+            )}
+
+            <KpiCard label="Asistencia hoy" value={porcentajeAsistencia} suffix="%"
+              loading={loadingAsist || loadingAlumnos} icon={<CheckIcon />}
+              hint={`${presentesHoy} / ${totalAlumnos} presentes`} accent="success" />
+
+            {verFinanzas && (
+              <KpiCard label="Deudas activas" value={resumenDeudas?.facturas ?? 0} loading={loadingDeudas}
+                icon={<AlertTriangleIcon />} hint={resumenDeudas ? formatMoney(resumenDeudas.total) : '—'} accent="crit" />
+            )}
+
+            {verFinanzas && (
+              <KpiCard label="Ingresos del mes" value={ingresosMes} loading={loadingPagosMes}
+                icon={<MoneyIcon />} hint="Mes actual" accent="success" format={formatMoney} />
+            )}
+
+            {verDeportivo && (
+              <KpiCard label="Convocatorias" value={convocatorias.length} loading={loadingConv}
+                icon={<ClipboardIcon />} hint="Registradas" accent="brand" />
+            )}
+
+            {verDeportivo && (
+              <KpiCard label="Promesas" value={promesas} loading={loadingCantera}
+                icon={<TrophyIcon />} hint="Alto + Élite potencial" accent="elite" />
+            )}
+
+            {rol === 'admin' && (
+              <KpiCard label="Staff activo" value={staffActivo} loading={loadingUsuarios}
+                icon={<StaffIcon />} hint={`${usuarios.length} total`} accent="brand" />
+            )}
+
+            {rol === 'invitado' && (
+              <KpiCard label="Categorías" value={totalCategorias} loading={loadingAlumnos}
+                icon={<TrophyIcon />} hint="Activas en sistema" accent="elite" />
+            )}
+          </div>
+        </section>
+
+        {/* === RESUMEN EJECUTIVO === */}
+        {notInvitado && resumenItems.length > 0 && (
+          <section style={{ marginTop: 'var(--sn-space-5)' }}>
+            <ResumenEjecutivo items={resumenItems} />
+          </section>
+        )}
+
+        {/* === INTELIGENCIA: ALERTAS + GRÁFICOS === */}
+        {notInvitado && (
+          <section style={{ marginTop: 'var(--sn-space-7)' }}>
+            <SectionHeader eyebrow="Inteligencia operativa" title="Análisis y alertas" />
+            <div style={intelGridStyle} className="sn-dash-intel-grid">
+              {/* ALERTAS */}
+              <Card>
+                <CardBody style={{ padding: 0 }}>
+                  <div style={panelHeaderStyle}>
+                    <div>
+                      <h3 style={panelTitleStyle}>Alertas del sistema</h3>
+                      <p style={panelSubtitleStyle}>{alertas.length} alerta{alertas.length !== 1 ? 's' : ''} activa{alertas.length !== 1 ? 's' : ''}</p>
+                    </div>
+                    {alertas.length > 0 && <Badge tone="crit" size="lg">{alertas.length}</Badge>}
+                  </div>
+                  <div style={{ padding: 'var(--sn-space-4)' }}>
+                    <AlertsPanel alerts={alertas} />
+                  </div>
+                </CardBody>
+              </Card>
+
+              {/* GRÁFICOS */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sn-space-5)' }}>
+                <Card>
+                  <CardBody style={{ padding: 0 }}>
+                    <div style={panelHeaderStyle}>
+                      <div>
+                        <h3 style={panelTitleStyle}>Distribución por estado</h3>
+                        <p style={panelSubtitleStyle}>Estado actual de los alumnos</p>
+                      </div>
+                    </div>
+                    <div style={{ padding: 'var(--sn-space-5)' }}>
+                      {loadingAlumnos ? <Skeleton height={180} /> : <EstadoDonut segments={estadoDistribucion} />}
+                    </div>
+                  </CardBody>
+                </Card>
+
+                {verDeportivo && (
+                  <Card>
+                    <CardBody style={{ padding: 0 }}>
+                      <div style={panelHeaderStyle}>
+                        <div>
+                          <h3 style={panelTitleStyle}>Última convocatoria</h3>
+                          <p style={panelSubtitleStyle}>Estado de disponibilidad</p>
+                        </div>
+                      </div>
+                      <div style={{ padding: 'var(--sn-space-5)' }}>
+                        {loadingConv ? <Skeleton height={120} /> : <ConvocatoriaChart convocatoria={convocatorias[0]} />}
+                      </div>
+                      <div style={panelFooterStyle}>
+                        <Link to="/convocatoria" style={panelLinkStyle}>Ir a convocatorias <ArrowRightIcon /></Link>
+                      </div>
+                    </CardBody>
+                  </Card>
+                )}
+
+                {verDeportivo && (
+                  <Card>
+                    <CardBody style={{ padding: 0 }}>
+                      <div style={panelHeaderStyle}>
+                        <div>
+                          <h3 style={panelTitleStyle}>Pipeline de cantera</h3>
+                          <p style={panelSubtitleStyle}>Evaluaciones de potencial</p>
+                        </div>
+                      </div>
+                      <div style={{ padding: 'var(--sn-space-5)' }}>
+                        {loadingCantera ? <Skeleton height={120} /> : <CanteraPipeline registros={canteraRegistros} />}
+                      </div>
+                      <div style={panelFooterStyle}>
+                        <Link to="/cantera" style={panelLinkStyle}>Ir a cantera <ArrowRightIcon /></Link>
+                      </div>
+                    </CardBody>
+                  </Card>
+                )}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* === DETALLE OPERATIVO === */}
         <section style={{ marginTop: 'var(--sn-space-7)' }}>
-          <SectionHeader eyebrow="Inteligencia operativa" title="Pulso del club" />
+          <SectionHeader eyebrow="Operaciones" title="Detalle operativo" />
           <div style={mainGridStyle} className="sn-dashboard-grid">
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sn-space-5)' }}>
               <CategoriaPanel distribucion={distribucion} maxAlumnos={maxAlumnosPorCat} loading={loadingAlumnos} />
@@ -140,22 +395,17 @@ const Dashboard = () => {
                     />
 
                     <div style={panelFooterStyle}>
-                      <Link to="/ver-pagos" style={panelLinkStyle}>
-                        Ir al libro mayor
-                        <ArrowRightIcon />
-                      </Link>
+                      <Link to="/ver-pagos" style={panelLinkStyle}>Ir al libro mayor <ArrowRightIcon /></Link>
                     </div>
                   </CardBody>
                 </Card>
               )}
             </div>
 
-            {/* === SIDEBAR === */}
+            {/* SIDEBAR */}
             <aside style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sn-space-5)' }}>
               <CumpleaniosPanel lista={cumpleanieros} loading={loadingAlumnos} />
-              {verFinanzas && (
-                <DeudoresPanel resumen={resumenDeudas} loading={loadingDeudas} />
-              )}
+              {verFinanzas && <DeudoresPanel resumen={resumenDeudas} loading={loadingDeudas} />}
             </aside>
           </div>
         </section>
@@ -191,11 +441,11 @@ const Hero = ({ user, hoyDmy }) => (
         {greet()},<br /><span style={{ color: 'var(--sn-brand-glow)' }}>{user?.nombre ?? 'Staff'}</span>.
       </h1>
       <p style={heroLeadStyle}>
-        Esta es la radiografía operativa de la academia: alumnos, asistencia, finanzas y rendimiento. Un solo lugar para tomar decisiones rápidas.
+        Radiografía operativa de la academia: alumnos, asistencia, finanzas, rendimiento y alertas. Un solo lugar para tomar decisiones rápidas.
       </p>
     </div>
     <div className="sn-dashboard-hero-quote" style={heroQuoteStyle}>
-      "Nuestra pasión marca la diferencia."
+      &ldquo;Nuestra pasión marca la diferencia.&rdquo;
       <span style={heroQuoteAuthorStyle}>— FC Sechura</span>
     </div>
   </div>
@@ -208,6 +458,83 @@ const greet = () => {
   return 'Buenas noches';
 };
 
+/* --- Resumen ejecutivo --- */
+const ResumenEjecutivo = ({ items }) => (
+  <Card>
+    <CardBody style={{ padding: 0 }}>
+      <div style={panelHeaderStyle}>
+        <div>
+          <h3 style={panelTitleStyle}>Hoy debes revisar…</h3>
+          <p style={panelSubtitleStyle}>Acciones recomendadas según datos actuales</p>
+        </div>
+        <BulbIcon />
+      </div>
+      <div style={{ padding: 'var(--sn-space-4) var(--sn-space-5)' }}>
+        <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 'var(--sn-space-2)' }}>
+          {items.map((item, i) => (
+            <li key={i} style={{ display: 'flex', alignItems: 'center', gap: 'var(--sn-space-3)', padding: '0.5rem 0' }}>
+              <span style={{
+                width: 8, height: 8, borderRadius: '50%', flexShrink: 0,
+                background: item.tone === 'crit' ? 'var(--sn-crit)' : item.tone === 'warn' ? 'var(--sn-warn)' : 'var(--sn-info)',
+              }} />
+              <span style={{ flex: 1, fontSize: 'var(--sn-fs-sm)', color: 'var(--sn-text-primary)', fontWeight: 600 }}>
+                {item.text}
+              </span>
+              {item.link && (
+                <Link to={item.link} style={{ fontSize: 'var(--sn-fs-xs)', fontWeight: 700, color: 'var(--sn-brand-glow)', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                  Ver →
+                </Link>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </CardBody>
+  </Card>
+);
+
+/* --- Alertas panel --- */
+const AlertsPanel = ({ alerts }) => {
+  if (alerts.length === 0) return <EmptyState title="Todo en orden" description="No hay alertas que requieran atención." />;
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sn-space-3)' }}>
+      {alerts.map((alert, i) => {
+        const tone = alert.severity === 'alta' ? 'crit' : alert.severity === 'media' ? 'warn' : 'info';
+        const borderColor = alert.severity === 'alta' ? 'var(--sn-crit)' : alert.severity === 'media' ? 'var(--sn-warn)' : 'var(--sn-info)';
+        return (
+          <div key={i} style={{
+            display: 'flex', alignItems: 'flex-start', gap: 'var(--sn-space-3)',
+            padding: 'var(--sn-space-3) var(--sn-space-4)',
+            borderRadius: 'var(--sn-radius-md)',
+            background: 'var(--sn-row-soft)',
+            border: '1px solid var(--sn-border-faint)',
+            borderLeft: `4px solid ${borderColor}`,
+          }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sn-space-2)', marginBottom: 4, flexWrap: 'wrap' }}>
+                <Badge tone={tone}>{alert.severity.toUpperCase()}</Badge>
+                <span style={{ fontWeight: 700, fontSize: 'var(--sn-fs-sm)', color: 'var(--sn-text-primary)' }}>
+                  {alert.title}
+                </span>
+              </div>
+              <p style={{ margin: 0, fontSize: 'var(--sn-fs-xs)', color: 'var(--sn-text-muted)' }}>
+                {alert.description}
+              </p>
+            </div>
+            {alert.link && (
+              <Link to={alert.link} style={alertActionStyle}>
+                {alert.action || 'Ver'} <ArrowRightIcon />
+              </Link>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+/* --- Paneles existentes --- */
 const CategoriaPanel = ({ distribucion, maxAlumnos, loading }) => (
   <Card>
     <CardBody style={{ padding: 0 }}>
@@ -229,9 +556,7 @@ const CategoriaPanel = ({ distribucion, maxAlumnos, loading }) => (
             {distribucion.map(([cat, count]) => (
               <div key={cat}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                  <span style={{ fontSize: 'var(--sn-fs-sm)', fontWeight: 700, color: 'var(--sn-text-secondary)' }}>
-                    Cat. {cat}
-                  </span>
+                  <span style={{ fontSize: 'var(--sn-fs-sm)', fontWeight: 700, color: 'var(--sn-text-secondary)' }}>Cat. {cat}</span>
                   <span style={{ fontFamily: 'var(--sn-font-mono)', fontSize: 'var(--sn-fs-sm)', fontWeight: 800, color: 'var(--sn-text-primary)' }}>
                     {count} <span style={{ color: 'var(--sn-text-muted)', fontWeight: 600 }}>alum.</span>
                   </span>
@@ -268,12 +593,12 @@ const CumpleaniosPanel = ({ lista, loading }) => (
         ) : (
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 'var(--sn-space-2)' }}>
             {lista.slice(0, 6).map((c) => {
-              const [_, mes, dia] = (c.fechaNacimiento ?? '').split('-');
+              const parts = (c.fechaNacimiento ?? '').split('-');
               return (
                 <li key={c.id} style={listRowStyle}>
                   <span style={listDateChipStyle}>
-                    <span style={{ fontSize: '0.65rem', color: 'var(--sn-text-muted)', lineHeight: 1 }}>{mes ?? '--'}</span>
-                    <span style={{ fontSize: 'var(--sn-fs-sm)', fontWeight: 800, lineHeight: 1, color: 'var(--sn-text-primary)' }}>{dia ?? '--'}</span>
+                    <span style={{ fontSize: '0.65rem', color: 'var(--sn-text-muted)', lineHeight: 1 }}>{parts[1] ?? '--'}</span>
+                    <span style={{ fontSize: 'var(--sn-fs-sm)', fontWeight: 800, lineHeight: 1, color: 'var(--sn-text-primary)' }}>{parts[2] ?? '--'}</span>
                   </span>
                   <span style={{ fontWeight: 700, color: 'var(--sn-text-primary)' }}>
                     {c.nombre} {c.apellido}
@@ -332,22 +657,24 @@ const DeudoresPanel = ({ resumen, loading }) => (
   </Card>
 );
 
-/* === Iconos === */
-const UsersIcon  = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 19a6.5 6.5 0 0 1 13 0"/><circle cx="17" cy="9" r="2.5"/><path d="M16 19a5.5 5.5 0 0 1 5.5-5.5"/></svg>);
-const CheckIcon  = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="m8 15 3 3 5-5"/></svg>);
-const AlertIcon  = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 9v4M12 17h.01M10.3 3.7a2 2 0 0 1 3.4 0l8.4 14.6A2 2 0 0 1 20.4 21H3.6a2 2 0 0 1-1.7-2.7L10.3 3.7Z"/></svg>);
-const TrophyIcon = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4Z"/><path d="M5 4H3v3a3 3 0 0 0 3 3M19 4h2v3a3 3 0 0 1-3 3"/></svg>);
-const CakeIcon   = () => (<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--sn-tier-elite)" strokeWidth="2"><path d="M12 6V3M9 6h6"/><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M4 14c2 0 2 2 4 2s2-2 4-2 2 2 4 2 2-2 4-2"/></svg>);
-const ArrowRightIcon = () => (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>);
-
-/* === Estilos compartidos === */
-const pageBg = {
-  minHeight: 'calc(100vh - 73px)',
-  background: 'var(--sn-bg-base)',
-  color: 'var(--sn-text-primary)',
-  fontFamily: 'var(--sn-font-ui)',
-  position: 'relative',
-};
+/* ===========================================================
+   Iconos
+   =========================================================== */
+const UsersIcon       = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 19a6.5 6.5 0 0 1 13 0"/><circle cx="17" cy="9" r="2.5"/><path d="M16 19a5.5 5.5 0 0 1 5.5-5.5"/></svg>);
+const CheckIcon       = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="m8 15 3 3 5-5"/></svg>);
+const AlertIcon       = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>);
+const AlertTriangleIcon = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 9v4M12 17h.01M10.3 3.7a2 2 0 0 1 3.4 0l8.4 14.6A2 2 0 0 1 20.4 21H3.6a2 2 0 0 1-1.7-2.7L10.3 3.7Z"/></svg>);
+const TrophyIcon      = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4Z"/><path d="M5 4H3v3a3 3 0 0 0 3 3M19 4h2v3a3 3 0 0 1-3 3"/></svg>);
+const CakeIcon        = () => (<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--sn-tier-elite)" strokeWidth="2"><path d="M12 6V3M9 6h6"/><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M4 14c2 0 2 2 4 2s2-2 4-2 2 2 4 2 2-2 4-2"/></svg>);
+const ArrowRightIcon  = () => (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>);
+const HeartIcon       = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>);
+const StarIcon        = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>);
+const MoneyIcon       = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>);
+const ClipboardIcon   = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>);
+const StaffIcon       = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>);
+const ActiveIcon      = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>);
+const BulbIcon        = () => (<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--sn-warn)" strokeWidth="2"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6M10 22h4"/></svg>);
+const FilterIcon      = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sn-text-muted)" strokeWidth="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>);
 
 const BackgroundFx = () => (
   <div aria-hidden style={{
@@ -358,6 +685,17 @@ const BackgroundFx = () => (
     `,
   }} />
 );
+
+/* ===========================================================
+   Estilos
+   =========================================================== */
+const pageBg = {
+  minHeight: 'calc(100vh - 73px)',
+  background: 'var(--sn-bg-base)',
+  color: 'var(--sn-text-primary)',
+  fontFamily: 'var(--sn-font-ui)',
+  position: 'relative',
+};
 
 const contentWrap = {
   position: 'relative',
@@ -438,10 +776,55 @@ const heroQuoteAuthorStyle = {
   color: 'var(--sn-brand-glow)',
 };
 
+const filtersBarStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: 'var(--sn-space-3)',
+  flexWrap: 'wrap',
+  padding: 'var(--sn-space-4)',
+  borderRadius: 'var(--sn-radius-lg)',
+  background: 'var(--sn-bg-surface)',
+  border: '1px solid var(--sn-border-faint)',
+};
+
+const filterSelectStyle = {
+  padding: '0.45rem 2rem 0.45rem 0.75rem',
+  borderRadius: 'var(--sn-radius-md)',
+  border: '1.5px solid var(--sn-border-soft)',
+  background: 'var(--sn-bg-base)',
+  color: 'var(--sn-text-primary)',
+  fontSize: 'var(--sn-fs-sm)',
+  fontFamily: 'var(--sn-font-ui)',
+  fontWeight: 600,
+  cursor: 'pointer',
+  minHeight: 38,
+};
+
+const clearFilterBtnStyle = {
+  padding: '0.4rem 0.8rem',
+  borderRadius: 'var(--sn-radius-pill)',
+  border: '1px solid var(--sn-border-soft)',
+  background: 'transparent',
+  color: 'var(--sn-text-muted)',
+  fontSize: 'var(--sn-fs-xs)',
+  fontWeight: 700,
+  cursor: 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  gap: 4,
+};
+
 const kpiGrid = {
   display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))',
   gap: 'var(--sn-space-4)',
+};
+
+const intelGridStyle = {
+  display: 'grid',
+  gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)',
+  gap: 'var(--sn-space-5)',
+  alignItems: 'start',
 };
 
 const mainGridStyle = {
@@ -485,6 +868,16 @@ const panelLinkStyle = {
   letterSpacing: 'var(--sn-tracking-wide)',
 };
 
+const alertActionStyle = {
+  fontSize: 'var(--sn-fs-xs)', fontWeight: 700,
+  color: 'var(--sn-brand-glow)', textDecoration: 'none',
+  whiteSpace: 'nowrap', padding: '4px 8px',
+  borderRadius: 'var(--sn-radius-sm)',
+  background: 'color-mix(in srgb, var(--sn-brand-glow) 10%, transparent)',
+  border: '1px solid color-mix(in srgb, var(--sn-brand-glow) 25%, transparent)',
+  display: 'inline-flex', alignItems: 'center', gap: 4, flexShrink: 0,
+};
+
 const progressTrackStyle = {
   height: 8,
   borderRadius: 'var(--sn-radius-pill)',
@@ -525,19 +918,23 @@ const rankBadgeStyle = {
   flexShrink: 0,
 };
 
-/* Responsive: colapsar grid en móvil */
+/* ===========================================================
+   Responsive
+   =========================================================== */
 const styleSheet = `
   @media (max-width: 991.98px) {
-    .sn-dashboard-grid { grid-template-columns: 1fr !important; }
+    .sn-dashboard-grid   { grid-template-columns: 1fr !important; }
+    .sn-dash-intel-grid  { grid-template-columns: 1fr !important; }
   }
   @media (max-width: 640px) {
-    .sn-dashboard-hero { min-height: 240px !important; }
+    .sn-dashboard-hero        { min-height: 240px !important; }
     .sn-dashboard-hero-content { padding: var(--sn-space-5) var(--sn-space-4) !important; }
-    .sn-dashboard-hero-quote {
+    .sn-dashboard-hero-quote  {
       max-width: calc(100% - 1rem) !important;
       margin: var(--sn-space-3) !important;
       font-size: var(--sn-fs-xs) !important;
     }
+    .sn-dash-filters select { width: 100% !important; }
   }
 `;
 

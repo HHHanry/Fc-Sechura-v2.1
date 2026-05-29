@@ -7,6 +7,7 @@ export { useTheme }                                             from './useTheme
 export { useTacticas, mutarTacticas }                           from './useTacticas';
 export { useConvocatorias, mutarConvocatorias }                 from './useConvocatorias';
 export { invalidate, invalidatePrefix, invalidateMany, invalidateAll } from './useFirestoreCache';
+export { useUsuarios }                                                 from './useUsuarios';
 
 // === Fases 2-3 (estructura preparada) ===
 export { useMisionesDeAlumno, mutarMisiones }             from './useMisiones';
