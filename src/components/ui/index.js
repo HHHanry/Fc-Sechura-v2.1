@@ -7,6 +7,7 @@ export { Modal }                        from './Modal';
 export { ToastProvider }                from './Toast';
 export { EmptyState }                   from './EmptyState';
 export { DataTable }                    from './DataTable';
+export { FilterBar }                    from './FilterBar';
 export { StatusBadge }                  from './StatusBadge';
 export { TagInput }                     from './TagInput';
 export { Timeline }                     from './Timeline';

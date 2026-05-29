@@ -8,7 +8,7 @@ import {
   puedeVerExpediente, puedeVerCarnet,
 } from '../helpers/permisosHelper';
 import { useAuth } from '../context/useAuth';
-import { Card, CardBody, Button, Badge, DataTable, Modal, EmptyState, StatusBadge } from '../components/ui';
+import { Card, CardBody, Button, Badge, DataTable, Modal, EmptyState, StatusBadge, FilterBar } from '../components/ui';
 import { toast } from '../hooks/useToast';
 import { AlumnoForm } from './alumnos/AlumnoForm';
 import { CarnetModal } from './alumnos/CarnetModal';
@@ -101,6 +101,11 @@ const Alumnos = () => {
     }
   };
 
+  const hayFiltrosActivos = busqueda || filtroCategoria !== 'Todas' || filtroDistrito !== 'Todos' || filtroEstado !== 'Todos' || orden !== 'reciente';
+  const limpiarFiltros = () => {
+    setBusqueda(''); setFiltroCategoria('Todas'); setFiltroDistrito('Todos'); setFiltroEstado('Todos'); setOrden('reciente');
+  };
+
   const handleEliminar = async () => {
     if (!alumnoAEliminar) return;
     setEliminando(true);
@@ -138,41 +143,22 @@ const Alumnos = () => {
         </header>
 
         {/* === FILTROS === */}
-        <Card style={{ marginBottom: 'var(--sn-space-5)' }}>
-          <CardBody>
-            <div style={filtersGridStyle} className="sn-alumnos-filters">
-              <div style={searchWrapStyle}>
-                <SearchIcon />
-                <input
-                  className="sn-focusable"
-                  type="text"
-                  value={busqueda}
-                  onChange={(e) => setBusqueda(e.target.value)}
-                  placeholder="Buscar por nombre, apellido o DNI..."
-                  style={searchInputStyle}
-                />
-              </div>
-              <SelectFilter value={filtroCategoria} onChange={setFiltroCategoria}
-                options={[{ value: 'Todas', label: 'Todas las categorías' }, ...CATEGORIAS.map((c) => ({ value: c, label: `Cat. ${c}` }))]} />
-              <SelectFilter value={filtroDistrito} onChange={setFiltroDistrito}
-                options={distritosExistentes.map((d) => ({ value: d, label: d === 'Todos' ? 'Todos los distritos' : d }))} />
-              <SelectFilter value={filtroEstado} onChange={setFiltroEstado}
-                options={[{ value: 'Todos', label: 'Todos los estados' }, ...ESTADOS_ALUMNO.map((e) => ({ value: e.value, label: e.label }))]} />
-              <SelectFilter value={orden} onChange={setOrden} options={ORDENES} />
-            </div>
-            <div style={{ marginTop: 'var(--sn-space-3)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: 'var(--sn-fs-xs)', color: 'var(--sn-text-muted)', letterSpacing: 'var(--sn-tracking-wide)' }}>
-                {loading ? 'Cargando...' : `${alumnosVisibles.length} de ${alumnos.length} alumnos`}
-              </span>
-              {(busqueda || filtroCategoria !== 'Todas' || filtroDistrito !== 'Todos' || filtroEstado !== 'Todos' || orden !== 'reciente') && (
-                <button onClick={() => { setBusqueda(''); setFiltroCategoria('Todas'); setFiltroDistrito('Todos'); setFiltroEstado('Todos'); setOrden('reciente'); }}
-                  style={resetBtnStyle} className="sn-focusable">
-                  Limpiar filtros
-                </button>
-              )}
-            </div>
-          </CardBody>
-        </Card>
+        <div style={{ marginBottom: 'var(--sn-space-5)' }}>
+          <FilterBar
+            search={{ value: busqueda, onChange: setBusqueda, placeholder: 'Buscar por nombre, apellido o DNI...', ariaLabel: 'Buscar alumno' }}
+            filters={[
+              { id: 'categoria', ariaLabel: 'Filtrar por categoría', value: filtroCategoria, onChange: setFiltroCategoria,
+                options: [{ value: 'Todas', label: 'Todas las categorías' }, ...CATEGORIAS.map((c) => ({ value: c, label: `Cat. ${c}` }))] },
+              { id: 'distrito', ariaLabel: 'Filtrar por distrito', value: filtroDistrito, onChange: setFiltroDistrito,
+                options: distritosExistentes.map((d) => ({ value: d, label: d === 'Todos' ? 'Todos los distritos' : d })) },
+              { id: 'estado', ariaLabel: 'Filtrar por estado', value: filtroEstado, onChange: setFiltroEstado,
+                options: [{ value: 'Todos', label: 'Todos los estados' }, ...ESTADOS_ALUMNO.map((e) => ({ value: e.value, label: e.label }))] },
+              { id: 'orden', ariaLabel: 'Ordenar resultados', value: orden, onChange: setOrden, options: ORDENES },
+            ]}
+            meta={loading ? 'Cargando...' : `${alumnosVisibles.length} de ${alumnos.length} alumnos`}
+            onReset={hayFiltrosActivos ? limpiarFiltros : undefined}
+          />
+        </div>
 
         {/* === TABLA === */}
         <Card>
@@ -238,19 +224,6 @@ const Alumnos = () => {
       />
 
       <CarnetModal alumno={alumnoCarnet} onClose={() => setAlumnoCarnet(null)} />
-
-      <style>{`
-        @media (max-width: 767.98px) {
-          .sn-alumnos-filters {
-            grid-template-columns: 1fr !important;
-          }
-        }
-        @media (min-width: 768px) and (max-width: 1099.98px) {
-          .sn-alumnos-filters {
-            grid-template-columns: 1fr 1fr !important;
-          }
-        }
-      `}</style>
 
       <Modal
         open={!!alumnoAEliminar}
@@ -353,16 +326,9 @@ const IconBtn = ({ as = 'button', tone = 'brand', children, ...rest }) => {
   );
 };
 
-const SelectFilter = ({ value, onChange, options }) => (
-  <select className="sn-focusable" value={value} onChange={(e) => onChange(e.target.value)} style={selectStyle}>
-    {options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-  </select>
-);
-
 /* ========== iconos ========== */
 const PlusIcon  = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14"/></svg>);
-const SearchIcon = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>);
-const ExternalIcon = () => (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 3h6v6M21 3l-7 7M19 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6"/></svg>);
+const ExternalIcon = () =>(<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 3h6v6M21 3l-7 7M19 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6"/></svg>);
 const ChartIcon = () => (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>);
 const CardIcon  = () => (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 11h18M7 16h2"/></svg>);
 const EditIcon  = () => (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg>);
@@ -391,49 +357,6 @@ const headerStyle = {
 const eyebrowStyle = { fontSize: 'var(--sn-fs-xs)', fontWeight: 800, letterSpacing: 'var(--sn-tracking-mega)', color: 'var(--sn-brand-glow)' };
 const titleStyle = { margin: '0.3rem 0 0', fontFamily: 'var(--sn-font-display)', fontSize: 'var(--sn-fs-2xl)', fontWeight: 700, color: 'var(--sn-text-primary)', letterSpacing: 'var(--sn-tracking-tight)' };
 const leadStyle  = { margin: '0.3rem 0 0', color: 'var(--sn-text-muted)', fontSize: 'var(--sn-fs-sm)' };
-
-const filtersGridStyle = {
-  display: 'grid',
-  gridTemplateColumns: 'minmax(200px, 2fr) repeat(4, minmax(140px, 1fr))',
-  gap: 'var(--sn-space-3)',
-};
-
-const searchWrapStyle = {
-  display: 'flex', alignItems: 'center', gap: 8,
-  background: 'var(--sn-input-bg)',
-  border: '1px solid var(--sn-border-soft)',
-  borderRadius: 'var(--sn-radius-md)',
-  padding: '0 0.85rem',
-  color: 'var(--sn-text-muted)',
-};
-
-const searchInputStyle = {
-  flex: 1,
-  background: 'transparent',
-  border: 'none', outline: 'none',
-  color: 'var(--sn-text-primary)',
-  fontFamily: 'var(--sn-font-ui)',
-  fontSize: 'var(--sn-fs-sm)',
-  padding: '0.7rem 0',
-};
-
-const selectStyle = {
-  width: '100%',
-  background: 'var(--sn-input-bg)',
-  border: '1px solid var(--sn-border-soft)',
-  borderRadius: 'var(--sn-radius-md)',
-  color: 'var(--sn-text-secondary)',
-  fontFamily: 'var(--sn-font-ui)',
-  fontSize: 'var(--sn-fs-sm)',
-  padding: '0.7rem 0.85rem',
-  outline: 'none',
-};
-
-const resetBtnStyle = {
-  background: 'transparent', border: 'none', cursor: 'pointer',
-  color: 'var(--sn-brand-glow)', fontWeight: 700,
-  fontSize: 'var(--sn-fs-xs)', letterSpacing: 'var(--sn-tracking-wide)',
-};
 
 const avatarStyle = {
   width: 38, height: 38, borderRadius: '50%',
