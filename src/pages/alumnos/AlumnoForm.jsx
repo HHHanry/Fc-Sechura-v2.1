@@ -179,7 +179,7 @@ const Section = ({ title, required, highlight, children }) => (
     paddingBottom: 'var(--sn-space-3)',
     borderTop: '1px solid var(--sn-border-faint)',
     ...(highlight ? {
-      background: 'rgba(34,211,238,0.04)',
+      background: 'rgba(167,139,250,0.06)',
       border: '1px solid var(--sn-border-glow)',
       borderRadius: 'var(--sn-radius-md)',
       padding: 'var(--sn-space-4)',

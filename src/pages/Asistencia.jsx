@@ -401,7 +401,7 @@ const scannerEmptyStyle = {
 
 const scanLineStyle = {
   position: 'absolute', top: 0, left: 0, width: '100%', height: 3,
-  background: 'rgba(34,211,238,0.65)',
+  background: 'rgba(167,139,250,0.65)',
   boxShadow: '0 0 14px var(--sn-brand-glow)',
   animation: 'scan 2.5s infinite linear',
 };

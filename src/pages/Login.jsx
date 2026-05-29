@@ -172,7 +172,7 @@ const BackgroundFx = () => (
       position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none',
       background: `
         radial-gradient(800px 500px at 20% 20%, color-mix(in srgb, var(--sn-brand-glow) 14%, transparent), transparent 60%),
-        radial-gradient(700px 600px at 85% 80%, rgba(30,58,138,0.30), transparent 55%),
+        radial-gradient(700px 600px at 85% 80%, rgba(124,58,237,0.30), transparent 55%),
         var(--sn-bg-base)
       `,
     }} />
@@ -228,7 +228,7 @@ const brandPanelStyle = {
 
 const brandGlowStyle = {
   position: 'absolute', inset: 0,
-  background: 'radial-gradient(420px 260px at 30% 30%, rgba(34,211,238,0.22), transparent 60%)',
+  background: 'radial-gradient(420px 260px at 30% 30%, rgba(167,139,250,0.22), transparent 60%)',
   pointerEvents: 'none',
 };
 

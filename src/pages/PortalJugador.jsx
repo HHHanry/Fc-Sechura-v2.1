@@ -241,8 +241,8 @@ const BackgroundFx = ({ tier }) => (
       position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none',
       background: `
         radial-gradient(900px 600px at 50% -10%, ${tier.color}1F, transparent 55%),
-        radial-gradient(800px 500px at 80% 100%, rgba(34,211,238,0.18), transparent 60%),
-        radial-gradient(700px 600px at 0% 50%, rgba(30,58,138,0.30), transparent 60%),
+        radial-gradient(800px 500px at 80% 100%, rgba(167,139,250,0.18), transparent 60%),
+        radial-gradient(700px 600px at 0% 50%, rgba(124,58,237,0.30), transparent 60%),
         var(--sn-bg-base)
       `,
     }} />

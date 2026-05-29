@@ -104,7 +104,7 @@ const OBJETIVOS_TACTICOS = [
   'Marca al hombre', 'Bloque medio', 'Contraataque', 'Línea de 4',
 ];
 
-const TRAZO_COLORS = ['#FBBF24', '#22D3EE', '#EF4444', '#FFFFFF'];
+const TRAZO_COLORS = ['#FBBF24', '#A78BFA', '#EF4444', '#FFFFFF'];
 
 const PizarraTactiva = () => {
   const { tacticas } = useTacticas();

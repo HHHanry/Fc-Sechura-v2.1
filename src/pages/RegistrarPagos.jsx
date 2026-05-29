@@ -598,7 +598,7 @@ const panelHeaderStyle = {
 
 const cajaHeaderStyle = {
   ...panelHeaderStyle,
-  background: 'linear-gradient(135deg, rgba(30,58,138,0.20) 0%, color-mix(in srgb, var(--sn-brand-glow) 12%, transparent) 100%)',
+  background: 'linear-gradient(135deg, rgba(124,58,237,0.20) 0%, color-mix(in srgb, var(--sn-brand-glow) 12%, transparent) 100%)',
 };
 
 const stepNumStyle = {
@@ -696,7 +696,7 @@ const trashIconStyle = {
 const totalCardStyle = {
   textAlign: 'center',
   padding: 'var(--sn-space-5) var(--sn-space-4)',
-  background: 'linear-gradient(135deg, rgba(30,58,138,0.15) 0%, color-mix(in srgb, var(--sn-brand-glow) 10%, transparent) 100%)',
+  background: 'linear-gradient(135deg, rgba(124,58,237,0.15) 0%, color-mix(in srgb, var(--sn-brand-glow) 10%, transparent) 100%)',
   border: '1px solid var(--sn-border-glow)',
   borderRadius: 'var(--sn-radius-lg)',
   marginBottom: 'var(--sn-space-4)',

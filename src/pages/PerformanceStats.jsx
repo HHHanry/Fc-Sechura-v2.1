@@ -267,7 +267,7 @@ const PerformanceStats = () => {
           width: 22px; height: 22px; border-radius: 50%;
           background: var(--sn-bg-elevated);
           border: 2px solid var(--sn-brand-glow);
-          box-shadow: 0 0 16px rgba(34,211,238,0.55);
+          box-shadow: 0 0 16px rgba(167,139,250,0.55);
           cursor: pointer; transition: transform var(--sn-dur-fast) var(--sn-ease);
         }
         input[type="range"].sn-slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
@@ -275,7 +275,7 @@ const PerformanceStats = () => {
           width: 22px; height: 22px; border-radius: 50%;
           background: var(--sn-bg-elevated);
           border: 2px solid var(--sn-brand-glow);
-          box-shadow: 0 0 16px rgba(34,211,238,0.55);
+          box-shadow: 0 0 16px rgba(167,139,250,0.55);
           cursor: pointer;
         }
       `}</style>

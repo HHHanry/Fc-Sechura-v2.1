@@ -19,7 +19,7 @@ const imprimirCR80 = () => {
           body { font-family: 'Inter', sans-serif; background: white; display: flex; flex-direction: column; align-items: center; gap: 10px; margin: 0; padding: 20px; }
           * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; box-sizing: border-box; }
           .carnet-id-horizontal { width: 8.54cm; height: 5.4cm; border-radius: 8px; overflow: hidden; display: flex; border: 1px solid #cbd5e1; position: relative; }
-          .carnet-left { width: 35%; background: linear-gradient(135deg, #0F1422 0%, #1E3A8A 100%) !important; color: white; padding: 5px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border-right: 2px solid #22D3EE; }
+          .carnet-left { width: 35%; background: linear-gradient(135deg, #1A1038 0%, #4C1D95 100%) !important; color: white; padding: 5px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border-right: 2px solid #A78BFA; }
           .carnet-right { width: 65%; background: #ffffff; padding: 10px; display: flex; flex-direction: column; justify-content: space-between; }
         </style>
       </head>
@@ -107,7 +107,7 @@ export const CarnetModal = ({ alumno, onClose }) => (
           <div style={{ background: '#f1f5f9', padding: 4, textAlign: 'center', fontSize: 6, color: '#475569', borderTop: '1px solid #e2e8f0' }}>
             Carnet personal e intransferible. Uso obligatorio para entrenamientos y torneos oficiales.
           </div>
-          <div style={{ background: '#0f172a', color: '#22D3EE', textAlign: 'center', fontSize: 7, fontWeight: 'bold', letterSpacing: 2, padding: '3px 0' }}>
+          <div style={{ background: '#1A1038', color: '#A78BFA', textAlign: 'center', fontSize: 7, fontWeight: 'bold', letterSpacing: 2, padding: '3px 0' }}>
             DISCIPLINA · HONOR · TALENTO
           </div>
         </div>
@@ -134,9 +134,9 @@ const frenteStyle = {
 
 const leftStyle = {
   width: '35%',
-  background: 'linear-gradient(135deg, #0F1422 0%, #1E3A8A 100%)',
+  background: 'linear-gradient(135deg, #1A1038 0%, #4C1D95 100%)',
   display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-  padding: 5, borderRight: '2px solid #22D3EE',
+  padding: 5, borderRight: '2px solid #A78BFA',
 };
 
 const rightStyle = {

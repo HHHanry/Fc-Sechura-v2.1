@@ -8,21 +8,21 @@
    ============================================================= */
 
 :root {
-  /* ===== BACKGROUNDS / SURFACES (LIGHT) ===== */
-  --sn-bg-base:        #EEF3F9;   /* Cancha administrativa, fría y limpia */
-  --sn-bg-surface:     #FFFFFF;   /* Cards */
+  /* ===== BACKGROUNDS / SURFACES (LIGHT) — lavanda-gris premium, no blanco plano ===== */
+  --sn-bg-base:        #ECEAF6;   /* Lavanda-gris con identidad (no blanco) */
+  --sn-bg-surface:     #FCFBFF;   /* Cards con hint de lavanda */
   --sn-bg-elevated:    #FFFFFF;   /* Modales / popovers */
-  --sn-bg-deep:        #E4EBF4;   /* Barras: headers de tabla, toolbars */
-  --sn-bg-overlay:     rgba(15, 23, 42, 0.45);
-  --sn-bg-soft:        #E8EFF7;   /* Sub-superficies tenues */
+  --sn-bg-deep:        #E3DEF3;   /* Barras: headers de tabla, toolbars */
+  --sn-bg-overlay:     rgba(26, 16, 54, 0.45);
+  --sn-bg-soft:        #E7E3F4;   /* Sub-superficies tenues */
 
-  /* ===== BRAND ===== */
-  --sn-brand-deep:     #173B82;   /* Azul histórico FC Sechura */
-  --sn-brand-deep-2:   #0F2A62;
-  --sn-brand-glow:     #0C7FC2;   /* Sky sobrio, legible como texto sobre blanco */
-  --sn-brand-glow-2:   #0369A1;
-  --sn-brand-gradient: linear-gradient(135deg, #173B82 0%, #0C7FC2 100%);
-  --sn-brand-gradient-soft: linear-gradient(135deg, rgba(23,59,130,0.10) 0%, rgba(12,127,194,0.08) 100%);
+  /* ===== BRAND — índigo/violeta FUT ===== */
+  --sn-brand-deep:     #4C1D95;   /* Violeta profundo */
+  --sn-brand-deep-2:   #3B1378;
+  --sn-brand-glow:     #6D28D9;   /* Violeta legible como texto sobre claro (~7:1) */
+  --sn-brand-glow-2:   #5B21B6;   /* Más profundo (nav-active AA) */
+  --sn-brand-gradient: linear-gradient(135deg, #7C3AED 0%, #C026D3 100%);
+  --sn-brand-gradient-soft: linear-gradient(135deg, rgba(124,58,237,0.10) 0%, rgba(192,38,211,0.08) 100%);
 
   /* ===== EQUIPO / RIVAL (pizarra, scouting, convocatoria) ===== */
   --sn-team:           #173B82;   /* Nosotros */
@@ -43,17 +43,17 @@
   --sn-warn-soft:      rgba(194, 98, 10, 0.10);
   --sn-crit:           #C81E1E;
   --sn-crit-soft:      rgba(200, 30, 30, 0.10);
-  --sn-info:           #0E72B8;
-  --sn-info-soft:      rgba(14, 114, 184, 0.10);
+  --sn-info:           #4F46E5;   /* Índigo (familia violeta, distinto de marca) */
+  --sn-info-soft:      rgba(79, 70, 229, 0.10);
 
-  /* ===== TEXTO sobre fondo claro ===== */
-  --sn-text-primary:   #0E1726;   /* ~16:1 */
-  --sn-text-secondary: #2F3E54;   /* ~10:1 */
-  --sn-text-muted:     #566274;   /* ~6:1 */
-  --sn-text-dim:       #7C8AA0;   /* ~4.6:1 — límite AA */
+  /* ===== TEXTO sobre fondo claro (tinte violeta) ===== */
+  --sn-text-primary:   #1A1330;   /* ~15:1 */
+  --sn-text-secondary: #3D3358;   /* ~9:1 */
+  --sn-text-muted:     #5E5578;   /* ~5.8:1 */
+  --sn-text-dim:       #6E6589;   /* ~4.4:1 — límite AA */
 
-  --sn-text-on-light:  #0E1726;
-  --sn-text-on-light-muted: #475569;
+  --sn-text-on-light:  #1A1330;
+  --sn-text-on-light-muted: #4A4263;
   --sn-text-on-brand:  #FFFFFF;
   --sn-text-on-glow:   #FFFFFF;
   --sn-text-on-elite:  #1A1408;
@@ -61,39 +61,39 @@
   --sn-text-on-crit:   #FFFFFF;   /* sobre rojo oscuro */
 
   /* ===== BORDES / DIVISORES ===== */
-  --sn-border-faint:   rgba(15, 23, 42, 0.08);
-  --sn-border-soft:    rgba(15, 23, 42, 0.15);
-  --sn-border-strong:  rgba(15, 23, 42, 0.26);
-  --sn-border-glow:    rgba(12, 127, 194, 0.48);
+  --sn-border-faint:   rgba(26, 16, 54, 0.08);
+  --sn-border-soft:    rgba(26, 16, 54, 0.15);
+  --sn-border-strong:  rgba(26, 16, 54, 0.26);
+  --sn-border-glow:    rgba(109, 40, 217, 0.45);
 
-  /* ===== SOMBRAS — premium escolar ===== */
-  --sn-shadow-sm:      0 1px 2px rgba(15, 23, 42, 0.05), 0 1px 3px rgba(15, 23, 42, 0.07);
-  --sn-shadow-md:      0 4px 14px rgba(15, 23, 42, 0.08), 0 2px 4px rgba(15, 23, 42, 0.05);
-  --sn-shadow-lg:      0 24px 48px -16px rgba(15, 23, 42, 0.20), 0 8px 16px rgba(15, 23, 42, 0.07);
-  --sn-shadow-glow:    0 0 0 1px rgba(12, 127, 194, 0.30), 0 8px 24px rgba(12, 127, 194, 0.16);
+  /* ===== SOMBRAS — premium ===== */
+  --sn-shadow-sm:      0 1px 2px rgba(26, 16, 54, 0.05), 0 1px 3px rgba(26, 16, 54, 0.07);
+  --sn-shadow-md:      0 4px 14px rgba(26, 16, 54, 0.08), 0 2px 4px rgba(26, 16, 54, 0.05);
+  --sn-shadow-lg:      0 24px 48px -16px rgba(26, 16, 54, 0.22), 0 8px 16px rgba(26, 16, 54, 0.08);
+  --sn-shadow-glow:    0 0 0 1px rgba(109, 40, 217, 0.30), 0 8px 24px rgba(109, 40, 217, 0.16);
   --sn-shadow-crit:    0 0 0 1px rgba(200, 30, 30, 0.30), 0 8px 24px rgba(200, 30, 30, 0.14);
   --sn-shadow-elite:   0 0 0 1px rgba(176, 125, 30, 0.40), 0 8px 24px rgba(176, 125, 30, 0.18);
 
   /* ===== INPUTS ===== */
   --sn-input-bg:       #FFFFFF;
-  --sn-input-border:   rgba(15, 23, 42, 0.20);
+  --sn-input-border:   rgba(26, 16, 54, 0.20);
 
   /* ===== NAV (top + bottom app nav) ===== */
-  --sn-nav-bg:         rgba(255, 255, 255, 0.86);
-  --sn-nav-border:     rgba(15, 23, 42, 0.10);
-  /* Sky más profundo (rampa de marca) para que el label diminuto del bottom-nav
-     pase AA sobre el fondo casi-blanco: ~5.9:1 vs ~4.3:1 del glow estándar. */
+  --sn-nav-bg:         rgba(252, 251, 255, 0.86);
+  --sn-nav-border:     rgba(26, 16, 54, 0.10);
+  /* Violeta profundo (rampa de marca) para que el label diminuto del bottom-nav
+     pase AA sobre el fondo casi-blanco. */
   --sn-nav-active:     var(--sn-brand-glow-2);
 
   /* ===== FOCUS ===== */
-  --sn-focus-ring:     rgba(12, 127, 194, 0.34);
+  --sn-focus-ring:     rgba(109, 40, 217, 0.34);
 
   /* ===== ROWS / TRACKS / OVERLAYS ===== */
-  --sn-row-soft:       rgba(15, 23, 42, 0.035);
-  --sn-row-strong:     rgba(15, 23, 42, 0.07);
-  --sn-overlay-soft:   rgba(15, 23, 42, 0.035);
-  --sn-overlay-strong: rgba(15, 23, 42, 0.06);
-  --sn-track-bg:       rgba(15, 23, 42, 0.08);
+  --sn-row-soft:       rgba(26, 16, 54, 0.035);
+  --sn-row-strong:     rgba(26, 16, 54, 0.07);
+  --sn-overlay-soft:   rgba(26, 16, 54, 0.035);
+  --sn-overlay-strong: rgba(26, 16, 54, 0.06);
+  --sn-track-bg:       rgba(26, 16, 54, 0.09);
 
   /* ===== RADIOS ===== */
   --sn-radius-xs: 6px;
@@ -173,19 +173,19 @@
    DARK MODE — stadium / HUD marcado pero serio
    ============================================================= */
 :root[data-theme="dark"] {
-  --sn-bg-base:        #060912;   /* Azul-negro profundo de estadio */
-  --sn-bg-surface:     #0E1626;
-  --sn-bg-elevated:    #15213B;   /* Separación real de elevación */
-  --sn-bg-deep:        #080D18;   /* Más profundo que surface (headers) */
-  --sn-bg-overlay:     rgba(4, 7, 14, 0.80);
-  --sn-bg-soft:        #0A1120;
+  --sn-bg-base:        #0F0A1E;   /* Índigo-negro FUT */
+  --sn-bg-surface:     #1A1438;
+  --sn-bg-elevated:    #241C4D;   /* Separación real de elevación */
+  --sn-bg-deep:        #0A0617;   /* Más profundo que surface (headers) */
+  --sn-bg-overlay:     rgba(8, 5, 20, 0.82);
+  --sn-bg-soft:        #150F2E;
 
-  --sn-brand-deep:     #1E3A8A;
-  --sn-brand-deep-2:   #16306E;
-  --sn-brand-glow:     #22D3EE;   /* Cian HUD */
-  --sn-brand-glow-2:   #38BDF8;
-  --sn-brand-gradient: linear-gradient(135deg, #1D4ED8 0%, #22D3EE 100%);
-  --sn-brand-gradient-soft: linear-gradient(135deg, rgba(29,78,216,0.30) 0%, rgba(34,211,238,0.16) 100%);
+  --sn-brand-deep:     #6D28D9;
+  --sn-brand-deep-2:   #4C1D95;
+  --sn-brand-glow:     #A78BFA;   /* Violeta HUD, legible sobre fondo profundo */
+  --sn-brand-glow-2:   #C084FC;
+  --sn-brand-gradient: linear-gradient(135deg, #7C3AED 0%, #C026D3 100%);
+  --sn-brand-gradient-soft: linear-gradient(135deg, rgba(124,58,237,0.32) 0%, rgba(192,38,211,0.18) 100%);
 
   --sn-team:           #3B82F6;
   --sn-team-soft:      rgba(59, 130, 246, 0.18);
@@ -198,8 +198,8 @@
   --sn-warn-soft:      rgba(249, 168, 37, 0.14);
   --sn-crit:           #FB5468;
   --sn-crit-soft:      rgba(251, 84, 104, 0.14);
-  --sn-info:           #38BDF8;
-  --sn-info-soft:      rgba(56, 189, 248, 0.14);
+  --sn-info:           #818CF8;
+  --sn-info-soft:      rgba(129, 140, 248, 0.16);
 
   --sn-tier-elite:     #E6BC5C;   /* Oro mate más claro para dark */
   --sn-tier-gold:      #D9A53A;
@@ -209,39 +209,39 @@
   --sn-text-on-success:#06241B;   /* sobre verde brillante */
   --sn-text-on-crit:   #1A0608;   /* sobre rojo brillante */
 
-  --sn-text-primary:   #F4F8FE;
-  --sn-text-secondary: #C7D3E3;
-  --sn-text-muted:     #9DAEC4;   /* Subido: legible sobre fondo profundo */
-  --sn-text-dim:       #8294AB;   /* Ya no invisible */
+  --sn-text-primary:   #F1EDFB;   /* near-white con tinte violeta */
+  --sn-text-secondary: #CFC6E6;
+  --sn-text-muted:     #ABA0C6;   /* legible sobre índigo profundo */
+  --sn-text-dim:       #8E84A8;
 
   --sn-text-on-elite:  #16100A;
 
-  --sn-border-faint:   rgba(148, 170, 200, 0.14);
-  --sn-border-soft:    rgba(148, 170, 200, 0.28);
-  --sn-border-strong:  rgba(148, 170, 200, 0.46);
-  --sn-border-glow:    rgba(34, 211, 238, 0.50);
+  --sn-border-faint:   rgba(176, 156, 230, 0.13);
+  --sn-border-soft:    rgba(176, 156, 230, 0.26);
+  --sn-border-strong:  rgba(176, 156, 230, 0.44);
+  --sn-border-glow:    rgba(167, 139, 250, 0.52);
 
-  --sn-shadow-sm:      0 1px 2px rgba(0, 0, 0, 0.40);
-  --sn-shadow-md:      0 14px 34px rgba(0, 0, 0, 0.50);
-  --sn-shadow-lg:      0 30px 64px -14px rgba(0, 0, 0, 0.72);
-  --sn-shadow-glow:    0 0 0 1px rgba(34, 211, 238, 0.40), 0 12px 34px rgba(34, 211, 238, 0.18);
+  --sn-shadow-sm:      0 1px 2px rgba(0, 0, 0, 0.45);
+  --sn-shadow-md:      0 14px 34px rgba(0, 0, 0, 0.55);
+  --sn-shadow-lg:      0 30px 64px -14px rgba(0, 0, 0, 0.74);
+  --sn-shadow-glow:    0 0 0 1px rgba(167, 139, 250, 0.42), 0 12px 34px rgba(167, 139, 250, 0.20);
   --sn-shadow-crit:    0 0 0 1px rgba(251, 84, 104, 0.42), 0 10px 34px rgba(251, 84, 104, 0.22);
   --sn-shadow-elite:   0 0 0 1px rgba(230, 188, 92, 0.45), 0 10px 34px rgba(230, 188, 92, 0.22);
 
-  --sn-input-bg:       rgba(13, 21, 38, 0.78);
-  --sn-input-border:   rgba(148, 170, 200, 0.32);
+  --sn-input-bg:       rgba(26, 20, 56, 0.78);
+  --sn-input-border:   rgba(176, 156, 230, 0.30);
 
-  --sn-nav-bg:         rgba(8, 13, 24, 0.88);
-  --sn-nav-border:     rgba(148, 170, 200, 0.18);
+  --sn-nav-bg:         rgba(13, 8, 28, 0.90);
+  --sn-nav-border:     rgba(176, 156, 230, 0.18);
   --sn-nav-active:     var(--sn-brand-glow);
 
-  --sn-focus-ring:     rgba(34, 211, 238, 0.42);
+  --sn-focus-ring:     rgba(167, 139, 250, 0.45);
 
-  --sn-row-soft:       rgba(148, 170, 200, 0.05);
-  --sn-row-strong:     rgba(148, 170, 200, 0.10);
-  --sn-overlay-soft:   rgba(4, 7, 14, 0.42);
-  --sn-overlay-strong: rgba(4, 7, 14, 0.66);
-  --sn-track-bg:       rgba(148, 170, 200, 0.12);
+  --sn-row-soft:       rgba(176, 156, 230, 0.06);
+  --sn-row-strong:     rgba(176, 156, 230, 0.11);
+  --sn-overlay-soft:   rgba(8, 5, 20, 0.45);
+  --sn-overlay-strong: rgba(8, 5, 20, 0.68);
+  --sn-track-bg:       rgba(176, 156, 230, 0.14);
 
   color-scheme: dark;
 }
@@ -291,8 +291,8 @@ body {
 }
 
 @keyframes sn-pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.35); }
-  50%      { box-shadow: 0 0 0 8px rgba(34, 211, 238, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.35); }
+  50%      { box-shadow: 0 0 0 8px rgba(167, 139, 250, 0); }
 }
 
 @keyframes sn-spin {

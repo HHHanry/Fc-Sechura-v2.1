@@ -673,7 +673,7 @@ const BackgroundFx = () => (
     position: 'absolute', inset: 0, pointerEvents: 'none',
     background: `
       radial-gradient(800px 500px at 0% 0%, color-mix(in srgb, var(--sn-brand-glow) 10%, transparent), transparent 60%),
-      radial-gradient(700px 600px at 100% 30%, rgba(30,58,138,0.20), transparent 55%)
+      radial-gradient(700px 600px at 100% 30%, rgba(124,58,237,0.20), transparent 55%)
     `,
   }} />
 );
