@@ -146,14 +146,34 @@ const VerPagos = () => {
   };
 
   const exportarExcel = () => {
-    const html = `<html><head><meta charset="utf-8"></head><body>
+    // Formato de texto para columnas que NO son números (evita que Excel mutile
+    // DNI/recibo/fecha y pierda ceros o use notación científica).
+    const txt = "mso-number-format:'\\@'";
+    const filas = visibles.map((p) => `<tr>
+      <td style="${txt}">${escapeHtml(p.id)}</td>
+      <td style="${txt}">${escapeHtml(p.fecha)}</td>
+      <td>${escapeHtml(p.alumno)}</td>
+      <td style="${txt}">${escapeHtml(p.dni)}</td>
+      <td>${escapeHtml(p.concepto)}</td>
+      <td>${escapeHtml(p.metodo)}</td>
+      <td>${p.monto.toFixed(2)}</td>
+      <td>${escapeHtml(p.estado)}</td>
+    </tr>`).join('');
+    const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+      <head><meta charset="utf-8">
+      <!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>
+      <x:Name>Caja ${escapeHtml(filtroMes)}</x:Name>
+      <x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet>
+      </x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
+      </head><body>
       <h2>Auditoría de Caja · FC Sechura · ${escapeHtml(filtroMes)}</h2>
       <table border="1" cellpadding="6" cellspacing="0">
         <thead><tr><th>RECIBO</th><th>FECHA</th><th>ALUMNO</th><th>DNI</th><th>CONCEPTO</th><th>MÉTODO</th><th>MONTO</th><th>ESTADO</th></tr></thead>
-        <tbody>${visibles.map((p) => `<tr><td>${escapeHtml(p.id)}</td><td>${escapeHtml(p.fecha)}</td><td>${escapeHtml(p.alumno)}</td><td>${escapeHtml(p.dni)}</td><td>${escapeHtml(p.concepto)}</td><td>${escapeHtml(p.metodo)}</td><td>${p.monto.toFixed(2)}</td><td>${escapeHtml(p.estado)}</td></tr>`).join('')}
+        <tbody>${filas}
         <tr><td colspan="6" style="text-align:right;font-weight:bold">TOTAL RECAUDADO</td><td style="font-weight:bold">${totalRecaudado.toFixed(2)}</td><td></td></tr>
         </tbody></table></body></html>`;
-    const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+    // El BOM UTF-8 fuerza a Excel a leer en UTF-8 → acentos correctos (no "CategorÃ­a").
+    const blob = new Blob(['﻿' + html], { type: 'application/vnd.ms-excel;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url; a.download = `Reporte_Caja_${filtroMes}.xls`;
@@ -162,8 +182,8 @@ const VerPagos = () => {
   };
 
   const exportarPDF = () => {
-    const w = window.open('', '_blank', 'noopener,noreferrer');
-    if (!w) return;
+    const w = window.open('', '_blank');
+    if (!w) { toast.error('Permite las ventanas emergentes para exportar el PDF.'); return; }
     const filas = visibles.map((p) => {
       const tono = p.estado === 'Completado' ? 'success' : p.estado === 'Anulado' ? 'danger' : '';
       const estilo = p.estado === 'Anulado' ? 'style="text-decoration:line-through;opacity:0.6"' : '';
@@ -420,8 +440,8 @@ const VerPagos = () => {
 const imprimirRecibo = () => {
   const el = document.getElementById('sn-recibo-print');
   if (!el) return;
-  const w = window.open('', '_blank', 'noopener,noreferrer');
-  if (!w) return;
+  const w = window.open('', '_blank');
+  if (!w) { toast.error('Permite las ventanas emergentes para imprimir la boleta.'); return; }
   w.document.write(`<html><head><title>Recibo FC Sechura</title>
     <style>
       @page { size: A4; margin: 15mm; }
