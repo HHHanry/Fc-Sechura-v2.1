@@ -13,7 +13,7 @@ import {
   ROLES_FINANCIEROS, ROLES_DEPORTIVOS,
   ESTADOS_ALUMNO, formatMoney, formatDateLima,
 } from '../config/businessRules';
-import { Card, CardBody, KpiCard, Badge, DataTable, EmptyState, Skeleton } from '../components/ui';
+import { Card, CardBody, KpiCard, Badge, DataTable, EmptyState, Skeleton, FilterBar } from '../components/ui';
 import { EstadoDonut, ConvocatoriaChart, CanteraPipeline } from './dashboard/DashCharts';
 import imagenPortada from '../assets/dashboard-cover.jpg';
 
@@ -187,22 +187,16 @@ const Dashboard = () => {
 
         {/* === FILTROS === */}
         <section style={{ marginTop: 'var(--sn-space-5)' }}>
-          <div className="sn-dash-filters" style={filtersBarStyle}>
-            <FilterIcon />
-            <select value={filtroCat} onChange={e => setFiltroCat(e.target.value)} className="form-select" style={filterSelectStyle}>
-              <option value="">Todas las categorías</option>
-              {categoriasDisponibles.map(c => <option key={c} value={c}>Cat. {c}</option>)}
-            </select>
-            <select value={filtroEstado} onChange={e => setFiltroEstado(e.target.value)} className="form-select" style={filterSelectStyle}>
-              <option value="">Todos los estados</option>
-              {ESTADOS_ALUMNO.map(e => <option key={e.value} value={e.value}>{e.label}</option>)}
-            </select>
-            {(filtroCat || filtroEstado) && (
-              <button onClick={() => { setFiltroCat(''); setFiltroEstado(''); }} style={clearFilterBtnStyle}>
-                ✕ Limpiar
-              </button>
-            )}
-          </div>
+          <FilterBar
+            filters={[
+              { id: 'cat', ariaLabel: 'Filtrar por categoría', value: filtroCat, onChange: setFiltroCat,
+                options: [{ value: '', label: 'Todas las categorías' }, ...categoriasDisponibles.map(c => ({ value: c, label: `Cat. ${c}` }))] },
+              { id: 'estado', ariaLabel: 'Filtrar por estado', value: filtroEstado, onChange: setFiltroEstado,
+                options: [{ value: '', label: 'Todos los estados' }, ...ESTADOS_ALUMNO.map(e => ({ value: e.value, label: e.label }))] },
+            ]}
+            meta={loadingAlumnos ? 'Cargando…' : `${totalAlumnos} alumno${totalAlumnos === 1 ? '' : 's'} en vista`}
+            onReset={(filtroCat || filtroEstado) ? () => { setFiltroCat(''); setFiltroEstado(''); } : undefined}
+          />
         </section>
 
         {/* === KPIs === */}
@@ -674,8 +668,6 @@ const ClipboardIcon   = () => (<svg width="18" height="18" viewBox="0 0 24 24" f
 const StaffIcon       = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>);
 const ActiveIcon      = () => (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>);
 const BulbIcon        = () => (<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--sn-warn)" strokeWidth="2"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6M10 22h4"/></svg>);
-const FilterIcon      = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sn-text-muted)" strokeWidth="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>);
-
 const BackgroundFx = () => (
   <div aria-hidden style={{
     position: 'absolute', inset: 0, pointerEvents: 'none',
@@ -774,44 +766,6 @@ const heroQuoteAuthorStyle = {
   fontSize: 'var(--sn-fs-xs)',
   letterSpacing: 'var(--sn-tracking-wide)',
   color: 'var(--sn-brand-glow)',
-};
-
-const filtersBarStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: 'var(--sn-space-3)',
-  flexWrap: 'wrap',
-  padding: 'var(--sn-space-4)',
-  borderRadius: 'var(--sn-radius-lg)',
-  background: 'var(--sn-bg-surface)',
-  border: '1px solid var(--sn-border-faint)',
-};
-
-const filterSelectStyle = {
-  padding: '0.45rem 2rem 0.45rem 0.75rem',
-  borderRadius: 'var(--sn-radius-md)',
-  border: '1.5px solid var(--sn-border-soft)',
-  background: 'var(--sn-bg-base)',
-  color: 'var(--sn-text-primary)',
-  fontSize: 'var(--sn-fs-sm)',
-  fontFamily: 'var(--sn-font-ui)',
-  fontWeight: 600,
-  cursor: 'pointer',
-  minHeight: 38,
-};
-
-const clearFilterBtnStyle = {
-  padding: '0.4rem 0.8rem',
-  borderRadius: 'var(--sn-radius-pill)',
-  border: '1px solid var(--sn-border-soft)',
-  background: 'transparent',
-  color: 'var(--sn-text-muted)',
-  fontSize: 'var(--sn-fs-xs)',
-  fontWeight: 700,
-  cursor: 'pointer',
-  display: 'flex',
-  alignItems: 'center',
-  gap: 4,
 };
 
 const kpiGrid = {
@@ -936,7 +890,6 @@ const styleSheet = `
       align-self: stretch !important;
       align-items: flex-start !important;
     }
-    .sn-dash-filters select { width: 100% !important; }
   }
 `;
 
