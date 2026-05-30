@@ -77,7 +77,7 @@ export const Modal = ({
         style={{
           width: '100%',
           maxWidth: widths[size] ?? widths.md,
-          maxHeight: 'calc(100vh - 2rem)',
+          maxHeight: 'calc(100dvh - 2rem)',
           background: 'var(--sn-bg-elevated)',
           color: 'var(--sn-text-primary)',
           border: '1px solid var(--sn-border-soft)',

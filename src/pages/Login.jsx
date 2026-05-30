@@ -43,7 +43,7 @@ const Login = () => {
     <div style={pageStyle}>
       <BackgroundFx />
 
-      <div style={cardStyle}>
+      <div style={cardStyle} className="sn-login-card">
         {/* === LADO IZQUIERDO: Identidad de marca === */}
         <aside style={brandPanelStyle} className="sn-login-brand">
           <div style={brandGlowStyle} aria-hidden />
@@ -134,6 +134,7 @@ const Login = () => {
       <style>{`
         .sn-login-input::placeholder { color: var(--sn-text-dim); }
         @media (max-width: 768px) {
+          .sn-login-card { grid-template-columns: 1fr !important; }
           .sn-login-brand { display: none !important; }
           .sn-login-mobile-logo { display: flex !important; }
         }

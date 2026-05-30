@@ -312,6 +312,11 @@ svg {
     grid-template-columns: 1fr !important;
   }
 
+  /* Selectores fijos de 4 columnas (chips de posición / potencial) → 2 en móvil */
+  [style*="grid-template-columns: repeat(4, 1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
   /* Cabeceras con título + botón: que el botón ocupe ancho completo si toca otro renglón */
   header[style*="justify-content: space-between"][style*="flex-wrap: wrap"] > * {
     min-width: 0;
