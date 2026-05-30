@@ -67,7 +67,7 @@ export const CarnetModal = ({ alumno, onClose }) => (
             </div>
             <div>
               <div style={{ fontSize: 6, color: '#64748b', fontWeight: 'bold', textTransform: 'uppercase' }}>Apellidos</div>
-              <div style={{ fontSize: 12, fontWeight: 900, color: '#1e3a8a', textTransform: 'uppercase', lineHeight: 1, fontFamily: 'Montserrat, sans-serif' }}>{alumno.apellido}</div>
+              <div style={{ fontSize: 12, fontWeight: 900, color: '#4C1D95', textTransform: 'uppercase', lineHeight: 1, fontFamily: 'Montserrat, sans-serif' }}>{alumno.apellido}</div>
               <div style={{ fontSize: 6, color: '#64748b', fontWeight: 'bold', textTransform: 'uppercase', marginTop: 4 }}>Nombres</div>
               <div style={{ fontSize: 11, fontWeight: 900, color: '#1e293b', textTransform: 'uppercase', lineHeight: 1 }}>{alumno.nombre}</div>
             </div>
@@ -95,7 +95,7 @@ export const CarnetModal = ({ alumno, onClose }) => (
 
         {/* === REVERSO === */}
         <div id={REVERSO_ID} className="carnet-id-horizontal" style={{ ...frenteStyle, flexDirection: 'column', background: 'linear-gradient(to bottom, #ffffff, #f8fafc)' }}>
-          <div style={{ background: '#1e3a8a', color: 'white', padding: '5px 10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '1.2cm' }}>
+          <div style={{ background: '#4C1D95', color: 'white', padding: '5px 10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '1.2cm' }}>
             <span style={{ fontSize: 10, fontWeight: 900, fontFamily: 'Montserrat, sans-serif' }}>INFO. DE EMERGENCIA</span>
             <span style={{ fontSize: 12, fontWeight: 'bold' }}>FC SECHURA</span>
           </div>
@@ -119,7 +119,7 @@ export const CarnetModal = ({ alumno, onClose }) => (
 const Linea = ({ label, valor, azul, pequena }) => (
   <div style={{ marginBottom: 4 }}>
     <div style={{ fontSize: 7, color: '#64748b', fontWeight: 'bold' }}>{label}</div>
-    <div style={{ fontSize: pequena ? 8 : (azul ? 10 : 9), color: azul ? '#1e3a8a' : '#0f172a', fontWeight: azul ? 900 : 'bold' }}>{valor}</div>
+    <div style={{ fontSize: pequena ? 8 : (azul ? 10 : 9), color: azul ? '#4C1D95' : '#0f172a', fontWeight: azul ? 900 : 'bold' }}>{valor}</div>
   </div>
 );
 

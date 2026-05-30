@@ -395,7 +395,7 @@ const scannerWrapStyle = {
 };
 
 const scannerEmptyStyle = {
-  textAlign: 'center', color: 'var(--sn-text-dim)',
+  textAlign: 'center', color: 'rgba(241,237,251,0.58)',
   display: 'flex', flexDirection: 'column', alignItems: 'center',
 };
 
