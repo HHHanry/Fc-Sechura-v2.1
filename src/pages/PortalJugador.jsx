@@ -268,7 +268,7 @@ const HoloShine = () => (
 
 const StatBox = ({ label, value }) => (
   <div style={statBoxStyle}>
-    <div style={{ fontSize: '0.62rem', fontWeight: 800, letterSpacing: 'var(--sn-tracking-mega)', color: 'rgba(56,189,248,0.85)', textTransform: 'uppercase' }}>
+    <div style={{ fontSize: '0.62rem', fontWeight: 800, letterSpacing: 'var(--sn-tracking-mega)', color: 'rgba(167,139,250,0.92)', textTransform: 'uppercase' }}>
       {label}
     </div>
     <div style={{ fontFamily: 'var(--sn-font-display)', fontWeight: 900, color: 'white', fontSize: 'var(--sn-fs-md)', lineHeight: 1, marginTop: 4 }}>

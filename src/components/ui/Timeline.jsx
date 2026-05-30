@@ -3,11 +3,11 @@ import React from 'react';
 const TONES = {
   neutral: { dot: 'var(--sn-text-muted)',   line: 'var(--sn-border-faint)' },
   brand:   { dot: 'var(--sn-brand-glow)',    line: 'var(--sn-border-glow)' },
-  success: { dot: 'var(--sn-success)',       line: 'rgba(16,185,129,0.30)' },
-  warn:    { dot: 'var(--sn-warn)',          line: 'rgba(245,158,11,0.30)' },
-  crit:    { dot: 'var(--sn-crit)',          line: 'rgba(239,68,68,0.30)' },
-  elite:   { dot: 'var(--sn-tier-elite)',    line: 'rgba(251,191,36,0.30)' },
-  info:    { dot: 'var(--sn-info)',          line: 'rgba(56,189,248,0.30)' },
+  success: { dot: 'var(--sn-success)',       line: 'color-mix(in srgb, var(--sn-success) 30%, transparent)' },
+  warn:    { dot: 'var(--sn-warn)',          line: 'color-mix(in srgb, var(--sn-warn) 30%, transparent)' },
+  crit:    { dot: 'var(--sn-crit)',          line: 'color-mix(in srgb, var(--sn-crit) 30%, transparent)' },
+  elite:   { dot: 'var(--sn-tier-elite)',    line: 'color-mix(in srgb, var(--sn-tier-elite) 30%, transparent)' },
+  info:    { dot: 'var(--sn-info)',          line: 'color-mix(in srgb, var(--sn-info) 30%, transparent)' },
 };
 
 export const Timeline = ({ items = [], emptyText = 'Sin eventos registrados.' }) => {
