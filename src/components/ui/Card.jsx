@@ -47,8 +47,8 @@ export const Card = React.forwardRef(function Card(
       boxShadow: 'var(--sn-shadow-glow)',
     },
     tier: {
-      background: 'linear-gradient(135deg, rgba(251,191,36,0.10) 0%, rgba(15,20,34,0.95) 60%)',
-      border: '1px solid rgba(251, 191, 36, 0.45)',
+      background: 'linear-gradient(135deg, color-mix(in srgb, var(--sn-tier-elite) 16%, var(--sn-bg-surface)) 0%, var(--sn-bg-surface) 65%)',
+      border: '1px solid color-mix(in srgb, var(--sn-tier-elite) 50%, transparent)',
       boxShadow: 'var(--sn-shadow-elite)',
     },
   };

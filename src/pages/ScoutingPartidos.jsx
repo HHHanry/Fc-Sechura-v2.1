@@ -389,7 +389,7 @@ const scoreWrapStyle = {
   display: 'flex', alignItems: 'center', justifyContent: 'center',
   gap: 'var(--sn-space-3)',
   padding: 'var(--sn-space-4)',
-  background: 'linear-gradient(135deg, rgba(167,139,250,0.08) 0%, rgba(10,6,23,0.55) 100%)',
+  background: 'color-mix(in srgb, var(--sn-brand-glow) 10%, var(--sn-bg-deep))',
   border: '1px solid var(--sn-border-glow)',
   borderRadius: 'var(--sn-radius-lg)',
 };
