@@ -1,7 +1,10 @@
 import React from 'react';
 
 // === RADAR SVG ARTESANAL (Optimizado para Alta Gama) ===
-const FifaRadar = ({ stats, themeColor = 'var(--sn-text-primary)' }) => {
+// `dark` = contexto siempre-oscuro (player card / placa de stats). Por defecto
+// el radar se adapta al tema (cards normales) usando tokens.
+const FifaRadar = ({ stats, dark = false }) => {
+  const labelColor  = dark ? '#F1EDFB' : 'var(--sn-text-primary)';
   // Las 6 estadísticas clásicas de FIFA
   const attributes = [
     { key: 'pac', label: 'RITMO', value: stats?.ritmo || 50 },
@@ -28,9 +31,11 @@ const FifaRadar = ({ stats, themeColor = 'var(--sn-text-primary)' }) => {
   const backgroundPolygon = attributes.map((_, i) => getCoordinatesForValue(100, i)).join(' ');
   const midPolygon = attributes.map((_, i) => getCoordinatesForValue(50, i)).join(' ');
 
-  // Rejilla y fondo tokenizados: se adaptan a claro/oscuro sin adivinar el tema.
-  const gridColor = 'var(--sn-border-strong)';
-  const bgColor = 'color-mix(in srgb, var(--sn-brand-glow) 7%, transparent)';
+  // Rejilla / relleno: fijos claros sobre placa oscura, o tokenizados en cards.
+  const gridColor   = dark ? 'rgba(255,255,255,0.16)' : 'var(--sn-border-strong)';
+  const bgColor     = dark ? 'rgba(255,255,255,0.04)' : 'color-mix(in srgb, var(--sn-brand-glow) 7%, transparent)';
+  const fillColor   = dark ? 'rgba(167,139,250,0.34)' : 'color-mix(in srgb, var(--sn-brand-glow) 32%, transparent)';
+  const strokeColor = dark ? '#A78BFA' : 'var(--sn-brand-glow)';
 
   return (
     <div className="d-flex justify-content-center align-items-center position-relative mx-auto" style={{ width: '100%', maxWidth: '300px', height: '300px' }}>
@@ -50,8 +55,8 @@ const FifaRadar = ({ stats, themeColor = 'var(--sn-text-primary)' }) => {
         {/* Polígono de Estadísticas Reales (El relleno Neón Azul/Dorado) */}
         <polygon
           points={polygonPoints}
-          fill="color-mix(in srgb, var(--sn-brand-glow) 32%, transparent)"
-          stroke="var(--sn-brand-glow)"
+          fill={fillColor}
+          stroke={strokeColor}
           strokeWidth="2.5"
           style={{ transition: 'all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)' }}
         />
@@ -75,8 +80,8 @@ const FifaRadar = ({ stats, themeColor = 'var(--sn-text-primary)' }) => {
                  transform: 'translate(-50%, -50%)', 
                  width: '60px' 
                }}>
-            <div className="fw-black lh-1 fs-5" style={{ color: themeColor }}>{attr.value}</div>
-            <div className="fw-bold lh-1 mt-1" style={{ fontSize: '0.65rem', color: themeColor, opacity: 0.8 }}>{attr.label}</div>
+            <div className="fw-black lh-1 fs-5" style={{ color: labelColor }}>{attr.value}</div>
+            <div className="fw-bold lh-1 mt-1" style={{ fontSize: '0.65rem', color: labelColor, opacity: 0.8 }}>{attr.label}</div>
           </div>
         );
       })}

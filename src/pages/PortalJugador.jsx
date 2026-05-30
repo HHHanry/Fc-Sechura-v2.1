@@ -194,7 +194,7 @@ const PortalJugador = () => {
                   Análisis táctico
                 </h6>
                 <div style={{ margin: '0 auto', maxWidth: 280 }}>
-                  <FifaRadar stats={stats} themeColor="#f8fafc" />
+                  <FifaRadar stats={stats} dark />
                 </div>
               </div>
             ) : (

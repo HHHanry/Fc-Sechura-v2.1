@@ -157,7 +157,7 @@ const PerformanceStats = () => {
                     <div style={{
                       marginTop: 'var(--sn-space-4)',
                       padding: 'var(--sn-space-4)',
-                      background: 'var(--sn-overlay-strong)',
+                      background: 'rgba(10,6,23,0.55)',
                       border: `1px solid ${tier.color}33`,
                       boxShadow: `inset 0 0 60px ${tier.color}10`,
                       borderRadius: 'var(--sn-radius-lg)',
@@ -165,7 +165,7 @@ const PerformanceStats = () => {
                       overflow: 'hidden',
                     }}>
                       <div style={{ transform: 'scale(0.92)', transformOrigin: 'center' }}>
-                        <FifaRadar stats={stats} themeColor="#f8fafc" />
+                        <FifaRadar stats={stats} dark />
                       </div>
                       <span style={{
                         position: 'absolute', bottom: 6, left: '50%', transform: 'translateX(-50%)',
