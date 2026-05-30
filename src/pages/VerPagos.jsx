@@ -198,12 +198,12 @@ const VerPagos = () => {
       <style>
         @page { size: A4 landscape; margin: 15mm; }
         body { font-family: Arial, sans-serif; padding: 20px; }
-        .h { display:flex; justify-content:space-between; align-items:flex-end; border-bottom:2px solid #6D28D9; padding-bottom:10px; margin-bottom:20px; }
-        .h h1 { color:#6D28D9; margin:0; }
+        .h { display:flex; justify-content:space-between; align-items:flex-end; border-bottom:2px solid #1D4ED8; padding-bottom:10px; margin-bottom:20px; }
+        .h h1 { color:#1D4ED8; margin:0; }
         .resumen { display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
         .box { padding:10px 16px; border:1px solid #e2e8f0; border-radius:8px; background:#f8fafc; flex:1; }
         table { width:100%; border-collapse:collapse; font-size:12px; }
-        th { background:#6D28D9; color:white; padding:8px; -webkit-print-color-adjust:exact; print-color-adjust:exact; text-align:left; }
+        th { background:#1D4ED8; color:white; padding:8px; -webkit-print-color-adjust:exact; print-color-adjust:exact; text-align:left; }
         td { border:1px solid #cbd5e1; padding:8px; }
         .r { text-align:right; } .c { text-align:center; }
         .success { color:#10b981; font-weight:bold; } .danger { color:#ef4444; font-weight:bold; }
@@ -213,7 +213,7 @@ const VerPagos = () => {
             <p style="margin:4px 0 0;color:#64748b">Periodo: ${escapeHtml(filtroMes)} · Categoría: ${escapeHtml(filtroCategoria)} · Estado: ${escapeHtml(filtroEstado)}</p>
           </div>
           <div style="text-align:right">
-            <h2 style="margin:0;color:#6D28D9">${formatMoney(totalRecaudado)}</h2>
+            <h2 style="margin:0;color:#1D4ED8">${formatMoney(totalRecaudado)}</h2>
             <p style="margin:0;color:#64748b;font-size:12px">Recaudación líquida</p>
           </div>
         </div>
@@ -472,7 +472,7 @@ const Boleta = ({ recibo }) => (
   <div id="sn-recibo-print" style={{
     background: 'white', color: '#0f172a',
     padding: 32, borderRadius: 12,
-    borderTop: '8px solid #6D28D9',
+    borderTop: '8px solid #1D4ED8',
     fontFamily: 'Inter, system-ui, sans-serif',
     position: 'relative',
     overflow: 'hidden',
@@ -489,7 +489,7 @@ const Boleta = ({ recibo }) => (
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         <img src={logo} alt="" style={{ width: 48, height: 48, objectFit: 'contain' }} />
         <div>
-          <h4 style={{ margin: 0, color: '#6D28D9', fontWeight: 900 }}>FC SECHURA</h4>
+          <h4 style={{ margin: 0, color: '#1D4ED8', fontWeight: 900 }}>FC SECHURA</h4>
           <p style={{ margin: 0, fontSize: 11, color: '#64748b', fontWeight: 700 }}>Academia de fútbol formativo</p>
         </div>
       </div>
@@ -528,7 +528,7 @@ const Boleta = ({ recibo }) => (
 
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderTop: '1px dashed #cbd5e1', paddingTop: 16 }}>
       <span style={{ fontSize: 12, fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>Total pagado</span>
-      <span style={{ fontFamily: 'monospace', fontWeight: 900, fontSize: 28, color: '#6D28D9' }}>{formatMoney(recibo.monto)}</span>
+      <span style={{ fontFamily: 'monospace', fontWeight: 900, fontSize: 28, color: '#1D4ED8' }}>{formatMoney(recibo.monto)}</span>
     </div>
 
     <p style={{ textAlign: 'center', marginTop: 32, color: '#64748b', fontSize: 9 }}>

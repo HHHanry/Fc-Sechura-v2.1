@@ -395,13 +395,13 @@ const scannerWrapStyle = {
 };
 
 const scannerEmptyStyle = {
-  textAlign: 'center', color: 'rgba(241,237,251,0.58)',
+  textAlign: 'center', color: 'rgba(237, 242, 251,0.58)',
   display: 'flex', flexDirection: 'column', alignItems: 'center',
 };
 
 const scanLineStyle = {
   position: 'absolute', top: 0, left: 0, width: '100%', height: 3,
-  background: 'rgba(167,139,250,0.65)',
+  background: 'rgba(96, 165, 250,0.65)',
   boxShadow: '0 0 14px var(--sn-brand-glow)',
   animation: 'scan 2.5s infinite linear',
 };

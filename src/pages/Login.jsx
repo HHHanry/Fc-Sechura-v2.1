@@ -172,7 +172,7 @@ const BackgroundFx = () => (
       position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none',
       background: `
         radial-gradient(800px 500px at 20% 20%, color-mix(in srgb, var(--sn-brand-glow) 14%, transparent), transparent 60%),
-        radial-gradient(700px 600px at 85% 80%, rgba(124,58,237,0.30), transparent 55%),
+        radial-gradient(700px 600px at 85% 80%, rgba(37, 99, 235,0.30), transparent 55%),
         var(--sn-bg-base)
       `,
     }} />
@@ -218,8 +218,8 @@ const cardStyle = {
 const brandPanelStyle = {
   position: 'relative',
   padding: 'var(--sn-space-7) var(--sn-space-6)',
-  background: 'linear-gradient(160deg, #1A1038 0%, #0A0617 50%, #4C1D95 130%)',
-  color: '#F1EDFB',
+  background: 'linear-gradient(160deg, #0F1B33 0%, #070C18 50%, #1E3A8A 130%)',
+  color: '#EDF2FB',
   display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
   borderRight: '1px solid var(--sn-border-faint)',
   minHeight: 520,
@@ -228,7 +228,7 @@ const brandPanelStyle = {
 
 const brandGlowStyle = {
   position: 'absolute', inset: 0,
-  background: 'radial-gradient(420px 260px at 30% 30%, rgba(167,139,250,0.22), transparent 60%)',
+  background: 'radial-gradient(420px 260px at 30% 30%, rgba(96, 165, 250,0.22), transparent 60%)',
   pointerEvents: 'none',
 };
 
@@ -256,17 +256,17 @@ const brandSubtitleStyle = {
   marginTop: 'var(--sn-space-2)',
   fontSize: 'var(--sn-fs-xs)',
   fontWeight: 800, letterSpacing: 'var(--sn-tracking-mega)',
-  color: '#C4B5FD',
+  color: '#93C5FD',
 };
 
 const brandQuoteStyle = {
   marginTop: 'var(--sn-space-5)',
   padding: 'var(--sn-space-4)',
-  borderLeft: '2px solid #A78BFA',
+  borderLeft: '2px solid #60A5FA',
   fontStyle: 'italic',
-  color: 'rgba(244,242,255,0.84)',
+  color: 'rgba(237, 242, 251,0.84)',
   fontSize: 'var(--sn-fs-sm)',
-  background: 'rgba(167,139,250,0.10)',
+  background: 'rgba(96, 165, 250,0.10)',
   borderRadius: '0 var(--sn-radius-md) var(--sn-radius-md) 0',
   textAlign: 'left',
 };
@@ -274,7 +274,7 @@ const brandQuoteStyle = {
 const brandFooterStyle = {
   position: 'relative', zIndex: 1,
   display: 'flex', alignItems: 'center', gap: 8,
-  fontSize: 'var(--sn-fs-xs)', color: 'rgba(244,242,255,0.72)',
+  fontSize: 'var(--sn-fs-xs)', color: 'rgba(237, 242, 251,0.72)',
   letterSpacing: 'var(--sn-tracking-wide)',
 };
 

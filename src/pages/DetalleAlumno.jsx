@@ -759,7 +759,7 @@ const tabGridStyle = {
 
 const perfilHeroStyle = {
   position: 'relative', height: 200,
-  background: 'linear-gradient(135deg, #1A1038 0%, #4C1D95 100%)',
+  background: 'linear-gradient(135deg, #0F1B33 0%, #1E3A8A 100%)',
   display: 'flex', alignItems: 'center', justifyContent: 'center',
   overflow: 'hidden',
 };

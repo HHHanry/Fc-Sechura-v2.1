@@ -107,12 +107,12 @@ const Historial = () => {
       <style>
         @page { size: A4; margin: 15mm; }
         body { font-family: 'Inter', system-ui, sans-serif; padding: 20px; }
-        .h { display:flex; justify-content:space-between; align-items:flex-end; border-bottom:2px solid #6D28D9; padding-bottom:10px; margin-bottom:20px; }
-        .h h1 { color:#6D28D9; margin:0; font-size:24px; text-transform:uppercase; }
+        .h { display:flex; justify-content:space-between; align-items:flex-end; border-bottom:2px solid #1D4ED8; padding-bottom:10px; margin-bottom:20px; }
+        .h h1 { color:#1D4ED8; margin:0; font-size:24px; text-transform:uppercase; }
         .resumen { display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
         .box { padding:10px 16px; border:1px solid #e2e8f0; border-radius:8px; background:#f8fafc; flex:1; text-align:center; }
         table { width:100%; border-collapse:collapse; font-size:12px; }
-        th { background:#6D28D9; color:white; padding:8px; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+        th { background:#1D4ED8; color:white; padding:8px; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
         td { border:1px solid #cbd5e1; padding:8px; }
         .c { text-align:center; }
         .text-success { color:#10b981; font-weight:bold; }
@@ -124,7 +124,7 @@ const Historial = () => {
             <p style="margin:4px 0 0;color:#64748b">Fecha: <strong>${escapeHtml(fecha)}</strong> · Categoría: ${escapeHtml(filtroCategoria)}</p>
           </div>
           <div style="text-align:right">
-            <h3 style="color:#6D28D9;margin:0">${formatMoney(totalCajaChica)}</h3>
+            <h3 style="color:#1D4ED8;margin:0">${formatMoney(totalCajaChica)}</h3>
             <p style="margin:0;color:#64748b;font-size:12px">Caja chica (cancha)</p>
           </div>
         </div>

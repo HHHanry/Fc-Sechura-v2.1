@@ -223,11 +223,11 @@ const RegistrarPagos = () => {
 
     // Lienzo
     ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, W, H);
-    ctx.fillStyle = '#FCFBFF'; ctx.fillRect(0, 150, W, H - 150);
+    ctx.fillStyle = '#FAFCFF'; ctx.fillRect(0, 150, W, H - 150);
 
     // Banda superior violeta
     const grad = ctx.createLinearGradient(0, 0, W, 150);
-    grad.addColorStop(0, '#7C3AED'); grad.addColorStop(1, '#C026D3');
+    grad.addColorStop(0, '#2563EB'); grad.addColorStop(1, '#0EA5E9');
     ctx.fillStyle = grad; ctx.fillRect(0, 0, W, 150);
     ctx.fillStyle = '#FFFFFF'; ctx.font = '800 42px Arial, sans-serif';
     ctx.fillText('FC SECHURA', 44, 74);
@@ -240,11 +240,11 @@ const RegistrarPagos = () => {
     // Filas de datos
     let y = 224;
     const drawRow = (label, value) => {
-      ctx.font = '700 13px Arial, sans-serif'; ctx.fillStyle = '#6E6589';
+      ctx.font = '700 13px Arial, sans-serif'; ctx.fillStyle = '#646F88';
       ctx.fillText(label.toUpperCase(), 44, y);
-      ctx.font = '700 22px Arial, sans-serif'; ctx.fillStyle = '#1A1330';
+      ctx.font = '700 22px Arial, sans-serif'; ctx.fillStyle = '#0F1A2E';
       ctx.fillText(String(value), 44, y + 30);
-      ctx.strokeStyle = '#E3DEF3'; ctx.lineWidth = 1;
+      ctx.strokeStyle = '#DCE6F5'; ctx.lineWidth = 1;
       ctx.beginPath(); ctx.moveTo(44, y + 48); ctx.lineTo(W - 44, y + 48); ctx.stroke();
       y += 70;
     };
@@ -253,13 +253,13 @@ const RegistrarPagos = () => {
     drawRow('DNI', recibo.dni || '—');
 
     // Concepto (multilínea)
-    ctx.font = '700 13px Arial, sans-serif'; ctx.fillStyle = '#6E6589';
+    ctx.font = '700 13px Arial, sans-serif'; ctx.fillStyle = '#646F88';
     ctx.fillText('CONCEPTO', 44, y);
-    ctx.font = '600 18px Arial, sans-serif'; ctx.fillStyle = '#1A1330';
+    ctx.font = '600 18px Arial, sans-serif'; ctx.fillStyle = '#0F1A2E';
     let cy = y + 28;
     wrap(recibo.concepto || '—', W - 88).slice(0, 3).forEach((ln) => { ctx.fillText(ln, 44, cy); cy += 26; });
     y = cy + 16;
-    ctx.strokeStyle = '#E3DEF3'; ctx.lineWidth = 1;
+    ctx.strokeStyle = '#DCE6F5'; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(44, y); ctx.lineTo(W - 44, y); ctx.stroke();
     y += 44;
 
@@ -267,11 +267,11 @@ const RegistrarPagos = () => {
 
     // Caja TOTAL
     const boxY = y;
-    ctx.fillStyle = 'rgba(124,58,237,0.08)'; roundRect(44, boxY, W - 88, 100, 16); ctx.fill();
-    ctx.strokeStyle = 'rgba(124,58,237,0.38)'; ctx.lineWidth = 1.5; roundRect(44, boxY, W - 88, 100, 16); ctx.stroke();
-    ctx.font = '800 15px Arial, sans-serif'; ctx.fillStyle = '#4C1D95';
+    ctx.fillStyle = 'rgba(37, 99, 235,0.08)'; roundRect(44, boxY, W - 88, 100, 16); ctx.fill();
+    ctx.strokeStyle = 'rgba(37, 99, 235,0.38)'; ctx.lineWidth = 1.5; roundRect(44, boxY, W - 88, 100, 16); ctx.stroke();
+    ctx.font = '800 15px Arial, sans-serif'; ctx.fillStyle = '#1E3A8A';
     ctx.fillText('TOTAL PAGADO', 68, boxY + 44);
-    ctx.textAlign = 'right'; ctx.font = '900 42px monospace'; ctx.fillStyle = '#6D28D9';
+    ctx.textAlign = 'right'; ctx.font = '900 42px monospace'; ctx.fillStyle = '#1D4ED8';
     ctx.fillText(formatMoney(recibo.totalPagado), W - 68, boxY + 68);
     ctx.textAlign = 'left';
     y = boxY + 140;
@@ -283,9 +283,9 @@ const RegistrarPagos = () => {
 
     // Pie
     ctx.textAlign = 'center';
-    ctx.font = '700 14px Arial, sans-serif'; ctx.fillStyle = '#3D3358';
+    ctx.font = '700 14px Arial, sans-serif'; ctx.fillStyle = '#2F3C56';
     ctx.fillText('¡Gracias por tu pago! · FC Sechura — Formando campeones', W / 2, H - 64);
-    ctx.font = '600 12px Arial, sans-serif'; ctx.fillStyle = '#857C9C';
+    ctx.font = '600 12px Arial, sans-serif'; ctx.fillStyle = '#7C8699';
     ctx.fillText('Comprobante generado digitalmente · conserva esta boleta', W / 2, H - 42);
     ctx.textAlign = 'left';
 
@@ -721,7 +721,7 @@ const panelHeaderStyle = {
 
 const cajaHeaderStyle = {
   ...panelHeaderStyle,
-  background: 'linear-gradient(135deg, rgba(124,58,237,0.20) 0%, color-mix(in srgb, var(--sn-brand-glow) 12%, transparent) 100%)',
+  background: 'linear-gradient(135deg, rgba(37, 99, 235,0.20) 0%, color-mix(in srgb, var(--sn-brand-glow) 12%, transparent) 100%)',
 };
 
 const stepNumStyle = {
@@ -819,7 +819,7 @@ const trashIconStyle = {
 const totalCardStyle = {
   textAlign: 'center',
   padding: 'var(--sn-space-5) var(--sn-space-4)',
-  background: 'linear-gradient(135deg, rgba(124,58,237,0.15) 0%, color-mix(in srgb, var(--sn-brand-glow) 10%, transparent) 100%)',
+  background: 'linear-gradient(135deg, rgba(37, 99, 235,0.15) 0%, color-mix(in srgb, var(--sn-brand-glow) 10%, transparent) 100%)',
   border: '1px solid var(--sn-border-glow)',
   borderRadius: 'var(--sn-radius-lg)',
   marginBottom: 'var(--sn-space-4)',

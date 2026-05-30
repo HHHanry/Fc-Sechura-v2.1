@@ -4,7 +4,7 @@ import React from 'react';
 // `dark` = contexto siempre-oscuro (player card / placa de stats). Por defecto
 // el radar se adapta al tema (cards normales) usando tokens.
 const FifaRadar = ({ stats, dark = false }) => {
-  const labelColor  = dark ? '#F1EDFB' : 'var(--sn-text-primary)';
+  const labelColor  = dark ? '#EDF2FB' : 'var(--sn-text-primary)';
   // Las 6 estadísticas clásicas de FIFA
   const attributes = [
     { key: 'pac', label: 'RITMO', value: stats?.ritmo || 50 },
@@ -34,8 +34,8 @@ const FifaRadar = ({ stats, dark = false }) => {
   // Rejilla / relleno: fijos claros sobre placa oscura, o tokenizados en cards.
   const gridColor   = dark ? 'rgba(255,255,255,0.16)' : 'var(--sn-border-strong)';
   const bgColor     = dark ? 'rgba(255,255,255,0.04)' : 'color-mix(in srgb, var(--sn-brand-glow) 7%, transparent)';
-  const fillColor   = dark ? 'rgba(167,139,250,0.34)' : 'color-mix(in srgb, var(--sn-brand-glow) 32%, transparent)';
-  const strokeColor = dark ? '#A78BFA' : 'var(--sn-brand-glow)';
+  const fillColor   = dark ? 'rgba(96, 165, 250,0.34)' : 'color-mix(in srgb, var(--sn-brand-glow) 32%, transparent)';
+  const strokeColor = dark ? '#60A5FA' : 'var(--sn-brand-glow)';
 
   return (
     <div className="d-flex justify-content-center align-items-center position-relative mx-auto" style={{ width: '100%', maxWidth: '300px', height: '300px' }}>
