@@ -170,6 +170,10 @@ const RegistrarPagos = () => {
         numero: numeroRecibo,
         totalPagado: montoReal,
         alumno: `${alumnoSel.nombre} ${alumnoSel.apellido}`,
+        dni: alumnoSel.dni ?? '',
+        fecha: fechaOp,
+        metodo: metodoPago,
+        concepto: resumen,
         deudaCreada: deudaGenerada,
       });
 
@@ -184,6 +188,115 @@ const RegistrarPagos = () => {
     } finally {
       setProcesando(false);
     }
+  };
+
+  // === Boleta descargable como imagen JPG (sin librerías, vía <canvas>) ===
+  const descargarBoletaImagen = (recibo) => {
+    const W = 760, H = 1040, scale = 2;
+    const canvas = document.createElement('canvas');
+    canvas.width = W * scale; canvas.height = H * scale;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) { toast.error('Tu navegador no permite generar la imagen.'); return; }
+    ctx.scale(scale, scale);
+
+    const roundRect = (x, y, w, h, r) => {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+    };
+    const wrap = (text, maxW) => {
+      const words = String(text).split(' ');
+      const out = []; let line = '';
+      for (const word of words) {
+        const test = line ? `${line} ${word}` : word;
+        if (ctx.measureText(test).width > maxW && line) { out.push(line); line = word; }
+        else line = test;
+      }
+      if (line) out.push(line);
+      return out;
+    };
+    const fFecha = (iso) => (iso ? String(iso).split('-').reverse().join('/') : '—');
+
+    // Lienzo
+    ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#FCFBFF'; ctx.fillRect(0, 150, W, H - 150);
+
+    // Banda superior violeta
+    const grad = ctx.createLinearGradient(0, 0, W, 150);
+    grad.addColorStop(0, '#7C3AED'); grad.addColorStop(1, '#C026D3');
+    ctx.fillStyle = grad; ctx.fillRect(0, 0, W, 150);
+    ctx.fillStyle = '#FFFFFF'; ctx.font = '800 42px Arial, sans-serif';
+    ctx.fillText('FC SECHURA', 44, 74);
+    ctx.font = '700 15px Arial, sans-serif'; ctx.fillStyle = 'rgba(255,255,255,0.88)';
+    ctx.fillText('COMPROBANTE DE PAGO · BOLETA', 44, 104);
+    ctx.textAlign = 'right'; ctx.font = '800 22px monospace'; ctx.fillStyle = '#FFFFFF';
+    ctx.fillText(recibo.numero, W - 44, 74);
+    ctx.textAlign = 'left';
+
+    // Filas de datos
+    let y = 224;
+    const drawRow = (label, value) => {
+      ctx.font = '700 13px Arial, sans-serif'; ctx.fillStyle = '#6E6589';
+      ctx.fillText(label.toUpperCase(), 44, y);
+      ctx.font = '700 22px Arial, sans-serif'; ctx.fillStyle = '#1A1330';
+      ctx.fillText(String(value), 44, y + 30);
+      ctx.strokeStyle = '#E3DEF3'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(44, y + 48); ctx.lineTo(W - 44, y + 48); ctx.stroke();
+      y += 70;
+    };
+    drawRow('Fecha', fFecha(recibo.fecha));
+    drawRow('Alumno', recibo.alumno);
+    drawRow('DNI', recibo.dni || '—');
+
+    // Concepto (multilínea)
+    ctx.font = '700 13px Arial, sans-serif'; ctx.fillStyle = '#6E6589';
+    ctx.fillText('CONCEPTO', 44, y);
+    ctx.font = '600 18px Arial, sans-serif'; ctx.fillStyle = '#1A1330';
+    let cy = y + 28;
+    wrap(recibo.concepto || '—', W - 88).slice(0, 3).forEach((ln) => { ctx.fillText(ln, 44, cy); cy += 26; });
+    y = cy + 16;
+    ctx.strokeStyle = '#E3DEF3'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(44, y); ctx.lineTo(W - 44, y); ctx.stroke();
+    y += 44;
+
+    drawRow('Método de pago', recibo.metodo || '—');
+
+    // Caja TOTAL
+    const boxY = y;
+    ctx.fillStyle = 'rgba(124,58,237,0.08)'; roundRect(44, boxY, W - 88, 100, 16); ctx.fill();
+    ctx.strokeStyle = 'rgba(124,58,237,0.38)'; ctx.lineWidth = 1.5; roundRect(44, boxY, W - 88, 100, 16); ctx.stroke();
+    ctx.font = '800 15px Arial, sans-serif'; ctx.fillStyle = '#4C1D95';
+    ctx.fillText('TOTAL PAGADO', 68, boxY + 44);
+    ctx.textAlign = 'right'; ctx.font = '900 42px monospace'; ctx.fillStyle = '#6D28D9';
+    ctx.fillText(formatMoney(recibo.totalPagado), W - 68, boxY + 68);
+    ctx.textAlign = 'left';
+    y = boxY + 140;
+
+    if (recibo.deudaCreada > 0) {
+      ctx.font = '700 16px Arial, sans-serif'; ctx.fillStyle = '#C81E1E';
+      ctx.fillText(`Saldo pendiente: ${formatMoney(recibo.deudaCreada)}`, 44, y);
+    }
+
+    // Pie
+    ctx.textAlign = 'center';
+    ctx.font = '700 14px Arial, sans-serif'; ctx.fillStyle = '#3D3358';
+    ctx.fillText('¡Gracias por tu pago! · FC Sechura — Formando campeones', W / 2, H - 64);
+    ctx.font = '600 12px Arial, sans-serif'; ctx.fillStyle = '#857C9C';
+    ctx.fillText('Comprobante generado digitalmente · conserva esta boleta', W / 2, H - 42);
+    ctx.textAlign = 'left';
+
+    canvas.toBlob((blob) => {
+      if (!blob) { toast.error('No se pudo generar la imagen.'); return; }
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `Boleta_${recibo.numero}.jpg`;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 'image/jpeg', 0.95);
   };
 
   const estaMoroso = alumnoSel ? hoyIso >= (alumnoSel.vencimientoMensualidad || '2000-01-01') : false;
@@ -421,9 +534,18 @@ const RegistrarPagos = () => {
         open={!!reciboModal}
         onClose={() => setReciboModal(null)}
         size="sm"
-        title="Transacción registrada"
+        title={reciboModal && reciboModal.totalPagado > 0 ? '¡Aquí está tu boleta!' : 'Operación registrada'}
         description={reciboModal ? `Cuenta de ${reciboModal.alumno} actualizada.` : ''}
-        footer={<Button variant="primary" onClick={() => setReciboModal(null)} style={{ width: '100%' }}>Nueva operación</Button>}
+        footer={
+          <div style={{ display: 'flex', gap: 'var(--sn-space-2)', width: '100%' }}>
+            {reciboModal && reciboModal.totalPagado > 0 && (
+              <Button variant="secondary" icon={<DownloadIcon />} onClick={() => descargarBoletaImagen(reciboModal)} style={{ flex: 1 }}>
+                Descargar boleta
+              </Button>
+            )}
+            <Button variant="primary" onClick={() => setReciboModal(null)} style={{ flex: 1 }}>Nueva operación</Button>
+          </div>
+        }
       >
         {reciboModal && (
           <div>
@@ -579,6 +701,7 @@ const PlusIcon = () => (<svg width="14" height="14" viewBox="0 0 24 24" fill="no
 const RefreshIcon = () => (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5"/></svg>);
 const LockIcon = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>);
 const ListIcon = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 5h11M9 12h11M9 19h11M5 5h.01M5 12h.01M5 19h.01"/></svg>);
+const DownloadIcon = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>);
 
 /* === estilos === */
 const pageBg = { minHeight: 'calc(100vh - var(--sn-navbar-h))', background: 'var(--sn-bg-base)', color: 'var(--sn-text-primary)', fontFamily: 'var(--sn-font-ui)' };
