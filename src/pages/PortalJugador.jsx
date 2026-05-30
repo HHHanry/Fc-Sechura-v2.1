@@ -312,7 +312,7 @@ const BackIcon = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="no
    ===================================================== */
 const portalShell = {
   minHeight: '100vh',
-  background: 'var(--sn-bg-base)',
+  background: 'var(--sn-bg-mesh)',
   fontFamily: 'var(--sn-font-ui)',
   position: 'relative',
   overflowX: 'hidden',

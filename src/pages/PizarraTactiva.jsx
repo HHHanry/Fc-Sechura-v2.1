@@ -320,7 +320,7 @@ const PizarraTactiva = () => {
 
             <div ref={fullscreenWrapperRef} style={{
               ...lienzoWrapStyle,
-              ...(isFullscreen ? { background: 'var(--sn-bg-base)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 'var(--sn-space-3)' } : {}),
+              ...(isFullscreen ? { background: 'var(--sn-bg-mesh)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 'var(--sn-space-3)' } : {}),
             }}>
               {isFullscreen && (
                 <div className="sn-pizarra-fs-toolbar">
@@ -1053,7 +1053,7 @@ const ExitFsIcon = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="
 /* =============================================================
    Estilos
    ============================================================= */
-const pageBg = { minHeight: 'calc(100vh - var(--sn-navbar-h))', background: 'var(--sn-bg-base)', color: 'var(--sn-text-primary)', fontFamily: 'var(--sn-font-ui)' };
+const pageBg = { minHeight: 'calc(100vh - var(--sn-navbar-h))', background: 'var(--sn-bg-mesh)', color: 'var(--sn-text-primary)', fontFamily: 'var(--sn-font-ui)' };
 const contentWrap = { maxWidth: 1280, margin: '0 auto', padding: 'var(--sn-space-4) var(--sn-space-4) var(--sn-space-6)' };
 const headerStyle = { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--sn-space-3)', flexWrap: 'wrap', marginBottom: 'var(--sn-space-4)' };
 const eyebrowStyle = { fontSize: 'var(--sn-fs-xs)', fontWeight: 800, letterSpacing: 'var(--sn-tracking-mega)', color: 'var(--sn-brand-glow)' };

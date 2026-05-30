@@ -17,7 +17,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     return (
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        minHeight: '100vh', background: 'var(--sn-bg-base)',
+        minHeight: '100vh', background: 'var(--sn-bg-mesh)',
       }}>
         <div style={{
           width: 48, height: 48, borderRadius: '50%',
@@ -38,7 +38,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         minHeight: 'calc(100vh - var(--sn-navbar-h))', padding: 'var(--sn-space-5)',
-        background: 'var(--sn-bg-base)',
+        background: 'var(--sn-bg-mesh)',
       }}>
         <div style={{
           maxWidth: 440, width: '100%', textAlign: 'center',

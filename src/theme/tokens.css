@@ -15,6 +15,13 @@
   --sn-bg-deep:        #E3DEF3;   /* Barras: headers de tabla, toolbars */
   --sn-bg-overlay:     rgba(26, 16, 54, 0.45);
   --sn-bg-soft:        #E7E3F4;   /* Sub-superficies tenues */
+  /* Mesh ambiental: aurora violeta sutil sobre la base — el fondo "respira",
+     no es un color plano. Se usa como background de cada página. */
+  --sn-bg-mesh:
+    radial-gradient(1150px 760px at 4% -10%, rgba(124, 58, 237, 0.13), transparent 60%),
+    radial-gradient(950px 700px at 106% 0%,  rgba(192, 38, 211, 0.09), transparent 55%),
+    radial-gradient(1250px 860px at 92% 114%, rgba(79, 70, 229, 0.10), transparent 60%),
+    var(--sn-bg-base);
 
   /* ===== BRAND — índigo/violeta FUT ===== */
   --sn-brand-deep:     #4C1D95;   /* Violeta profundo */
@@ -179,6 +186,12 @@
   --sn-bg-deep:        #0A0617;   /* Más profundo que surface (headers) */
   --sn-bg-overlay:     rgba(8, 5, 20, 0.82);
   --sn-bg-soft:        #150F2E;
+  /* Mesh ambiental dark: aurora de estadio — glow violeta/magenta profundo. */
+  --sn-bg-mesh:
+    radial-gradient(1150px 760px at 4% -10%, rgba(124, 58, 237, 0.28), transparent 58%),
+    radial-gradient(950px 700px at 106% 0%,  rgba(192, 38, 211, 0.17), transparent 55%),
+    radial-gradient(1250px 880px at 90% 116%, rgba(76, 29, 149, 0.38), transparent 62%),
+    var(--sn-bg-base);
 
   --sn-brand-deep:     #6D28D9;
   --sn-brand-deep-2:   #4C1D95;

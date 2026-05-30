@@ -27,7 +27,7 @@ const CargaMasivaSechura = lazy(() => import('./pages/cargamasiva_sechura'));
 const RouteFallback = () => (
   <div style={{
     display: 'flex', alignItems: 'center', justifyContent: 'center',
-    minHeight: 'calc(100vh - var(--sn-navbar-h))', background: 'var(--sn-bg-base)',
+    minHeight: 'calc(100vh - var(--sn-navbar-h))', background: 'var(--sn-bg-mesh)',
   }}>
     <div style={{
       width: 40, height: 40, borderRadius: '50%',

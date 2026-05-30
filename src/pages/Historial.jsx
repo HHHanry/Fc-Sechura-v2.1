@@ -356,7 +356,7 @@ const TrashIcon = () => (<svg width="14" height="14" viewBox="0 0 24 24" fill="n
 /* === estilos === */
 const pageBg = {
   minHeight: 'calc(100vh - var(--sn-navbar-h))',
-  background: 'var(--sn-bg-base)',
+  background: 'var(--sn-bg-mesh)',
   color: 'var(--sn-text-primary)',
   fontFamily: 'var(--sn-font-ui)',
 };

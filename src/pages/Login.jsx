@@ -197,7 +197,7 @@ const pageStyle = {
   minHeight: '100vh',
   display: 'flex', alignItems: 'center', justifyContent: 'center',
   padding: 'var(--sn-space-5)',
-  background: 'var(--sn-bg-base)',
+  background: 'var(--sn-bg-mesh)',
   position: 'relative',
   fontFamily: 'var(--sn-font-ui)',
 };
