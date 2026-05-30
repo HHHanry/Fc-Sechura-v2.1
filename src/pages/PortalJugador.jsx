@@ -149,7 +149,7 @@ const PortalJugador = () => {
                 {alumno.foto ? (
                   <img src={alumno.foto} alt="" style={{ ...avatarStyle, borderColor: tier.color, boxShadow: `0 12px 40px ${tier.glow}` }} />
                 ) : (
-                  <div style={{ ...avatarStyle, borderColor: tier.color, boxShadow: `0 12px 40px ${tier.glow}`, background: 'linear-gradient(135deg, #1e293b, #0f172a)', color: 'rgba(255,255,255,0.7)', fontSize: 64, fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ ...avatarStyle, borderColor: tier.color, boxShadow: `0 12px 40px ${tier.glow}`, background: 'linear-gradient(135deg, #1A1038, #0A0617)', color: 'rgba(255,255,255,0.7)', fontSize: 64, fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     {inicial}
                   </div>
                 )}
@@ -416,7 +416,7 @@ const shareButtonStyle = {
   width: '100%',
   padding: '0.95rem 1.4rem',
   borderRadius: 'var(--sn-radius-pill)',
-  background: 'linear-gradient(135deg, #06b6d4 0%, #1e3a8a 100%)',
+  background: 'linear-gradient(135deg, #7C3AED 0%, #C026D3 100%)',
   color: 'white',
   border: '1px solid var(--sn-border-glow)',
   boxShadow: '0 0 28px var(--sn-border-glow), 0 12px 30px -10px rgba(0,0,0,0.6)',

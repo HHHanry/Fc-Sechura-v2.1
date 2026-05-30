@@ -1,7 +1,7 @@
 import React from 'react';
 
 // === RADAR SVG ARTESANAL (Optimizado para Alta Gama) ===
-const FifaRadar = ({ stats, themeColor = '#1e293b' }) => {
+const FifaRadar = ({ stats, themeColor = 'var(--sn-text-primary)' }) => {
   // Las 6 estadísticas clásicas de FIFA
   const attributes = [
     { key: 'pac', label: 'RITMO', value: stats?.ritmo || 50 },
@@ -28,10 +28,9 @@ const FifaRadar = ({ stats, themeColor = '#1e293b' }) => {
   const backgroundPolygon = attributes.map((_, i) => getCoordinatesForValue(100, i)).join(' ');
   const midPolygon = attributes.map((_, i) => getCoordinatesForValue(50, i)).join(' ');
 
-  // Determinar si estamos en modo oscuro (para cambiar colores de líneas)
-  const isDarkMode = themeColor === '#f8fafc' || themeColor === 'white';
-  const gridColor = isDarkMode ? "rgba(255, 255, 255, 0.1)" : "#cbd5e1";
-  const bgColor = isDarkMode ? "rgba(255, 255, 255, 0.02)" : "#f1f5f9";
+  // Rejilla y fondo tokenizados: se adaptan a claro/oscuro sin adivinar el tema.
+  const gridColor = 'var(--sn-border-strong)';
+  const bgColor = 'color-mix(in srgb, var(--sn-brand-glow) 7%, transparent)';
 
   return (
     <div className="d-flex justify-content-center align-items-center position-relative mx-auto" style={{ width: '100%', maxWidth: '300px', height: '300px' }}>
@@ -49,12 +48,12 @@ const FifaRadar = ({ stats, themeColor = '#1e293b' }) => {
         })}
 
         {/* Polígono de Estadísticas Reales (El relleno Neón Azul/Dorado) */}
-        <polygon 
-          points={polygonPoints} 
-          fill="rgba(56, 189, 248, 0.4)" 
-          stroke="#38bdf8" 
-          strokeWidth="2.5" 
-          style={{ transition: 'all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)' }} 
+        <polygon
+          points={polygonPoints}
+          fill="color-mix(in srgb, var(--sn-brand-glow) 32%, transparent)"
+          stroke="var(--sn-brand-glow)"
+          strokeWidth="2.5"
+          style={{ transition: 'all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)' }}
         />
 
         {/* Puntos brillantes en los vértices */}

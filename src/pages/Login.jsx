@@ -51,7 +51,7 @@ const Login = () => {
             <div style={logoFrameStyle}>
               <img src={logo} alt="" style={{ width: 110, height: 110, objectFit: 'contain' }} />
             </div>
-            <h1 style={brandTitleStyle}>FC SECHURA</h1>
+            <h1 style={{ ...brandTitleStyle, color: '#FFFFFF' }}>FC SECHURA</h1>
             <p style={brandSubtitleStyle}>CENTRO DE MANDO DEPORTIVO</p>
             <div style={brandQuoteStyle}>
               "Nuestra pasión marca la diferencia."
@@ -218,8 +218,8 @@ const cardStyle = {
 const brandPanelStyle = {
   position: 'relative',
   padding: 'var(--sn-space-7) var(--sn-space-6)',
-  background: 'linear-gradient(160deg, #0F1422 0%, #07090F 50%, #1E3A8A 130%)',
-  color: 'var(--sn-text-primary)',
+  background: 'linear-gradient(160deg, #1A1038 0%, #0A0617 50%, #4C1D95 130%)',
+  color: '#F1EDFB',
   display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
   borderRight: '1px solid var(--sn-border-faint)',
   minHeight: 520,
@@ -256,17 +256,17 @@ const brandSubtitleStyle = {
   marginTop: 'var(--sn-space-2)',
   fontSize: 'var(--sn-fs-xs)',
   fontWeight: 800, letterSpacing: 'var(--sn-tracking-mega)',
-  color: 'var(--sn-brand-glow)',
+  color: '#C4B5FD',
 };
 
 const brandQuoteStyle = {
   marginTop: 'var(--sn-space-5)',
   padding: 'var(--sn-space-4)',
-  borderLeft: '2px solid var(--sn-brand-glow)',
+  borderLeft: '2px solid #A78BFA',
   fontStyle: 'italic',
-  color: 'var(--sn-text-secondary)',
+  color: 'rgba(244,242,255,0.84)',
   fontSize: 'var(--sn-fs-sm)',
-  background: 'color-mix(in srgb, var(--sn-brand-glow) 8%, transparent)',
+  background: 'rgba(167,139,250,0.10)',
   borderRadius: '0 var(--sn-radius-md) var(--sn-radius-md) 0',
   textAlign: 'left',
 };
@@ -274,7 +274,7 @@ const brandQuoteStyle = {
 const brandFooterStyle = {
   position: 'relative', zIndex: 1,
   display: 'flex', alignItems: 'center', gap: 8,
-  fontSize: 'var(--sn-fs-xs)', color: 'var(--sn-text-muted)',
+  fontSize: 'var(--sn-fs-xs)', color: 'rgba(244,242,255,0.72)',
   letterSpacing: 'var(--sn-tracking-wide)',
 };
 
