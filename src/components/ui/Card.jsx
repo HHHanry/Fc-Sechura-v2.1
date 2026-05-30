@@ -32,7 +32,7 @@ export const Card = React.forwardRef(function Card(
   const accentStyle = accentColor ? { borderLeft: `3px solid ${accentColor}` } : null;
   const variants = {
     surface: {
-      background: 'var(--sn-bg-surface)',
+      background: 'var(--sn-surface-gradient)',
       border: '1px solid var(--sn-border-faint)',
       boxShadow: 'var(--sn-shadow-sm)',
     },

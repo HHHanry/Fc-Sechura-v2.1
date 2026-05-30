@@ -22,6 +22,8 @@
     radial-gradient(950px 700px at 106% 0%,  rgba(192, 38, 211, 0.09), transparent 55%),
     radial-gradient(1250px 860px at 92% 114%, rgba(79, 70, 229, 0.10), transparent 60%),
     var(--sn-bg-base);
+  /* Superficie con profundidad: sheen vertical sutil en vez de relleno plano. */
+  --sn-surface-gradient: linear-gradient(180deg, #FFFFFF 0%, #F4F1FC 100%);
 
   /* ===== BRAND — índigo/violeta FUT ===== */
   --sn-brand-deep:     #4C1D95;   /* Violeta profundo */
@@ -192,6 +194,8 @@
     radial-gradient(950px 700px at 106% 0%,  rgba(192, 38, 211, 0.17), transparent 55%),
     radial-gradient(1250px 880px at 90% 116%, rgba(76, 29, 149, 0.38), transparent 62%),
     var(--sn-bg-base);
+  /* Superficie con profundidad: sheen vertical sutil en vez de relleno plano. */
+  --sn-surface-gradient: linear-gradient(180deg, #221A47 0%, #160F30 100%);
 
   --sn-brand-deep:     #6D28D9;
   --sn-brand-deep-2:   #4C1D95;
