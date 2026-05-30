@@ -393,7 +393,7 @@ const CompetenciasJugador = () => {
         .sn-comp-pos-btn.is-active {
           background: var(--sn-brand-gradient);
           border-color: transparent;
-          color: #06121A;
+          color: var(--sn-text-on-brand);
         }
 
         @media (max-width: 991.98px) {
@@ -420,7 +420,7 @@ const CompetenciasJugador = () => {
         }
         .sn-comp-level-btn:hover { border-color: var(--sn-text-muted); }
         .sn-comp-level-btn.is-active {
-          color: #06121A;
+          color: var(--sn-text-on-accent);
           font-weight: 900;
           border-color: transparent;
         }
@@ -597,7 +597,7 @@ const CompetenciaSlider = ({ label, value, onChange }) => {
             className={`sn-comp-level-btn sn-focusable ${value === n.value ? 'is-active' : ''}`}
             onClick={() => onChange(n.value)}
             title={n.label}
-            style={value === n.value ? { background: n.color, borderColor: n.color, color: '#06121A' } : {}}
+            style={value === n.value ? { background: n.color, borderColor: n.color, color: 'var(--sn-text-on-accent)' } : {}}
           >
             {n.value}
           </button>
@@ -644,7 +644,7 @@ const selectedPlayerStyle = {
 
 const avatarStyle = {
   width: 36, height: 36, borderRadius: '50%',
-  background: 'var(--sn-brand-gradient)', color: '#06121A',
+  background: 'var(--sn-brand-gradient)', color: 'var(--sn-text-on-brand)',
   display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
   fontWeight: 900, fontSize: 14, flexShrink: 0,
 };

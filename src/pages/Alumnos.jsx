@@ -260,7 +260,7 @@ const Alumnos = () => {
 const Avatar = ({ alumno }) => alumno.foto
   ? <img src={alumno.foto} alt="" style={avatarStyle} />
   : (
-    <div style={{ ...avatarStyle, background: 'var(--sn-brand-gradient)', color: '#06121A', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>
+    <div style={{ ...avatarStyle, background: 'var(--sn-brand-gradient)', color: 'var(--sn-text-on-brand)', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>
       {(alumno.nombre ?? '?').charAt(0).toUpperCase()}
     </div>
   );

@@ -727,7 +727,7 @@ const cajaHeaderStyle = {
 const stepNumStyle = {
   width: 28, height: 28, borderRadius: '50%',
   background: 'var(--sn-brand-gradient)',
-  color: '#06121A', fontWeight: 900, fontSize: 14,
+  color: 'var(--sn-text-on-brand)', fontWeight: 900, fontSize: 14,
   display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
 };
 
@@ -796,7 +796,7 @@ const dropdownItemStyle = {
 const avatarBigStyle = {
   width: 56, height: 56, borderRadius: '50%',
   background: 'var(--sn-brand-gradient)',
-  color: '#06121A', fontWeight: 900, fontSize: 20,
+  color: 'var(--sn-text-on-brand)', fontWeight: 900, fontSize: 20,
   display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
 };
 

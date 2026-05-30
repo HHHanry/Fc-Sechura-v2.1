@@ -68,6 +68,9 @@
   --sn-text-on-elite:  #1A1408;
   --sn-text-on-success:#FFFFFF;   /* sobre verde oscuro */
   --sn-text-on-crit:   #FFFFFF;   /* sobre rojo oscuro */
+  /* Texto sobre cualquier relleno de acento SÓLIDO saturado (brand-glow,
+     semánticos, tiers). En claro los acentos son oscuros → texto blanco. */
+  --sn-text-on-accent: #FFFFFF;
 
   /* ===== BORDES / DIVISORES ===== */
   --sn-border-faint:   rgba(26, 16, 54, 0.08);
@@ -225,6 +228,8 @@
 
   --sn-text-on-success:#06241B;   /* sobre verde brillante */
   --sn-text-on-crit:   #1A0608;   /* sobre rojo brillante */
+  /* En oscuro los acentos son brillantes (verde/ámbar/violeta claro) → texto casi-negro. */
+  --sn-text-on-accent: #160F30;
 
   --sn-text-primary:   #F1EDFB;   /* near-white con tinte violeta */
   --sn-text-secondary: #CFC6E6;

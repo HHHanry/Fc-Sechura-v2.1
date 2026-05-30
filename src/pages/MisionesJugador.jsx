@@ -811,7 +811,7 @@ const Avatar = ({ alumno, small }) => {
   ) : (
     <div style={{
       width: size, height: size, borderRadius: '50%',
-      background: 'var(--sn-brand-gradient)', color: '#06121A',
+      background: 'var(--sn-brand-gradient)', color: 'var(--sn-text-on-brand)',
       display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
       fontWeight: 900, fontSize: small ? 13 : 16, flexShrink: 0,
     }}>{inicial}</div>

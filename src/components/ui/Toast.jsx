@@ -47,7 +47,7 @@ export const ToastProvider = () => {
             <span aria-hidden style={{
               flex: '0 0 auto', width: 26, height: 26, borderRadius: '50%',
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-              background: v.color, color: '#06121A', fontWeight: 900, fontSize: 14,
+              background: v.color, color: 'var(--sn-text-on-accent)', fontWeight: 900, fontSize: 14,
             }}>{v.icon}</span>
             <div style={{ flex: 1, minWidth: 0 }}>
               {t.title && <div style={{ fontWeight: 700, marginBottom: 2 }}>{t.title}</div>}

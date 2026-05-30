@@ -308,7 +308,7 @@ const PerfilCard = ({ alumno, inicial, ovr, tier, linkWhatsApp, celular }) => (
         {alumno.foto ? (
           <img src={alumno.foto} alt="" style={perfilFotoStyle} />
         ) : (
-          <div style={{ ...perfilFotoStyle, background: 'var(--sn-brand-gradient)', color: '#06121A', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 36 }}>
+          <div style={{ ...perfilFotoStyle, background: 'var(--sn-brand-gradient)', color: 'var(--sn-text-on-brand)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 36 }}>
             {inicial}
           </div>
         )}
@@ -740,7 +740,7 @@ const tabBtnStyle = (active) => ({
   padding: '0.6rem 1rem',
   borderRadius: 'var(--sn-radius-pill)',
   background: active ? 'var(--sn-brand-gradient)' : 'transparent',
-  color: active ? '#06121A' : 'var(--sn-text-muted)',
+  color: active ? 'var(--sn-text-on-brand)' : 'var(--sn-text-muted)',
   border: 'none', cursor: 'pointer',
   fontFamily: 'var(--sn-font-ui)',
   fontWeight: 700,
@@ -759,7 +759,7 @@ const tabGridStyle = {
 
 const perfilHeroStyle = {
   position: 'relative', height: 200,
-  background: 'linear-gradient(135deg, #0F1422 0%, #1E3A8A 100%)',
+  background: 'linear-gradient(135deg, #1A1038 0%, #4C1D95 100%)',
   display: 'flex', alignItems: 'center', justifyContent: 'center',
   overflow: 'hidden',
 };

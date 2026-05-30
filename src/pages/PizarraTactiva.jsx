@@ -669,7 +669,7 @@ const PizarraTactiva = () => {
         .sn-pizarra-tool-btn:hover { background: var(--sn-row-soft); }
         .sn-pizarra-tool-btn.is-active {
           background: var(--sn-brand-gradient);
-          color: #06121A;
+          color: var(--sn-text-on-brand);
           border-color: transparent;
         }
         .sn-pizarra-tool-btn.is-icon { padding: 8px; width: 40px; justify-content: center; }
@@ -1011,7 +1011,7 @@ const AsignarJugadorForm = ({ ficha, onApply }) => {
             >
               <div style={{
                 width: 32, height: 32, borderRadius: '50%',
-                background: 'var(--sn-brand-gradient)', color: '#06121A',
+                background: 'var(--sn-brand-gradient)', color: 'var(--sn-text-on-brand)',
                 display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
                 fontWeight: 900, fontSize: 13, flexShrink: 0,
               }}>

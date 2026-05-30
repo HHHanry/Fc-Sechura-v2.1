@@ -445,7 +445,7 @@ const Navbar = () => {
           width: 44px; height: 44px; border-radius: 50%;
           display: inline-flex; align-items: center; justify-content: center;
           background: var(--sn-brand-gradient);
-          color: #06121A; font-weight: 900; font-size: 16px;
+          color: var(--sn-text-on-brand); font-weight: 900; font-size: 16px;
           box-shadow: 0 0 0 2px color-mix(in srgb, var(--sn-brand-glow) 22%, transparent);
           flex-shrink: 0;
         }
@@ -718,7 +718,7 @@ const chipAvatarStyle = {
   width: 30, height: 30, borderRadius: '50%',
   display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
   background: 'var(--sn-brand-gradient)',
-  color: '#06121A', fontWeight: 900, fontSize: 13,
+  color: 'var(--sn-text-on-brand)', fontWeight: 900, fontSize: 13,
   boxShadow: '0 0 0 2px color-mix(in srgb, var(--sn-brand-glow) 22%, transparent)',
 };
 

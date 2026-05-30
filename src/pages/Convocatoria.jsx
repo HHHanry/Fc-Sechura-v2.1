@@ -659,7 +659,7 @@ const MiniKpi = ({ label, value, color }) => (
 const PlayerAvatar = ({ al }) => (
   al.foto
     ? <img src={al.foto} alt="" style={avatarStyle} />
-    : <div style={{ ...avatarStyle, background: 'var(--sn-brand-gradient)', color: '#06121A', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13 }}>
+    : <div style={{ ...avatarStyle, background: 'var(--sn-brand-gradient)', color: 'var(--sn-text-on-brand)', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13 }}>
         {(al.nombre ?? '?')[0]}{(al.apellido ?? '')[0]}
       </div>
 );
@@ -774,7 +774,7 @@ const convCardStyle = {
 
 const convNumStyle = {
   width: 24, height: 24, borderRadius: '50%',
-  background: 'var(--sn-brand-gradient)', color: '#06121A',
+  background: 'var(--sn-brand-gradient)', color: 'var(--sn-text-on-brand)',
   display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
   fontWeight: 900, fontSize: 11, flexShrink: 0,
 };

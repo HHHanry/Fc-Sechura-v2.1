@@ -428,11 +428,11 @@ const Hero = ({ user, hoyDmy }) => (
     <div style={heroBgStyle} aria-hidden />
     <div style={heroOverlayStyle} aria-hidden />
     <div className="sn-dashboard-hero-content" style={heroContentStyle}>
-      <span style={{ fontSize: 'var(--sn-fs-xs)', fontWeight: 800, letterSpacing: 'var(--sn-tracking-mega)', color: 'var(--sn-brand-glow)' }}>
+      <span style={{ fontSize: 'var(--sn-fs-xs)', fontWeight: 800, letterSpacing: 'var(--sn-tracking-mega)', color: '#C4B5FD' }}>
         CENTRO DE MANDO · {hoyDmy}
       </span>
       <h1 style={heroTitleStyle}>
-        {greet()},<br /><span style={{ color: 'var(--sn-brand-glow)' }}>{user?.nombre ?? 'Staff'}</span>.
+        {greet()},<br /><span style={{ color: '#C4B5FD' }}>{user?.nombre ?? 'Staff'}</span>.
       </h1>
       <p style={heroLeadStyle}>
         Radiografía operativa de la academia: alumnos, asistencia, finanzas, rendimiento y alertas. Un solo lugar para tomar decisiones rápidas.
@@ -716,7 +716,7 @@ const heroBgStyle = {
 const heroOverlayStyle = {
   position: 'absolute', inset: 0,
   background: `
-    linear-gradient(135deg, rgba(7,9,15,0.92) 0%, rgba(15,20,34,0.65) 60%, color-mix(in srgb, var(--sn-brand-glow) 12%, transparent) 100%)
+    linear-gradient(135deg, rgba(10,6,23,0.94) 0%, rgba(26,16,54,0.66) 55%, color-mix(in srgb, var(--sn-brand-glow) 26%, transparent) 100%)
   `,
 };
 
@@ -732,14 +732,14 @@ const heroTitleStyle = {
   fontSize: 'clamp(1.8rem, 3.6vw, 3.2rem)',
   fontWeight: 800,
   letterSpacing: 'var(--sn-tracking-tight)',
-  color: 'var(--sn-text-primary)',
+  color: '#FFFFFF',
   textShadow: '0 6px 30px rgba(0,0,0,0.55)',
   lineHeight: 1.05,
 };
 
 const heroLeadStyle = {
   margin: 0,
-  color: 'var(--sn-text-secondary)',
+  color: 'rgba(244,242,255,0.86)',
   fontSize: 'var(--sn-fs-md)',
   maxWidth: 600,
   lineHeight: 1.5,
@@ -750,12 +750,12 @@ const heroQuoteStyle = {
   alignSelf: 'flex-end',
   margin: 'var(--sn-space-5)',
   padding: '0.75rem 1.1rem',
-  background: 'var(--sn-overlay-strong)',
-  border: '1px solid var(--sn-border-glow)',
+  background: 'rgba(10,6,23,0.42)',
+  border: '1px solid rgba(167,139,250,0.45)',
   borderRadius: 'var(--sn-radius-md)',
   backdropFilter: 'blur(8px)',
   fontStyle: 'italic',
-  color: 'var(--sn-text-secondary)',
+  color: 'rgba(244,242,255,0.84)',
   fontSize: 'var(--sn-fs-sm)',
   maxWidth: 360,
   display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4,
@@ -765,7 +765,7 @@ const heroQuoteAuthorStyle = {
   fontStyle: 'normal', fontWeight: 800,
   fontSize: 'var(--sn-fs-xs)',
   letterSpacing: 'var(--sn-tracking-wide)',
-  color: 'var(--sn-brand-glow)',
+  color: '#C4B5FD',
 };
 
 const kpiGrid = {

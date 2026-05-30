@@ -98,7 +98,7 @@ const selectedStyle = {
 
 const avatarStyle = {
   width: 36, height: 36, borderRadius: '50%',
-  background: 'var(--sn-brand-gradient)', color: '#06121A',
+  background: 'var(--sn-brand-gradient)', color: 'var(--sn-text-on-brand)',
   display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
   fontWeight: 900, fontSize: 14, flexShrink: 0,
 };

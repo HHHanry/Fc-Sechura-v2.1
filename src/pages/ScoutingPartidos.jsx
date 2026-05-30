@@ -358,7 +358,7 @@ const Counter = ({ label, value, onMinus, onPlus, tone = 'brand' }) => {
       <button onClick={onMinus} className="sn-focusable" style={{ ...counterBtnStyle, background: 'var(--sn-track-bg)', color: 'var(--sn-text-muted)' }}>−</button>
       <span style={{ fontFamily: 'var(--sn-font-mono)', fontWeight: 900, color: 'var(--sn-text-primary)', minWidth: 26, textAlign: 'center' }}>{value}</span>
       <span style={{ fontSize: 'var(--sn-fs-xs)', fontWeight: 800, color: 'var(--sn-text-muted)', letterSpacing: 'var(--sn-tracking-wide)', marginRight: 4 }}>{label}</span>
-      <button onClick={onPlus} className="sn-focusable" style={{ ...counterBtnStyle, background: c, color: '#06121A' }}>+</button>
+      <button onClick={onPlus} className="sn-focusable" style={{ ...counterBtnStyle, background: c, color: 'var(--sn-text-on-accent)' }}>+</button>
     </div>
   );
 };
