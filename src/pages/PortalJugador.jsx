@@ -57,7 +57,7 @@ const PortalJugador = () => {
       <div style={portalShell}>
         <div style={loadingHaloStyle}>
           <div style={spinnerRingStyle} />
-          <p style={{ marginTop: 24, color: 'var(--sn-text-muted)', letterSpacing: 'var(--sn-tracking-mega)', fontSize: 'var(--sn-fs-xs)', fontWeight: 800 }}>
+          <p style={{ marginTop: 24, color: 'rgba(241,237,251,0.70)', letterSpacing: 'var(--sn-tracking-mega)', fontSize: 'var(--sn-fs-xs)', fontWeight: 800 }}>
             CARGANDO PLAYER CARD
           </p>
         </div>
@@ -71,7 +71,7 @@ const PortalJugador = () => {
         <div style={{ textAlign: 'center', color: 'white' }}>
           <div style={{ fontSize: 80, opacity: 0.3 }}>?</div>
           <h2 style={{ fontFamily: 'var(--sn-font-display)', margin: '0 0 8px' }}>Tarjeta no encontrada</h2>
-          <p style={{ color: 'var(--sn-text-muted)', marginBottom: 32 }}>El código de scouting es inválido o expiró.</p>
+          <p style={{ color: 'rgba(241,237,251,0.70)', marginBottom: 32 }}>El código de scouting es inválido o expiró.</p>
           <button onClick={() => navigate('/login')} style={shareButtonStyle}>Ir a FC Sechura</button>
         </div>
       </div>
@@ -95,7 +95,7 @@ const PortalJugador = () => {
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: 'var(--sn-space-5)', animation: revealed ? 'sn-fade-in 0.8s var(--sn-ease)' : 'none', opacity: revealed ? 1 : 0 }}>
           <img src={logo} alt="" style={{ width: 56, filter: 'drop-shadow(0 0 14px var(--sn-border-glow))', marginBottom: 8 }} />
-          <h6 style={{ color: 'var(--sn-brand-glow)', fontWeight: 800, letterSpacing: 'var(--sn-tracking-mega)', fontSize: 'var(--sn-fs-xs)', margin: 0 }}>
+          <h6 style={{ color: '#C4B5FD', fontWeight: 800, letterSpacing: 'var(--sn-tracking-mega)', fontSize: 'var(--sn-fs-xs)', margin: 0 }}>
             REPORTE OFICIAL · PLAYER CARD
           </h6>
         </div>
@@ -223,7 +223,7 @@ const PortalJugador = () => {
           <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.55)', fontSize: 'var(--sn-fs-xs)', margin: '8px 0 0' }}>
             Plataforma gestionada por el área técnica de FC Sechura.
             <br />
-            <Link to="/login" style={{ color: 'var(--sn-brand-glow)', fontWeight: 700, textDecoration: 'none' }}>Acceso administrativo</Link>
+            <Link to="/login" style={{ color: '#C4B5FD', fontWeight: 700, textDecoration: 'none' }}>Acceso administrativo</Link>
           </p>
         </div>
       </div>
@@ -243,7 +243,7 @@ const BackgroundFx = ({ tier }) => (
         radial-gradient(900px 600px at 50% -10%, ${tier.color}1F, transparent 55%),
         radial-gradient(800px 500px at 80% 100%, rgba(167,139,250,0.18), transparent 60%),
         radial-gradient(700px 600px at 0% 50%, rgba(124,58,237,0.30), transparent 60%),
-        var(--sn-bg-base)
+        #0A0617
       `,
     }} />
     <div aria-hidden style={{
@@ -312,7 +312,8 @@ const BackIcon = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="no
    ===================================================== */
 const portalShell = {
   minHeight: '100vh',
-  background: 'var(--sn-bg-mesh)',
+  // Player card siempre oscura (experiencia tipo FIFA), independiente del tema.
+  background: '#0A0617',
   fontFamily: 'var(--sn-font-ui)',
   position: 'relative',
   overflowX: 'hidden',
@@ -437,8 +438,8 @@ const loadingHaloStyle = {
 
 const spinnerRingStyle = {
   width: 60, height: 60,
-  border: '3px solid color-mix(in srgb, var(--sn-brand-glow) 22%, transparent)',
-  borderTopColor: 'var(--sn-brand-glow)',
+  border: '3px solid rgba(167,139,250,0.22)',
+  borderTopColor: '#A78BFA',
   borderRadius: '50%',
   margin: '0 auto',
   animation: 'sn-spin 0.9s linear infinite',
