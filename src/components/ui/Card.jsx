@@ -27,6 +27,10 @@ export const Card = React.forwardRef(function Card(
     borderRadius: 'var(--sn-radius-lg)',
     color: 'var(--sn-text-primary)',
     transition: 'transform var(--sn-dur-base) var(--sn-ease), box-shadow var(--sn-dur-base) var(--sn-ease), border-color var(--sn-dur-base) var(--sn-ease)',
+    // Entrada suave al montar. fill 'backwards' (no 'forwards') para no
+    // congelar transform y dejar intacto el hover JS de las cards interactivas.
+    // El caller puede sobreescribirlo vía la prop `style`.
+    animation: 'sn-slide-up var(--sn-dur-base) var(--sn-ease-out) backwards',
   };
   const accentColor = accent ? (ACCENTS[accent] ?? accent) : null;
   const accentStyle = accentColor ? { borderLeft: `3px solid ${accentColor}` } : null;

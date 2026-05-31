@@ -82,6 +82,7 @@ export const DataTable = ({
                 padding: 'var(--sn-space-4)',
                 display: 'flex', flexDirection: 'column', gap: 'var(--sn-space-3)',
                 cursor: clickable ? 'pointer' : 'default',
+                animation: `sn-slide-up var(--sn-dur-slow) var(--sn-ease-out) ${Math.min(idx, 10) * 45}ms both`,
               }}
             >
               <div style={{ paddingBottom: hasMore ? 'var(--sn-space-3)' : 0, borderBottom: hasMore ? '1px solid var(--sn-border-faint)' : 'none' }}>

@@ -78,7 +78,12 @@ const BottomNav = ({ user, onMore, moreActive }) => {
             border-top: 1px solid var(--sn-nav-border);
             padding-bottom: env(safe-area-inset-bottom, 0px);
             box-shadow: 0 -10px 28px -16px rgba(0,0,0,0.35);
+            animation: sn-bn-rise var(--sn-dur-slow) var(--sn-ease-out) both;
           }
+        }
+        @keyframes sn-bn-rise {
+          from { opacity: 0; transform: translateY(100%); }
+          to   { opacity: 1; transform: translateY(0); }
         }
         .sn-bn-item {
           position: relative;
@@ -91,6 +96,16 @@ const BottomNav = ({ user, onMore, moreActive }) => {
           background: transparent; border: none; cursor: pointer;
           transition: color var(--sn-dur-fast) var(--sn-ease);
           -webkit-tap-highlight-color: transparent;
+          animation: sn-bn-item-in var(--sn-dur-base) var(--sn-ease-out) both;
+        }
+        .sn-bn-item:nth-child(1) { animation-delay: 70ms; }
+        .sn-bn-item:nth-child(2) { animation-delay: 120ms; }
+        .sn-bn-item:nth-child(3) { animation-delay: 170ms; }
+        .sn-bn-item:nth-child(4) { animation-delay: 220ms; }
+        .sn-bn-item:nth-child(5) { animation-delay: 270ms; }
+        @keyframes sn-bn-item-in {
+          from { opacity: 0; transform: translateY(6px); }
+          to   { opacity: 1; transform: translateY(0); }
         }
         .sn-bn-item:hover { color: var(--sn-text-secondary); }
         .sn-bn-item.is-active { color: var(--sn-nav-active); }
